@@ -1,0 +1,10 @@
+{
+	// https://nuxt.com/docs/guide/concepts/typescript
+	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+	"compilerOptions": {
+		"paths": {
+			"@/*": ["./*"]
+		}
+	},
+	"extends": "./.nuxt/tsconfig.json"
+}
