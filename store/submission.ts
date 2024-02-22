@@ -1,3 +1,5 @@
+import { defineStore } from "pinia";
+import type { Submission } from "@/types/submission";
 interface SubmissionTable {
 	loading: boolean;
 	search: string;

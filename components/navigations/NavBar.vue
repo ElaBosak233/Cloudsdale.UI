@@ -40,8 +40,12 @@
 			</v-btn>
 		</v-toolbar-items>
 		<v-btn
-			v-if="authStore.user.level <= 2 && authStore.user.level != 0"
-			icon
+			v-if="
+				authStore?.user?.group?.level &&
+				authStore?.user?.group?.level <= 2 &&
+				authStore?.user?.group?.level != 0
+			"
+			:icon="true"
 			to="/admin"
 			:active="false"
 		>
@@ -57,7 +61,7 @@
 			:close-on-content-click="false"
 		>
 			<template #activator="{ props }">
-				<v-btn icon v-bind="props">
+				<v-btn :icon="true" v-bind="props">
 					<v-icon icon="mdi-account-circle" />
 				</v-btn>
 			</template>
@@ -65,10 +69,10 @@
 				<v-card
 					class="mx-auto d-flex justify-center align-center mt-2 py-4"
 					elevation="0"
-					@click="$router.push(`/user/${authStore.user.id}`)"
+					@click="$router.push(`/user/${authStore.user?.id}`)"
 				>
 					<div class="mx-2">
-						<IAvatar :size="40" :user-id="authStore?.user.id" />
+						<IAvatar :size="40" :user-id="authStore?.user?.id" />
 					</div>
 					<v-chip :label="true" color="primary">
 						<span
@@ -79,7 +83,7 @@
 								overflow: hidden;
 								font-size: 0.85rem;
 							"
-							>{{ authStore?.user.nickname }}</span
+							>{{ authStore?.user?.nickname }}</span
 						>
 					</v-chip>
 				</v-card>
@@ -113,7 +117,12 @@
 				</div>
 			</v-card>
 		</v-menu>
-		<v-btn v-if="!authStore?.pgsToken" icon to="/login" :active="false">
+		<v-btn
+			v-if="!authStore?.pgsToken"
+			:icon="true"
+			to="/login"
+			:active="false"
+		>
 			<v-icon icon="mdi-account-circle" />
 		</v-btn>
 	</v-app-bar>

@@ -1,5 +1,6 @@
-import { useAuthFetch } from "@/composables/useAuthFetch";
+import { defineStore } from "pinia";
 import { getCategory } from "@/api/category";
+import type { Category } from "@/types/category";
 
 export interface CategoryState {
 	categories: Array<Category>;

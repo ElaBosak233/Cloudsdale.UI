@@ -229,7 +229,7 @@
 </template>
 
 <script setup lang="ts">
-import { useChallengeStore } from "~/store/challenge";
+import { useChallengeStore } from "@/store/challenge";
 
 const challengeStore = useChallengeStore();
 

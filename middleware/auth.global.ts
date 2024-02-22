@@ -1,4 +1,5 @@
-import { useAuthStore } from "~/store/auth";
+import { useAuthStore } from "@/store/auth";
+import type { Group } from "@/types/group";
 export default defineNuxtRouteMiddleware(async (to) => {
 	const authStore = useAuthStore();
 	const verified = await authStore.verifyToken();
@@ -13,7 +14,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
 	}
 	if (
 		to.path.includes("/admin") &&
-		(authStore.user.level > 2 || authStore.user.level === 0)
+		((authStore.user?.group as Group).level > 2 ||
+			(authStore.user?.group as Group).level === 0)
 	) {
 		return navigateTo("/");
 	}

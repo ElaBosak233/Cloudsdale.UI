@@ -1,6 +1,6 @@
 import { useAuthFetch } from "@/composables/useAuthFetch";
-import { useSnackBarStore } from "~/store/snackBar";
-import { type User, defaultUser } from "@/utils";
+import { useSnackBarStore } from "@/store/snackBar";
+import type { User } from "@/types/user";
 
 interface UserTable {
 	loading: boolean;
@@ -15,13 +15,12 @@ interface UserTable {
 interface UserEditor {
 	dialog: boolean;
 	type: "create" | "edit";
-	user: User;
+	user: User | null;
 }
 
 export interface UserState {
 	userTable: UserTable;
 	userEditor: UserEditor;
-	userAvatar: Record<number, string>;
 }
 
 export const useUserStore = defineStore("user", {
@@ -38,13 +37,12 @@ export const useUserStore = defineStore("user", {
 		userEditor: {
 			dialog: false,
 			type: "create",
-			user: defaultUser,
+			user: null,
 		},
-		userAvatar: {},
 	}),
 	actions: {
 		$resetUserEditor() {
-			this.userEditor.user = useCloneDeep(defaultUser);
+			this.userEditor.user = useCloneDeep(null);
 		},
 		async loadUserTable({ page, itemsPerPage, sortBy }: any) {
 			this.userTable.loading = true;
@@ -109,33 +107,6 @@ export const useUserStore = defineStore("user", {
 				itemsPerPage: this.userTable.itemsPerPage,
 				sortBy: [],
 			});
-		},
-		async getUserAvatar(id: number) {
-			if (this.userAvatar[id]) {
-				return this.userAvatar[id];
-			}
-			const { data: res } = await useAuthFetch(
-				`/media/users/avatar/${id}`,
-				{
-					method: "GET",
-				}
-			);
-			const resObj = res.value as any;
-			if (resObj && resObj?.code !== 404) {
-				this.userAvatar[id] = URL.createObjectURL(resObj);
-			} else {
-				this.userAvatar[id] = "";
-			}
-		},
-		deleteUserAvatar(id: number) {
-			if (this.userAvatar[id]) {
-				URL.revokeObjectURL(this.userAvatar[id]);
-				delete this.userAvatar[id];
-			}
-		},
-		async updateUserAvatar(id: number) {
-			this.deleteUserAvatar(id);
-			await this.getUserAvatar(id);
 		},
 	},
 });

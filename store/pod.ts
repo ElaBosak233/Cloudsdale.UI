@@ -1,3 +1,4 @@
+import { defineStore } from "pinia";
 import { getPod } from "@/api/pod";
 
 export interface PodState {

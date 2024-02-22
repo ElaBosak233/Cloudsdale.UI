@@ -1,21 +1,31 @@
 <template>
-  <v-avatar :size="size" color="primary" :image="teamStore.teamAvatar[teamId]">
-    <v-icon icon="mdi-account-multiple" :size="size * 0.4"></v-icon>
-  </v-avatar>
+	<div>
+		<v-avatar
+			v-if="mediaStore.teamAvatarBlobs[teamId]"
+			:size="size"
+			color="primary"
+			:image="mediaStore.teamAvatarBlobs[teamId]"
+		/>
+		<v-avatar
+			v-if="!mediaStore.teamAvatarBlobs[teamId]"
+			:size="size"
+			color="primary"
+		>
+			<v-icon icon="mdi-account-multiple" :size="size * 0.6"></v-icon>
+		</v-avatar>
+	</div>
 </template>
 
 <script setup lang="ts">
-import { useAuthFetch } from "@/composables/useAuthFetch";
-import { useTeamStore } from "~/store/team";
+import { useMediaStore } from "@/store/media";
 
-const teamStore = useTeamStore();
+const mediaStore = useMediaStore();
 
 interface Props {
-  teamId: number;
-  size: number;
+	teamId: number;
+	size: number;
 }
 const props = defineProps<Props>();
-const { teamId } = toRefs(props);
 
-teamStore.getTeamAvatar(props.teamId);
+mediaStore.getTeamAvatar(props.teamId);
 </script>

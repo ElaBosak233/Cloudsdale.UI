@@ -1,3 +1,4 @@
+import { defineStore } from "pinia";
 export interface SnackBarStoreState {
 	enabled: boolean;
 	text: string;

@@ -19,7 +19,7 @@
 				<div v-for="team in teamStore.teams" :key="team?.id">
 					<TeamCard
 						:name="team?.name"
-						:is-captain="authStore.id == team?.captain_id"
+						:is-captain="authStore.user?.id == team?.captain_id"
 						:users="team?.users"
 						:team-id="team?.id"
 						class="ma-2 pa-2"
@@ -59,11 +59,11 @@
 	</div>
 </template>
 <script setup lang="ts">
-import TeamCard from "@/components/teams/TeamCard.vue";
-import { useAuthStore } from "~/store/auth";
-import { useConfigStore } from "~/store/config";
-import { useTeamStore } from "~/store/team";
-import CornerIcon from "@/components/CornerIcon.vue";
+import TeamCard from "@/components/widgets/TeamCard.vue";
+import { useAuthStore } from "@/store/auth";
+import { useConfigStore } from "@/store/config";
+import { useTeamStore } from "@/store/team";
+import CornerIcon from "@/components/ui/CornerIcon.vue";
 
 const authStore = useAuthStore();
 const configStore = useConfigStore();
@@ -74,9 +74,4 @@ teamStore.getTeamsRelatedToCurrentUser();
 useHead({
 	title: `团队 - ${configStore.pltCfg.site.title}`,
 });
-
-// onMounted(async () => {
-// 	await teamStore.getAllTeams();
-// 	teamStore.loadTeamsByUserId();
-// });
 </script>

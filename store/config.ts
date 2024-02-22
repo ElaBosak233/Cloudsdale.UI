@@ -1,3 +1,4 @@
+import { defineStore } from "pinia";
 import { getPltCfg } from "@/api/config";
 
 interface PltCfg {

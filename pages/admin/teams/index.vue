@@ -180,13 +180,13 @@
 </template>
 
 <script setup lang="ts">
-import { useTeamStore } from "~/store/team";
-import { useConfigStore } from "~/store/config";
+import { useTeamStore } from "@/store/team";
+import { useConfigStore } from "@/store/config";
 import DeleteBtn from "@/components/admin/teams/actions/DeleteBtn.vue";
 import EditBtn from "@/components/admin/teams/actions/EditBtn.vue";
-import IAvatar from "@/components/avatar/IAvatar.vue";
+import IAvatar from "@/components/images/IAvatar.vue";
 import AvatarSettingBtn from "@/components/admin/teams/avatar/AvatarSettingBtn.vue";
-import TAvatar from "@/components/avatar/TAvatar.vue";
+import TAvatar from "@/components/images/TAvatar.vue";
 import TeamEditor from "@/components/admin/teams/TeamEditor.vue";
 
 const configStore = useConfigStore();

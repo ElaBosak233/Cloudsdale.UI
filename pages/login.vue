@@ -47,7 +47,7 @@
 </template>
 <script setup lang="ts">
 import { useAuthStore } from "@/store/auth";
-import CornerIcon from "@/components/CornerIcon.vue";
+import CornerIcon from "@/components/ui/CornerIcon.vue";
 
 const authStore = useAuthStore();
 const username = ref("");

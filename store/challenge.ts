@@ -1,12 +1,13 @@
 import { useAuthFetch } from "@/composables/useAuthFetch";
-import { useSnackBarStore } from "~/store/snackBar";
-import { usePodStore } from "~/store/pod";
-import { defaultChallenge } from "~/utils";
+import { useSnackBarStore } from "@/store/snackBar";
+import { usePodStore } from "@/store/pod";
+import type { Challenge } from "@/types/challenge";
+import { getChallenge } from "@/api/challenge";
 
 interface ChallengeEditor {
 	dialog: boolean;
 	type: "create" | "edit";
-	challenge: Challenge;
+	challenge: Challenge | null;
 }
 
 interface ChallengeTable {
@@ -49,34 +50,26 @@ export const useChallengeStore = defineStore("challenge", {
 		challengeEditor: {
 			dialog: false,
 			type: "create",
-			challenge: defaultChallenge,
+			challenge: null,
 		},
 	}),
 	actions: {
 		$resetChallengeEditor() {
-			this.challengeEditor.challenge = useCloneDeep(defaultChallenge);
+			this.challengeEditor.challenge = useCloneDeep(null);
 		},
 		async loadChallenges(page?: number, filters?: string) {
-			interface Response {
-				code: number;
-				data: Array<Challenge>;
-				pages: number;
-			}
 			const url = filters
-				? `/challenges/?page=${page}&size=15&submission_qty=3&${filters}`
-				: `/challenges/?page=${page}&size=15&submission_qty=3`;
+				? `page=${page}&size=15&submission_qty=3&${filters}`
+				: `page=${page}&size=15&submission_qty=3`;
 			this.last_filters = filters || "";
-			const { data: res } = await useAuthFetch(url, {
-				method: "GET",
-			});
-			const resObj = res.value as Response;
-			if (resObj?.code === 200) {
-				this.challenges = resObj.data ? resObj.data : [];
-				this.pages = resObj.pages;
+			const response = await getChallenge(url);
+			if (response?.code === 200) {
+				this.challenges = response.data ? response.data : [];
+				this.pages = response.pages;
 				this.current_page = page || 1;
 			}
 			const instanceStore = usePodStore();
-			instanceStore.loadExistPods();
+			await instanceStore.loadExistPods();
 		},
 		async saveChallenge() {
 			const snackBarStore = useSnackBarStore();

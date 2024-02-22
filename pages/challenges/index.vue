@@ -82,7 +82,7 @@
 						</div>
 						<div class="d-flex justify-center mt-5">
 							<v-pagination
-								v-model="challengeStore.currentPage"
+								v-model="challengeStore.current_page"
 								class="my-4"
 								:length="challengeStore.pages"
 								total-visible="5"

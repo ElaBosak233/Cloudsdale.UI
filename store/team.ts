@@ -1,12 +1,13 @@
-import { useConfigStore } from "~/store/config";
-import { useAuthStore } from "~/store/auth";
+import { useConfigStore } from "@/store/config";
+import { useAuthStore } from "@/store/auth";
 import { useAuthFetch } from "@/composables/useAuthFetch";
-import { useSnackBarStore } from "~/store/snackBar";
+import { useSnackBarStore } from "@/store/snackBar";
+import type { Team } from "@/types/team";
 
 interface TeamEditor {
 	dialog: boolean;
 	type: "create" | "edit";
-	team: Team;
+	team: Team | null;
 }
 
 interface TeamTable {
@@ -43,13 +44,13 @@ export const useTeamStore = defineStore("team", {
 		teamEditor: {
 			dialog: false,
 			type: "create",
-			team: defaultTeam,
+			team: null,
 		},
 		teamAvatar: {},
 	}),
 	actions: {
 		$resetTeamEditor() {
-			this.teamEditor.team = useCloneDeep(defaultTeam);
+			this.teamEditor.team = useCloneDeep(null);
 		},
 		async loadTeamTable({ page, itemsPerPage, sortBy }: any) {
 			this.teamTable.loading = true;
@@ -85,8 +86,10 @@ export const useTeamStore = defineStore("team", {
 				data: Array<Team>;
 			}
 			const authStore = useAuthStore();
-			const teamIds = authStore.teams.map((team) => team.id);
-			const queryString = teamIds
+			const teamIds = authStore?.user?.teams.map(
+				(team) => team.id
+			);
+			const queryString = (teamIds as any[])
 				.map(function (id) {
 					return "id=" + id;
 				})
@@ -121,7 +124,7 @@ export const useTeamStore = defineStore("team", {
 			const authStore = useAuthStore();
 			this.teams_by_user_id = [];
 			this.teams.forEach((team) => {
-				if (team.users.includes(authStore.id)) {
+				if (team.users.includes(authStore?.user?.id as any)) {
 					this.teams_by_user_id.push(team);
 				}
 			});

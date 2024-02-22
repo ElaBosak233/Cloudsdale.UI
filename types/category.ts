@@ -9,4 +9,5 @@ export interface CategoryResponse {
 	code: number;
 	msg: string;
 	data: Array<Category>;
+	total: number;
 }

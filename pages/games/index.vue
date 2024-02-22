@@ -57,10 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import GameCard from "@/components/games/GameCard.vue";
-import { useGameStore } from "~/store/game";
-import { useConfigStore } from "~/store/config";
-import CornerIcon from "@/components/CornerIcon.vue";
+import GameCard from "@/components/widgets/GameCard.vue";
+import { useGameStore } from "@/store/game";
+import { useConfigStore } from "@/store/config";
+import CornerIcon from "@/components/ui/CornerIcon.vue";
 const configStore = useConfigStore();
 const gameStore = useGameStore();
 

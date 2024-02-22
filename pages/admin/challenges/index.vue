@@ -180,9 +180,9 @@
 </template>
 
 <script setup lang="ts">
-import { useConfigStore } from "~/store/config";
-import { useChallengeStore } from "~/store/challenge";
-import { useSnackBarStore } from "~/store/snackBar";
+import { useConfigStore } from "@/store/config";
+import { useChallengeStore } from "@/store/challenge";
+import { useSnackBarStore } from "@/store/snackBar";
 import PreviewBtn from "@/components/admin/challenges/actions/PreviewBtn.vue";
 import DeleteBtn from "@/components/admin/challenges/actions/DeleteBtn.vue";
 import EditBtn from "@/components/admin/challenges/actions/EditBtn.vue";
@@ -235,7 +235,7 @@ async function switchChallengeIsPracticable(
 	}
 	const { data: res } = await useAuthFetch(`/challenges/`, {
 		method: "PUT",
-		body: {
+		data: {
 			id: item.id,
 			is_practicable: isPracticable,
 		},

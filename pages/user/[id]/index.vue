@@ -24,9 +24,9 @@
 </template>
 
 <script setup lang="ts">
-import { useConfigStore } from "~/store/config";
-import CornerIcon from "@/components/CornerIcon.vue";
-import type { User } from "@/utils";
+import { useConfigStore } from "@/store/config";
+import CornerIcon from "@/components/ui/CornerIcon.vue";
+import type { User } from "@/types/user";
 const configStore = useConfigStore();
 
 const user = ref({} as User);

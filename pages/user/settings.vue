@@ -38,8 +38,81 @@
 					</div>
 				</div>
 				<div class="d-flex flex-column">
-					<IAvatar :user-id="authStore.id" :size="90" class="mx-5" />
-					<AvatarArea :item="user" />
+					<IAvatar
+						:user-id="authStore?.user?.id"
+						:size="90"
+						class="mx-5"
+					/>
+					<v-btn
+						color="primary"
+						variant="tonal"
+						density="comfortable"
+						class="ma-2"
+						@click="openDialog()"
+					>
+						管理头像
+					</v-btn>
+					<v-dialog
+						v-model="dialog"
+						min-width="50vh"
+						max-width="50vh"
+					>
+						<v-card class="pa-5">
+							<div class="d-flex justify-between align-center">
+								<v-icon
+									icon="mdi-image-edit"
+									size="35"
+									color="primary"
+								></v-icon>
+								<v-chip
+									:label="true"
+									class="mx-2"
+									color="primary"
+								>
+									<span class="font-weight-bold text-h6"
+										>头像管理</span
+									>
+								</v-chip>
+							</div>
+							<v-sheet class="d-flex justify-space-between mt-5">
+								<div
+									class="d-flex justify-center align-center pa-3"
+								>
+									<IAvatar :size="80" :user-id="user.id" />
+								</div>
+								<v-sheet class="flex-1-0" max-width="35vh">
+									<v-btn
+										prepend-icon="mdi-attachment-remove"
+										:flat="true"
+										color="warning"
+										variant="tonal"
+										:block="true"
+										@click="deleteAttachment()"
+										>清除已有头像</v-btn
+									>
+									<div class="d-flex align-center mt-5">
+										<v-file-input
+											v-model="files"
+											density="compact"
+											label="更新头像"
+											variant="solo-filled"
+											hide-details
+											:single-line="true"
+											:flat="true"
+											style="overflow: hidden"
+										></v-file-input>
+										<v-btn
+											:flat="true"
+											class="ml-3"
+											color="primary"
+											@click="uploadAttachment()"
+											>上传</v-btn
+										>
+									</div>
+								</v-sheet>
+							</v-sheet>
+						</v-card>
+					</v-dialog>
 				</div>
 			</div>
 			<div class="d-flex">
@@ -74,21 +147,26 @@
 </template>
 
 <script setup lang="ts">
-import { useConfigStore } from "~/store/config";
-import { useAuthStore } from "~/store/auth";
-import CornerIcon from "@/components/CornerIcon.vue";
-import type { User } from "@/utils";
-import AvatarArea from "@/components/user/settings/AvatarArea.vue";
-import IAvatar from "@/components/avatar/IAvatar.vue";
-import { useSnackBarStore } from "~/store/snackBar";
+import type { Ref } from "vue";
+import { useConfigStore } from "@/store/config";
+import { useAuthStore } from "@/store/auth";
+import CornerIcon from "@/components/ui/CornerIcon.vue";
+import IAvatar from "@/components/images/IAvatar.vue";
+import { useSnackBarStore } from "@/store/snackBar";
+import { useMediaStore } from "@/store/media";
+import type { User } from "@/types/user";
 
 const configStore = useConfigStore();
 const authStore = useAuthStore();
 const snackBarStore = useSnackBarStore();
+const mediaStore = useMediaStore();
 
 const user = ref({} as User);
 const password = ref("");
 const passwordConfirm = ref("");
+
+const dialog = ref(false);
+const files: Ref<Array<File>> = ref([]);
 
 onMounted(async () => {
 	await getUser();
@@ -99,7 +177,9 @@ async function getUser() {
 		code: number;
 		data: Array<User>;
 	}
-	const { data: res } = await useAuthFetch(`/users/?id=${authStore.id}`);
+	const { data: res } = await useAuthFetch(
+		`/users/?id=${authStore.user?.id}`
+	);
 	const resObj = res.value as Response;
 	if (resObj.code === 200) {
 		user.value = resObj.data[0];
@@ -118,7 +198,7 @@ async function saveUser() {
 	const { data: res } = await useAuthFetch(`/users/`, {
 		method: "PUT",
 		body: {
-			id: authStore.id,
+			id: authStore.user?.id,
 			nickname: user.value.nickname,
 			email: user.value.email,
 			password: password.value,
@@ -130,6 +210,36 @@ async function saveUser() {
 	} else {
 		snackBarStore.showSnackbar("保存失败\n" + resObj.msg, "error");
 	}
+}
+
+async function deleteAttachment() {
+	const success = await mediaStore.deleteUserAvatar(user.value.id);
+	if (success) {
+		snackBarStore.success("头像清除成功");
+	} else {
+		snackBarStore.error("头像清除失败");
+	}
+}
+
+async function uploadAttachment() {
+	if (files.value[0]) {
+		const success = await mediaStore.setUserAvatar(
+			user.value.id,
+			files.value[0]
+		);
+		if (success) {
+			snackBarStore.success("头像上传成功");
+		} else {
+			snackBarStore.error("头像上传失败");
+		}
+	} else {
+		snackBarStore.error("请选择文件再上传");
+	}
+}
+
+function openDialog() {
+	files.value = [];
+	dialog.value = true;
 }
 
 useHead({

@@ -147,12 +147,12 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "~/store/user";
-import { useConfigStore } from "~/store/config";
+import { useUserStore } from "@/store/user";
+import { useConfigStore } from "@/store/config";
 import DeleteBtn from "@/components/admin/users/actions/DeleteBtn.vue";
 import EditBtn from "@/components/admin/users/actions/EditBtn.vue";
 import UserEditor from "@/components/admin/users/UserEditor.vue";
-import IAvatar from "@/components/avatar/IAvatar.vue";
+import IAvatar from "@/components/images/IAvatar.vue";
 import AvatarSettingBtn from "@/components/admin/users/avatar/AvatarSettingBtn.vue";
 
 const configStore = useConfigStore();

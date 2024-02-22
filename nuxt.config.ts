@@ -1,6 +1,3 @@
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
-import { process } from "std-env";
-
 export default defineNuxtConfig({
 	ssr: false,
 	modules: [
@@ -8,9 +5,6 @@ export default defineNuxtConfig({
 		"@pinia-plugin-persistedstate/nuxt",
 		"nuxt-lodash",
 	],
-	pinia: {
-		autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
-	},
 	css: [
 		"vuetify/lib/styles/main.sass",
 		"@vuepic/vue-datepicker/dist/main.css",

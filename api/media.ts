@@ -1,13 +1,41 @@
 import { useAuthFetch } from "@/composables/useAuthFetch";
 import type { ChallengeAttachmentInfoResponse } from "@/types/media";
+import { apiUrlJoin } from "@/utils/url";
 
 export async function getUserAvatar(id: number): Promise<string> {
-	const { data: res } = await useAuthFetch(`/media/users/avatar/${id}`, {
+	const { data: res } = await useAuthFetch(`/media/users/avatar/${id}/info`, {
 		method: "GET",
 	});
 	const resObj = res.value as any;
 	if (resObj && resObj?.code !== 404) {
-		return URL.createObjectURL(resObj);
+		return apiUrlJoin(`/media/users/avatar/${id}`);
+	} else {
+		return "";
+	}
+}
+
+export async function deleteUserAvatar(id: number) {
+	const { data: res } = await useAuthFetch(`/media/users/avatar/${id}`, {
+		method: "DELETE",
+	});
+	return res.value;
+}
+
+export async function setUserAvatar(id: number, formData: FormData) {
+	const { data: res } = await useAuthFetch(`/media/users/avatar/${id}`, {
+		method: "POST",
+		data: formData,
+	});
+	return res.value;
+}
+
+export async function getTeamAvatar(id: number): Promise<string> {
+	const { data: res } = await useAuthFetch(`/media/teams/avatar/${id}/info`, {
+		method: "GET",
+	});
+	const resObj = res.value as any;
+	if (resObj && resObj?.code !== 404) {
+		return apiUrlJoin(`/media/teams/avatar/${id}`);
 	} else {
 		return "";
 	}

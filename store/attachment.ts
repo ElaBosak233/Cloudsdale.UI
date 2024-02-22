@@ -1,3 +1,4 @@
+import { defineStore } from "pinia";
 import { useAuthFetch } from "@/composables/useAuthFetch";
 
 export interface AttachmentState {

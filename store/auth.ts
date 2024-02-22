@@ -1,3 +1,4 @@
+import { defineStore } from "pinia";
 import { login, verify } from "@/api/user";
 import { useSnackBarStore } from "@/store/snackBar";
 import type { User } from "@/types/user";
@@ -31,6 +32,7 @@ export const useAuthStore = defineStore("auth", {
 			if (response && response.code === 200) {
 				this.setPgsToken(response?.token);
 				await this.verifyToken();
+				this.user = response.data;
 				await router.push("/");
 			} else {
 				snackBarStore.error(

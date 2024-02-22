@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<NavBar id="navbar" />
 		<SideBar id="sidebar" />
 		<main>
 			<div>
@@ -12,7 +13,8 @@
 
 <script setup lang="ts">
 import SideBar from "@/components/admin/SideBar.vue";
-import CornerIcon from "~/components/CornerIcon.vue";
+import CornerIcon from "@/components/ui/CornerIcon.vue";
+import NavBar from "@/components/navigations/NavBar.vue";
 </script>
 
 <style scoped lang="scss">

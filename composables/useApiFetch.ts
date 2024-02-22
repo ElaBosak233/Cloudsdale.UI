@@ -1,22 +1,6 @@
-import axios from "axios";
-import { useConfigStore } from "~/store/config";
 
-// export function useApiFetch<T> (url: string, options: UseFetchOptions<T> = {}) {
-// 	const configStore = useConfigStore();
-// 	const defaults: UseFetchOptions<T> = {
-// 		baseURL: configStore.apiUrl,
-// 		key: url,
-// 		onResponse (_ctx) {
-// 			// _ctx.response._data = new myBusinessResponse(_ctx.response._data)
-// 		},
-// 		onResponseError (_ctx) {
-// 			// throw new myBusinessError()
-// 		}
-// 	}
-// 	// for nice deep defaults, please use unjs/defu
-// 	const params = defu(options, defaults)
-// 	return useFetch(url, params)
-// }
+import { useConfigStore } from "@/store/config";
+import axios from "axios";
 
 // 定义一个 useApiFetch 函数，接收 url 和 options 作为参数
 export async function useApiFetch(url: string, options = {}) {

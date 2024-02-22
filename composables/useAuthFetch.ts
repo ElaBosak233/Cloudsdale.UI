@@ -1,30 +1,6 @@
 import axios from "axios";
-import { useAuthStore } from "~/store/auth";
-import { useConfigStore } from "~/store/config";
-
-// export function useAuthFetch<T> (url: string, options: UseFetchOptions<T> = {}) {
-// 	const configStore = useConfigStore();
-// 	const authStore = useAuthStore();
-// 	const defaults: UseFetchOptions<T> = {
-// 		baseURL: configStore.apiUrl,
-// 		key: url,
-// 		headers: {
-// 			Authorization: authStore.pgsToken
-// 		} as HeadersInit,
-// 		//
-// 		// onResponse (_ctx) {
-// 		// 	// _ctx.response._data = new myBusinessResponse(_ctx.response._data)
-// 		// },
-// 		//
-// 		// onResponseError (_ctx) {
-// 		// 	// throw new myBusinessError()
-// 		// }
-// 	}
-
-// 	// for nice deep defaults, please use unjs/defu
-// 	const params = defu(options, defaults);
-// 	return useFetch(url, params);
-// }
+import { useAuthStore } from "@/store/auth";
+import { useConfigStore } from "@/store/config";
 
 // 定义一个 useAuthFetch 函数，接收 url 和 options 作为参数
 export async function useAuthFetch(url: string, options = {}) {

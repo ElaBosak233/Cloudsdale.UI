@@ -1,7 +1,6 @@
 <template>
 	<Body>
 		<v-layout>
-			<NavBar id="navbar" />
 			<v-main>
 				<NuxtLayout>
 					<NuxtPage />
@@ -9,7 +8,7 @@
 			</v-main>
 		</v-layout>
 		<v-snackbar
-			v-model="snackBarStore.snackbar"
+			v-model="snackBarStore.enabled"
 			location="right bottom"
 			color="transparent"
 			variant="tonal"
@@ -25,7 +24,6 @@
 </template>
 
 <script lang="ts" setup>
-import NavBar from "@/components/navigations/NavBar.vue";
 import WidthLimitOverlay from "@/components/utils/WidthLimitOverlay.vue";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useConfigStore } from "@/store/config";
