@@ -24,9 +24,25 @@ export interface PodFindRequest {
 	user_id?: number;
 	team_id?: number;
 	challenge_id?: number;
-	removed_at?: number;
+	is_available?: boolean;
 	page?: number;
 	size?: number;
-	sort_key?: string;
-	sort_order?: string;
+}
+
+export interface PodCreateRequest {
+	game_id?: number;
+	team_id?: number;
+	challenge_id?: number;
+}
+
+export interface PodRemoveRequest {
+	id: number;
+	team_id?: number;
+	game_id?: number;
+}
+
+export interface PodRenewRequest {
+	id: number;
+	team_id?: number;
+	game_id?: number;
 }

@@ -27,6 +27,8 @@ import { create } from "zustand";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import ChallengeDialog from "@/components/modals/ChallengeDialog";
+import { getPods } from "@/api/pod";
+import { usePodStore } from "@/store/pod";
 
 interface State {
 	open: boolean;
@@ -80,6 +82,7 @@ function Row({ row }: { row: Challenge }) {
 						overflow: "hidden",
 						whiteSpace: "nowrap",
 						textOverflow: "ellipsis",
+						fontWeight: "bold",
 					}}
 				>
 					{row.title}
@@ -167,6 +170,8 @@ export default function Page() {
 	const configStore = useConfigStore();
 	const snackBarStore = useSnackBarStore();
 	const challengeStore = useChallengeStore();
+	const podStore = usePodStore();
+
 	const [challenges, setChallenges] = useState<Array<Challenge>>([]);
 	const [page, setPage] = useState<number>(0);
 	const [rowsPerPage, setRowsPerPage] = useState<number>(12);
@@ -214,8 +219,20 @@ export default function Page() {
 			});
 	}
 
+	function getExistPods() {
+		getPods({
+			is_available: true,
+		}).then((res) => {
+			const r = res.data;
+			r.forEach((i: any) => {
+				podStore.addExistPod(i.challenge_id, i);
+			});
+		});
+	}
+
 	useEffect(() => {
 		getChallengesData();
+		getExistPods();
 	}, [page, rowsPerPage, sortKey, sortOrder, search, challengeStore.refresh]);
 
 	return (
