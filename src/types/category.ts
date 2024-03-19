@@ -4,6 +4,6 @@ export interface Category {
 	description?: string;
 	color?: string;
 	icon?: string;
-	created_at?: string;
-	updated_at?: string;
+	created_at?: number;
+	updated_at?: number;
 }

@@ -13,8 +13,11 @@ import {
 	TableSortLabel,
 	TextField,
 	Dialog,
+	Select,
+	MenuItem,
+	SelectChangeEvent,
+	Typography,
 } from "@mui/material";
-import Logo from "@/components/widgets/Logo";
 import UIcon from "@/components/ui/UIcon";
 import { getChallenges } from "@/api/challenge";
 import { useConfigStore } from "@/store/config";
@@ -29,6 +32,7 @@ import { useChallengeStore } from "@/store/challenge";
 import ChallengeDialog from "@/components/modals/ChallengeDialog";
 import { getPods } from "@/api/pod";
 import { usePodStore } from "@/store/pod";
+import { useCategoryStore } from "@/store/category";
 
 interface State {
 	open: boolean;
@@ -145,6 +149,18 @@ function Row({ row }: { row: Challenge }) {
 					emptyIcon={<Icon path={mdiStarOutline} size={1} />}
 				/>
 			</TableCell>
+			<TableCell align={"left"}>
+				<Box
+					sx={{
+						color: color.useTextColor(
+							row.solved ? true : false,
+							row.category?.color
+						),
+					}}
+				>
+					{row?.practice_pts} pts
+				</Box>
+			</TableCell>
 			<TableCell align={"center"}>
 				<IconButton
 					sx={{
@@ -168,6 +184,7 @@ function Row({ row }: { row: Challenge }) {
 export default function Page() {
 	const store = useStore();
 	const configStore = useConfigStore();
+	const categoryStore = useCategoryStore();
 	const snackBarStore = useSnackBarStore();
 	const challengeStore = useChallengeStore();
 	const podStore = usePodStore();
@@ -176,6 +193,7 @@ export default function Page() {
 	const [page, setPage] = useState<number>(0);
 	const [rowsPerPage, setRowsPerPage] = useState<number>(12);
 	const [total, setTotal] = useState<number>(0);
+	const [category, setCategory] = useState<string>("0");
 	const [search, setSearch] = useState<string>("");
 	const [searchInput, setSearchInput] = useState<string>("");
 	const [sortKey, setSortKey] = useState<
@@ -186,7 +204,7 @@ export default function Page() {
 	);
 
 	useEffect(() => {
-		document.title = `题库 - ${configStore.pltCfg.site.title}`;
+		document.title = `练习场 - ${configStore.pltCfg.site.title}`;
 	}, []);
 
 	function handleSort(key: "id" | "difficulty" | "category_id") {
@@ -196,6 +214,10 @@ export default function Page() {
 		setSortKey(key);
 	}
 
+	function handleCategorySelect(event: SelectChangeEvent) {
+		setCategory(event.target.value);
+	}
+
 	function getChallengesData() {
 		getChallenges({
 			is_practicable: true,
@@ -203,6 +225,7 @@ export default function Page() {
 			size: rowsPerPage,
 			submission_qty: 3,
 			title: search,
+			category_id: category === "0" ? undefined : parseInt(category),
 			sort_key: sortKey,
 			sort_order: sortOrder,
 		})
@@ -224,21 +247,56 @@ export default function Page() {
 			is_available: true,
 		}).then((res) => {
 			const r = res.data;
-			r.forEach((i: any) => {
-				podStore.addExistPod(i.challenge_id, i);
-			});
+			if (r.data) {
+				r.data.forEach((i: any) => {
+					podStore.addExistPod(i.challenge_id, i);
+				});
+			} else {
+				podStore.setExistPods({});
+			}
 		});
 	}
 
 	useEffect(() => {
 		getChallengesData();
 		getExistPods();
-	}, [page, rowsPerPage, sortKey, sortOrder, search, challengeStore.refresh]);
+	}, [
+		page,
+		rowsPerPage,
+		sortKey,
+		sortOrder,
+		search,
+		category,
+		challengeStore.refresh,
+	]);
 
 	return (
 		<>
 			<Box sx={{ marginTop: "2rem", marginX: "10%" }}>
-				<Logo />
+				<Box
+					display={"flex"}
+					alignItems={"center"}
+					className={"no-select"}
+				>
+					<img
+						src="/favicon.ico"
+						alt="logo"
+						width={48}
+						height={48}
+						draggable={false}
+					/>
+					<Typography
+						sx={{
+							marginX: "0.5rem",
+							fontSize: "2rem",
+							fontWeight: "bold",
+							fontFamily: "sans-serif",
+						}}
+						color={"text.primary"}
+					>
+						练习场
+					</Typography>
+				</Box>
 				<Box sx={{ marginY: "2rem" }}>
 					<Box
 						sx={{
@@ -253,11 +311,30 @@ export default function Page() {
 							size="small"
 							placeholder="搜索"
 							value={searchInput}
-							sx={{
-								width: "20rem",
-							}}
+							fullWidth
 							onChange={(e) => setSearchInput(e.target.value)}
 						/>
+						<Select
+							value={category}
+							size="small"
+							onChange={handleCategorySelect}
+							sx={{
+								width: "10rem",
+								marginLeft: "1rem",
+							}}
+						>
+							<MenuItem value={"0"}>
+								<em>All</em>
+							</MenuItem>
+							{categoryStore.categories.map((category) => (
+								<MenuItem
+									value={String(category?.id)}
+									key={category?.id}
+								>
+									{category?.name}
+								</MenuItem>
+							))}
+						</Select>
 						<IconButton
 							sx={{ marginX: "1rem" }}
 							onClick={() => setSearch(searchInput)}
@@ -286,17 +363,7 @@ export default function Page() {
 									</TableCell>
 									<TableCell align={"left"}>标题</TableCell>
 									<TableCell align={"left"}>描述</TableCell>
-									<TableCell align={"left"}>
-										<TableSortLabel
-											active={sortKey === "category_id"}
-											direction={sortOrder}
-											onClick={() =>
-												handleSort("category_id")
-											}
-										>
-											分类
-										</TableSortLabel>
-									</TableCell>
+									<TableCell align={"left"}>分类</TableCell>
 									<TableCell align={"left"}>
 										<TableSortLabel
 											active={sortKey === "difficulty"}
@@ -308,6 +375,7 @@ export default function Page() {
 											难度
 										</TableSortLabel>
 									</TableCell>
+									<TableCell align={"left"}>分值</TableCell>
 									<TableCell align={"left"}></TableCell>
 								</TableRow>
 							</TableHead>

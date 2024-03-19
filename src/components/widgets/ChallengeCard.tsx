@@ -118,7 +118,7 @@ export default function ChallengeCard({
 						<Typography
 							sx={{ m: 1, fontWeight: "bold", color: textColor }}
 						>
-							{challenge.practice_pts} pts
+							{challenge.pts} pts
 						</Typography>
 						<Rating
 							readOnly

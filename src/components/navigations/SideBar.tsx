@@ -105,7 +105,7 @@ export default function SideBar() {
 						<Icon path={mdiHome} size={1} />
 					</IconButton>
 				</SideBarTooltip>
-				<SideBarTooltip title="题库">
+				<SideBarTooltip title="练习场">
 					<IconButton
 						sx={{ color: "white", marginTop: "5px" }}
 						onClick={() => navigate("/challenges")}

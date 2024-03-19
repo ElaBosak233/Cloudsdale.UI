@@ -43,3 +43,26 @@ export const challenge = {
 			: hexToRGBA(color as string, 0.1);
 	},
 };
+
+export const game = {
+	useChipColor: (color?: string) => {
+		const themeStore = useThemeStore();
+		switch (themeStore.mode) {
+			case "dark":
+				return hexToRGBA("#9e9e9e", 1);
+			case "light":
+			default:
+				return color;
+		}
+	},
+	useTextColor: (color?: string) => {
+		const themeStore = useThemeStore();
+		switch (themeStore.mode) {
+			case "dark":
+				return hexToRGBA("#000", 0.9);
+			case "light":
+			default:
+				return color;
+		}
+	},
+};

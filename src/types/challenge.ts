@@ -14,6 +14,7 @@ export interface Challenge {
 	is_dynamic?: boolean;
 	difficulty?: number;
 	practice_pts?: number;
+	pts?: number;
 	duration?: number;
 	flags?: Array<Flag>;
 	hints?: Array<Hint>;

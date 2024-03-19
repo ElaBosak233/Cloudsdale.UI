@@ -14,22 +14,9 @@ import { useTheme } from "@/utils/theme";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
 import { getPltCfg } from "@/api/config";
-
-function Loading(): React.ReactNode {
-	return (
-		<Box
-			sx={{
-				width: "100%",
-				height: "100vh",
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-			}}
-		>
-			<CircularProgress sx={{ color: "loading.main" }} />
-		</Box>
-	);
-}
+import { getCategories } from "@/api/category";
+import { useCategoryStore } from "@/store/category";
+import Loading from "@/components/ui/Loading";
 
 function ESnackBar(): React.ReactNode {
 	const snackBarStore = useSnackBarStore();
@@ -67,6 +54,7 @@ function ESnackBar(): React.ReactNode {
 
 export default function App() {
 	const configStore = useConfigStore();
+	const categoryStore = useCategoryStore();
 
 	// Get platform config
 	useEffect(() => {
@@ -77,6 +65,16 @@ export default function App() {
 			.catch((err) => {
 				console.log(err);
 			});
+	}, []);
+
+	// Get exists categories
+	useEffect(() => {
+		getCategories().then((res) => {
+			const r = res.data;
+			if (r.code === 200) {
+				categoryStore.setCategories(r.data);
+			}
+		});
 	}, []);
 
 	return (
