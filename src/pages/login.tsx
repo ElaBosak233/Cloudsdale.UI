@@ -63,7 +63,9 @@ export default function Page() {
 				}}
 				className={"no-select"}
 			>
-				<Logo />
+				<Box sx={{ display: "flex", justifyContent: "center" }}>
+					<Logo />
+				</Box>
 				<Box
 					sx={{
 						display: "flex",

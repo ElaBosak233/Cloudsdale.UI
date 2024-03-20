@@ -89,7 +89,7 @@ export default function Page() {
 					</IconButton>
 				</Box>
 				{games?.map((game) => (
-					<Box sx={{ marginY: "1.5rem" }}>
+					<Box sx={{ marginY: "1.5rem" }} key={game?.id as number}>
 						<GameCard game={game} />
 					</Box>
 				))}

@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { mdiCheck, mdiStar, mdiStarOutline } from "@mdi/js";
-import { useState } from "react";
 import { useThemeStore } from "@/store/theme";
 import UIcon from "@/components/ui/UIcon";
 import { hexToRGBA } from "@/utils/color";
@@ -23,7 +22,6 @@ export default function ChallengeCard({
 	challenge: Challenge;
 }): JSX.Element {
 	const themeStore = useThemeStore();
-	const [dialogOpen, setDialogOpen] = useState(false);
 
 	// const isSolved: boolean = challenge.solved ? true : false;
 
@@ -62,111 +60,105 @@ export default function ChallengeCard({
 	};
 
 	return (
-		<ButtonBase component="span">
-			<Card
-				sx={{
-					width: 275,
-					height: 150,
-					backgroundColor: bgColor,
-					position: "relative",
-					cursor: "pointer",
-					zIndex: 0,
-				}}
-				onClick={() => setDialogOpen(true)}
-			>
-				<CardContent>
-					<Chip
-						label={challenge?.category?.name}
-						size="small"
-						sx={{
-							fontSize: "0.75rem",
-							fontWeight: "500",
-							mb: "0.25rem",
-							bgcolor: chipColor,
-							color: textColor,
-						}}
-					/>
+		<Card
+			sx={{
+				width: 275,
+				height: 150,
+				backgroundColor: bgColor,
+				position: "relative",
+				cursor: "pointer",
+				zIndex: 0,
+			}}
+		>
+			<CardContent>
+				<Chip
+					label={challenge?.category?.name}
+					size="small"
+					sx={{
+						fontSize: "0.75rem",
+						fontWeight: "500",
+						mb: "0.25rem",
+						bgcolor: chipColor,
+						color: textColor,
+					}}
+				/>
+				<Typography
+					variant="h6"
+					sx={{
+						fontWeight: "bold",
+						width: 200,
+						overflow: "hidden",
+						whiteSpace: "nowrap",
+						textOverflow: "ellipsis",
+						my: 1,
+					}}
+					color={textColor}
+				>
+					{challenge.title}
+				</Typography>
+				<Divider
+					sx={{
+						my: 1,
+						bgcolor: textColor,
+						borderColor: textColor,
+						zIndex: 1,
+					}}
+				/>
+				<Box
+					style={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+					}}
+				>
 					<Typography
-						variant="h6"
-						sx={{
-							fontWeight: "bold",
-							width: 200,
-							overflow: "hidden",
-							whiteSpace: "nowrap",
-							textOverflow: "ellipsis",
-							my: 1,
-						}}
-						color={textColor}
+						sx={{ m: 1, fontWeight: "bold", color: textColor }}
 					>
-						{challenge.title}
+						{challenge.pts} pts
 					</Typography>
-					<Divider
+					<Rating
+						readOnly
+						value={challenge.difficulty}
 						sx={{
-							my: 1,
-							bgcolor: textColor,
-							borderColor: textColor,
-							zIndex: 1,
-						}}
-					/>
-					<Box
-						style={{
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "center",
-						}}
-					>
-						<Typography
-							sx={{ m: 1, fontWeight: "bold", color: textColor }}
-						>
-							{challenge.pts} pts
-						</Typography>
-						<Rating
-							readOnly
-							value={challenge.difficulty}
-							sx={{
-								color: textColor,
-								"& .MuiRating-iconEmpty": {
-									color: textColor,
-								},
-							}}
-							size="large"
-							icon={<Icon path={mdiStar} size={1.25} />}
-							emptyIcon={
-								<Icon path={mdiStarOutline} size={1.25} />
-							}
-						/>
-					</Box>
-				</CardContent>
-				{isSolved && (
-					<Box
-						sx={{
-							position: "absolute",
-							top: "0.75rem",
-							right: "0.75rem",
-							zIndex: 1,
 							color: textColor,
+							"& .MuiRating-iconEmpty": {
+								color: textColor,
+							},
 						}}
-					>
-						<Tooltip title="已解决" placement="top">
-							<Icon path={mdiCheck} size={1.25}></Icon>
-						</Tooltip>
-					</Box>
-				)}
+						size="large"
+						icon={<Icon path={mdiStar} size={1.25} />}
+						emptyIcon={<Icon path={mdiStarOutline} size={1.25} />}
+					/>
+				</Box>
+			</CardContent>
+			{isSolved && (
 				<Box
 					sx={{
 						position: "absolute",
-						right: "-1rem",
-						bottom: "-2.5rem",
-						zIndex: -1,
-						opacity: 0.2,
-						fontSize: "3rem",
+						top: "0.75rem",
+						right: "0.75rem",
+						zIndex: 1,
 						color: textColor,
 					}}
 				>
-					<UIcon path={"mdiFingerprint"} size={8} />
+					<Tooltip title="已解决" placement="top">
+						<Icon path={mdiCheck} size={1.25}></Icon>
+					</Tooltip>
 				</Box>
-				{/* <ChallengeDialog open={dialogOpen} challenge={challenge} /> */}
-			</Card>
-		</ButtonBase>
+			)}
+			<Box
+				sx={{
+					position: "absolute",
+					right: "-1rem",
+					bottom: "-2.5rem",
+					zIndex: -1,
+					opacity: 0.2,
+					fontSize: "3rem",
+					color: textColor,
+				}}
+			>
+				<UIcon path={`mdi${challenge.category?.icon}`} size={8} />
+			</Box>
+		</Card>
 	);
 }
