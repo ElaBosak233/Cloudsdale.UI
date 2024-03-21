@@ -5,6 +5,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface CategoryState {
 	categories: Array<Category>;
 	setCategories: (categories: Array<Category>) => void;
+	refresh: number;
+	setRefresh: (refresh: number) => void;
 }
 
 export const useCategoryStore = create<CategoryState>()(
@@ -12,6 +14,8 @@ export const useCategoryStore = create<CategoryState>()(
 		(set, _get) => ({
 			categories: [],
 			setCategories: (categories) => set({ categories }),
+			refresh: 0,
+			setRefresh: (refresh) => set({ refresh }),
 		}),
 		{
 			name: "category_storage",

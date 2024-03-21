@@ -19,7 +19,7 @@ import {
 	Typography,
 } from "@mui/material";
 import UIcon from "@/components/ui/UIcon";
-import { getChallenges } from "@/api/challenge";
+import { getChallenges, useChallengeApi } from "@/api/challenge";
 import { useConfigStore } from "@/store/config";
 import { useEffect, useState } from "react";
 import { Challenge } from "@/types/challenge";
@@ -182,6 +182,8 @@ function Row({ row }: { row: Challenge }) {
 }
 
 export default function Page() {
+	const challengeApi = useChallengeApi();
+
 	const store = useStore();
 	const configStore = useConfigStore();
 	const categoryStore = useCategoryStore();
@@ -219,16 +221,17 @@ export default function Page() {
 	}
 
 	function getChallengesData() {
-		getChallenges({
-			is_practicable: true,
-			page: page + 1,
-			size: rowsPerPage,
-			submission_qty: 3,
-			title: search,
-			category_id: category === "0" ? undefined : parseInt(category),
-			sort_key: sortKey,
-			sort_order: sortOrder,
-		})
+		challengeApi
+			.getChallenges({
+				is_practicable: true,
+				page: page + 1,
+				size: rowsPerPage,
+				submission_qty: 3,
+				title: search,
+				category_id: category === "0" ? undefined : parseInt(category),
+				sort_key: sortKey,
+				sort_order: sortOrder,
+			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {

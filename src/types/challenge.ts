@@ -37,3 +37,16 @@ export interface ChallengeFindRequest {
 	sort_key?: string;
 	sort_order?: string;
 }
+
+export interface ChallengeUpdateRequest {
+	id?: number;
+	title?: string;
+	description?: string;
+	category_id?: number;
+	has_attachment?: boolean;
+	is_practicable?: boolean;
+	is_dynamic?: boolean;
+	difficulty?: number;
+	practice_pts?: number;
+	duration?: number;
+}

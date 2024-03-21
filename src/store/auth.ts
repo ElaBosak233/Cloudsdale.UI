@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface AuthState {
 	user?: User;
 	pgsToken?: string;
-	setUser: (user: User) => void;
+	setUser: (user?: User) => void;
 	setPgsToken: (pgsToken: string) => void;
 }
 

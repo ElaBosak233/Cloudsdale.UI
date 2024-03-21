@@ -20,7 +20,7 @@ import {
 	mdiHexagonSlice2,
 	mdiPackageVariant,
 } from "@mdi/js";
-import { createSubmission } from "@/api/submissions";
+import { useSubmissionApi } from "@/api/submissions";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import { usePodStore } from "@/store/pod";
@@ -28,7 +28,7 @@ import Icon from "@mdi/react";
 import Markdown from "@/components/ui/Markdown";
 import { useEffect, useState } from "react";
 import { Submission } from "@/types/submission";
-import { createPod, removePod } from "@/api/pod";
+import { usePodApi } from "@/api/pod";
 import { LoadingButton } from "@mui/lab";
 import { Instance } from "@/types/instance";
 
@@ -37,6 +37,9 @@ export default function ChallengeDialog({
 }: {
 	challenge?: Challenge;
 }) {
+	const submissionApi = useSubmissionApi();
+	const podApi = usePodApi();
+
 	const snackBarStore = useSnackBarStore();
 	const challengeStore = useChallengeStore();
 	const podStore = usePodStore();
@@ -73,41 +76,44 @@ export default function ChallengeDialog({
 			return;
 		}
 		snackBarStore.info("判题中");
-		createSubmission({
-			challenge_id: challenge?.id as number,
-			flag: flag,
-		}).then((res) => {
-			const r = res.data;
-			if (r.code === 200) {
-				switch (r.status) {
-					case 1:
-						snackBarStore.warning("错误");
-						break;
-					case 2:
-						snackBarStore.success("正确");
-						setFlag("");
-						challengeStore.setRefresh(challenge?.id as number);
-						break;
-					case 3:
-						snackBarStore.error("作弊");
-						break;
-					case 4:
-						snackBarStore.info("重复提交");
-						setFlag("");
-						challengeStore.setRefresh(challenge?.id as number);
-						break;
+		submissionApi
+			.createSubmission({
+				challenge_id: challenge?.id as number,
+				flag: flag,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					switch (r.status) {
+						case 1:
+							snackBarStore.warning("错误");
+							break;
+						case 2:
+							snackBarStore.success("正确");
+							setFlag("");
+							challengeStore.setRefresh(challenge?.id as number);
+							break;
+						case 3:
+							snackBarStore.error("作弊");
+							break;
+						case 4:
+							snackBarStore.info("重复提交");
+							setFlag("");
+							challengeStore.setRefresh(challenge?.id as number);
+							break;
+					}
 				}
-			}
-		});
+			});
 	}
 
 	// 容器创建
 	function handlePodCreate() {
 		snackBarStore.info("创建中");
 		setPodCreateLoading(true);
-		createPod({
-			challenge_id: challenge?.id as number,
-		})
+		podApi
+			.createPod({
+				challenge_id: challenge?.id as number,
+			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
@@ -129,9 +135,10 @@ export default function ChallengeDialog({
 	function handlePodRemove() {
 		snackBarStore.info("删除中");
 		setPodRemoveLoading(true);
-		removePod({
-			id: podID,
-		})
+		podApi
+			.removePod({
+				id: podID,
+			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
@@ -152,9 +159,10 @@ export default function ChallengeDialog({
 	function handlePodRenew() {
 		snackBarStore.info("续期中");
 		setPodRenewLoading(true);
-		removePod({
-			id: podID,
-		})
+		podApi
+			.removePod({
+				id: podID,
+			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {

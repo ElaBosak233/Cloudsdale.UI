@@ -10,10 +10,12 @@ import {
 import { mdiMagnify } from "@mdi/js";
 import { Icon } from "@mdi/react";
 import { useEffect, useState } from "react";
-import { getGames } from "@/api/game";
+import { useGameApi } from "@/api/game";
 import { Game } from "@/types/game";
 
 export default function Page() {
+	const gameApi = useGameApi();
+
 	const configStore = useConfigStore();
 
 	const [games, setGames] = useState<Array<Game>>();
@@ -25,17 +27,19 @@ export default function Page() {
 	}, []);
 
 	function getGamesData() {
-		getGames({
-			is_enabled: true,
-			size: 3,
-			page: page,
-		}).then((res) => {
-			const r = res.data;
-			if (r.code === 200) {
-				setGames(r.data);
-				setPages(r.pages);
-			}
-		});
+		gameApi
+			.getGames({
+				is_enabled: true,
+				size: 3,
+				page: page,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					setGames(r.data);
+					setPages(r.pages);
+				}
+			});
 	}
 
 	useEffect(() => {

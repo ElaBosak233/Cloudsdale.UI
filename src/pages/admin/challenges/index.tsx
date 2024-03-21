@@ -1,4 +1,8 @@
-import { getChallenges } from "@/api/challenge";
+import {
+	getChallenges,
+	updateChallenge,
+	useChallengeApi,
+} from "@/api/challenge";
 import withAdmin from "@/components/layouts/withAdmin";
 import { useChallengeStore } from "@/store/challenge";
 import { useConfigStore } from "@/store/config";
@@ -20,6 +24,7 @@ import {
 	Rating,
 	Select,
 	SelectChangeEvent,
+	Switch,
 	Table,
 	TableBody,
 	TableCell,
@@ -35,8 +40,39 @@ import { useEffect, useState } from "react";
 import { useCategoryStore } from "@/store/category";
 import UIcon from "@/components/ui/UIcon";
 import { challenge as color } from "@/utils/color";
+import { useNavigate } from "react-router";
 
 function Row({ row }: { row: Challenge }) {
+	const snackBarStore = useSnackBarStore();
+
+	const navigate = useNavigate();
+
+	const [isPracticable, setIsPracticable] = useState<boolean>(
+		row?.is_practicable as boolean
+	);
+
+	function updateChallengeData() {
+		updateChallenge({
+			id: row.id,
+			is_practicable: isPracticable,
+		}).then((res) => {
+			const r = res.data;
+			if (r.code === 200) {
+				snackBarStore.success("题目更新成功");
+			}
+		});
+	}
+
+	function handlePracticableChange() {
+		setIsPracticable(!isPracticable);
+	}
+
+	useEffect(() => {
+		if (isPracticable !== row.is_practicable) {
+			updateChallengeData();
+		}
+	}, [isPracticable]);
+
 	return (
 		<TableRow>
 			<TableCell align={"left"}>
@@ -94,11 +130,15 @@ function Row({ row }: { row: Challenge }) {
 					emptyIcon={<Icon path={mdiStarOutline} size={1} />}
 				/>
 			</TableCell>
-			<TableCell align={"left"}>
-				<Box>{row?.practice_pts} pts</Box>
+			<TableCell align={"left"} onClick={handlePracticableChange}>
+				<Switch checked={isPracticable} />
 			</TableCell>
 			<TableCell align={"center"}>
-				<IconButton sx={{ marginX: "0.1rem" }} color="primary">
+				<IconButton
+					sx={{ marginX: "0.1rem" }}
+					color="primary"
+					onClick={() => navigate(`/admin/challenges/${row.id}`)}
+				>
 					<Icon path={mdiBookEdit} size={1} />
 				</IconButton>
 				<IconButton sx={{ marginX: "0.1rem" }} color="error">
@@ -110,6 +150,8 @@ function Row({ row }: { row: Challenge }) {
 }
 
 function Page() {
+	const challengeApi = useChallengeApi();
+
 	const configStore = useConfigStore();
 	const snackBarStore = useSnackBarStore();
 	const challengeStore = useChallengeStore();
@@ -128,15 +170,16 @@ function Page() {
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>();
 
 	function getChallengesData() {
-		getChallenges({
-			page: page + 1,
-			size: rowsPerPage,
-			submission_qty: 3,
-			title: search,
-			category_id: category === "0" ? undefined : parseInt(category),
-			sort_key: sortKey,
-			sort_order: sortOrder,
-		})
+		challengeApi
+			.getChallenges({
+				page: page + 1,
+				size: rowsPerPage,
+				submission_qty: 3,
+				title: search,
+				category_id: category === "0" ? undefined : parseInt(category),
+				sort_key: sortKey,
+				sort_order: sortOrder,
+			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
@@ -178,114 +221,116 @@ function Page() {
 	}, []);
 
 	return (
-		<Paper
-			sx={{
-				padding: "1.5rem",
-				minHeight: "82vh",
-			}}
-		>
-			<Box
+		<>
+			<Paper
 				sx={{
-					display: "flex",
-					justifyContent: "end",
-					marginY: "1rem",
+					padding: "1.5rem",
+					minHeight: "82vh",
 				}}
 			>
-				<TextField
-					hiddenLabel
-					variant="filled"
-					size="small"
-					placeholder="搜索"
-					value={searchInput}
-					fullWidth
-					onChange={(e) => setSearchInput(e.target.value)}
-				/>
-				<Select
-					value={category}
-					size="small"
-					onChange={handleCategorySelect}
+				<Box
 					sx={{
-						width: "10rem",
-						marginLeft: "1rem",
+						display: "flex",
+						justifyContent: "end",
+						marginY: "1rem",
 					}}
 				>
-					<MenuItem value={"0"}>
-						<em>All</em>
-					</MenuItem>
-					{categoryStore.categories.map((category) => (
-						<MenuItem
-							value={String(category?.id)}
-							key={category?.id}
-						>
-							{category?.name}
+					<TextField
+						hiddenLabel
+						variant="filled"
+						size="small"
+						placeholder="搜索"
+						value={searchInput}
+						fullWidth
+						onChange={(e) => setSearchInput(e.target.value)}
+					/>
+					<Select
+						value={category}
+						size="small"
+						onChange={handleCategorySelect}
+						sx={{
+							width: "10rem",
+							marginLeft: "1rem",
+						}}
+					>
+						<MenuItem value={"0"}>
+							<em>All</em>
 						</MenuItem>
-					))}
-				</Select>
-				<IconButton
-					sx={{ marginX: "0.5rem" }}
-					onClick={() => setSearch(searchInput)}
-				>
-					<Icon path={mdiMagnify} size={1} />
-				</IconButton>
-				<IconButton sx={{ marginRight: "0.5rem" }}>
-					<Icon path={mdiBookPlus} size={1} />
-				</IconButton>
-			</Box>
-			<TableContainer
-				component={Paper}
-				sx={{
-					borderTopLeftRadius: "0.5rem",
-					borderTopRightRadius: "0.5rem",
-				}}
-			>
-				<Table stickyHeader size={"small"}>
-					<TableHead sx={{ height: "3.5rem" }}>
-						<TableRow>
-							<TableCell align={"left"}>
-								<TableSortLabel
-									active={sortKey === "id"}
-									direction={sortOrder}
-									onClick={() => handleSort("id")}
-								>
-									ID
-								</TableSortLabel>
-							</TableCell>
-							<TableCell align={"left"}>标题</TableCell>
-							<TableCell align={"left"}>描述</TableCell>
-							<TableCell align={"left"}>分类</TableCell>
-							<TableCell align={"left"}>难度</TableCell>
-							<TableCell align={"left"}>练习分值</TableCell>
-							<TableCell align={"left"}></TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{challenges.map((row) => (
-							<Row row={row} key={row.id} />
+						{categoryStore.categories.map((category) => (
+							<MenuItem
+								value={String(category?.id)}
+								key={category?.id}
+							>
+								{category?.name}
+							</MenuItem>
 						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
-			<TablePagination
-				rowsPerPageOptions={[11, 25, 50]}
-				component="div"
-				count={total}
-				rowsPerPage={rowsPerPage}
-				page={page}
-				labelRowsPerPage={"每页显示"}
-				labelDisplayedRows={({ from, to, count }) =>
-					`${from}-${to} 共 ${count}`
-				}
-				onPageChange={(event: unknown, newPage: number) => {
-					setPage(newPage);
-				}}
-				onRowsPerPageChange={(
-					event: React.ChangeEvent<HTMLInputElement>
-				) => {
-					setRowsPerPage(parseInt(event.target.value));
-					setPage(0);
-				}}
-			/>
-		</Paper>
+					</Select>
+					<IconButton
+						sx={{ marginX: "0.5rem" }}
+						onClick={() => setSearch(searchInput)}
+					>
+						<Icon path={mdiMagnify} size={1} />
+					</IconButton>
+					<IconButton sx={{ marginRight: "0.5rem" }}>
+						<Icon path={mdiBookPlus} size={1} />
+					</IconButton>
+				</Box>
+				<TableContainer
+					component={Paper}
+					sx={{
+						borderTopLeftRadius: "0.5rem",
+						borderTopRightRadius: "0.5rem",
+					}}
+				>
+					<Table stickyHeader size={"small"}>
+						<TableHead sx={{ height: "3.5rem" }}>
+							<TableRow>
+								<TableCell align={"left"}>
+									<TableSortLabel
+										active={sortKey === "id"}
+										direction={sortOrder}
+										onClick={() => handleSort("id")}
+									>
+										ID
+									</TableSortLabel>
+								</TableCell>
+								<TableCell align={"left"}>标题</TableCell>
+								<TableCell align={"left"}>描述</TableCell>
+								<TableCell align={"left"}>分类</TableCell>
+								<TableCell align={"left"}>难度</TableCell>
+								<TableCell align={"left"}>练习题</TableCell>
+								<TableCell align={"left"}></TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{challenges.map((row) => (
+								<Row row={row} key={row.id} />
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+				<TablePagination
+					rowsPerPageOptions={[11, 25, 50]}
+					component="div"
+					count={total}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					labelRowsPerPage={"每页显示"}
+					labelDisplayedRows={({ from, to, count }) =>
+						`${from}-${to} 共 ${count}`
+					}
+					onPageChange={(event: unknown, newPage: number) => {
+						setPage(newPage);
+					}}
+					onRowsPerPageChange={(
+						event: React.ChangeEvent<HTMLInputElement>
+					) => {
+						setRowsPerPage(parseInt(event.target.value));
+						setPage(0);
+					}}
+				/>
+			</Paper>
+		</>
 	);
 }
 
