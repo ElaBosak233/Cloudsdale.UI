@@ -30,6 +30,7 @@ export interface ChallengeFindRequest {
 	has_attachment?: boolean;
 	is_practicable?: boolean;
 	is_dynamic?: boolean;
+	is_detailed?: boolean;
 	difficulty?: number;
 	page?: number;
 	size?: number;

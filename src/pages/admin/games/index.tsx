@@ -37,28 +37,6 @@ function Row({ row }: { row: Game }) {
 		}
 	};
 
-	// function updateChallengeData() {
-	// 	updateChallenge({
-	// 		id: row.id,
-	// 		is_practicable: isPracticable,
-	// 	}).then((res) => {
-	// 		const r = res.data;
-	// 		if (r.code === 200) {
-	// 			snackBarStore.success("题目更新成功");
-	// 		}
-	// 	});
-	// }
-
-	// function handlePracticableChange() {
-	// 	setIsPracticable(!isPracticable);
-	// }
-
-	// useEffect(() => {
-	// 	if (isPracticable !== row.is_practicable) {
-	// 		updateChallengeData();
-	// 	}
-	// }, [isPracticable]);
-
 	return (
 		<TableRow>
 			<TableCell align={"left"}>
@@ -132,6 +110,9 @@ function Row({ row }: { row: Game }) {
 									? "error"
 									: "success"
 						}
+						sx={{
+							color: "white",
+						}}
 					></Chip>
 				</Box>
 			</TableCell>

@@ -1,8 +1,4 @@
-import {
-	getChallenges,
-	updateChallenge,
-	useChallengeApi,
-} from "@/api/challenge";
+import { useChallengeApi } from "@/api/challenge";
 import withAdmin from "@/components/layouts/withAdmin";
 import { useChallengeStore } from "@/store/challenge";
 import { useConfigStore } from "@/store/config";
@@ -44,6 +40,7 @@ import { useNavigate } from "react-router";
 
 function Row({ row }: { row: Challenge }) {
 	const snackBarStore = useSnackBarStore();
+	const challengeApi = useChallengeApi();
 
 	const navigate = useNavigate();
 
@@ -52,15 +49,17 @@ function Row({ row }: { row: Challenge }) {
 	);
 
 	function updateChallengeData() {
-		updateChallenge({
-			id: row.id,
-			is_practicable: isPracticable,
-		}).then((res) => {
-			const r = res.data;
-			if (r.code === 200) {
-				snackBarStore.success("题目更新成功");
-			}
-		});
+		challengeApi
+			.updateChallenge({
+				id: row.id,
+				is_practicable: isPracticable,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("题目更新成功");
+				}
+			});
 	}
 
 	function handlePracticableChange() {
@@ -70,6 +69,7 @@ function Row({ row }: { row: Challenge }) {
 	useEffect(() => {
 		if (isPracticable !== row.is_practicable) {
 			updateChallengeData();
+			row.is_practicable = isPracticable;
 		}
 	}, [isPracticable]);
 

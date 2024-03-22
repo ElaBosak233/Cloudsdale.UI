@@ -26,3 +26,18 @@ export interface SubmissionCreateRequest {
 	team_id?: number;
 	game_id?: number;
 }
+
+export interface SubmissionFindRequest {
+	id?: number;
+	flag?: string;
+	status?: number;
+	user_id?: number;
+	is_detailed?: boolean;
+	challenge_id?: number;
+	team_id?: number;
+	game_id?: number;
+}
+
+export interface SubmissionDeleteRequest {
+	id?: number;
+}

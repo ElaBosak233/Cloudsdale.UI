@@ -20,7 +20,7 @@ import {
 	mdiHexagonSlice2,
 	mdiPackageVariant,
 } from "@mdi/js";
-import { useSubmissionApi } from "@/api/submissions";
+import { useSubmissionApi } from "@/api/submission";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import { usePodStore } from "@/store/pod";
@@ -300,6 +300,7 @@ export default function ChallengeDialog({
 											display: "flex",
 											alignItems: "center",
 											paddingX: "0.5rem",
+											marginTop: "1rem",
 										}}
 									>
 										<Icon
