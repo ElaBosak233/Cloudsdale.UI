@@ -12,17 +12,6 @@ export default function Page() {
 		document.title = `${configStore?.pltCfg?.site?.title}`;
 	}, []);
 
-	useEffect(() => {
-		api.get("/")
-			.then((res: any) => {
-				console.log(res);
-			})
-			.catch((err: any) => {
-				console.log(err);
-			});
-		setCount(count + 1);
-	}, []);
-
 	return (
 		<>
 			<Box sx={{ marginTop: "2rem", marginX: "10%" }}>
