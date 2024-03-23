@@ -19,7 +19,7 @@ import {
 	Typography,
 } from "@mui/material";
 import UIcon from "@/components/ui/UIcon";
-import { getChallenges, useChallengeApi } from "@/api/challenge";
+import { useChallengeApi } from "@/api/challenge";
 import { useConfigStore } from "@/store/config";
 import { useEffect, useState } from "react";
 import { Challenge } from "@/types/challenge";
@@ -30,7 +30,7 @@ import { create } from "zustand";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import ChallengeDialog from "@/components/modals/ChallengeDialog";
-import { getPods } from "@/api/pod";
+import { usePodApi } from "@/api/pod";
 import { usePodStore } from "@/store/pod";
 import { useCategoryStore } from "@/store/category";
 
@@ -183,6 +183,7 @@ function Row({ row }: { row: Challenge }) {
 
 export default function Page() {
 	const challengeApi = useChallengeApi();
+	const podApi = usePodApi();
 
 	const store = useStore();
 	const configStore = useConfigStore();
@@ -206,7 +207,7 @@ export default function Page() {
 	);
 
 	useEffect(() => {
-		document.title = `练习场 - ${configStore.pltCfg.site.title}`;
+		document.title = `练习场 - ${configStore?.pltCfg?.site?.title}`;
 	}, []);
 
 	function handleSort(key: "id" | "difficulty" | "category_id") {
@@ -246,18 +247,20 @@ export default function Page() {
 	}
 
 	function getExistPods() {
-		getPods({
-			is_available: true,
-		}).then((res) => {
-			const r = res.data;
-			if (r.data) {
-				r.data.forEach((i: any) => {
-					podStore.addExistPod(i.challenge_id, i);
-				});
-			} else {
-				podStore.setExistPods({});
-			}
-		});
+		podApi
+			.getPods({
+				is_available: true,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.data) {
+					r.data.forEach((i: any) => {
+						podStore.addExistPod(i.challenge_id, i);
+					});
+				} else {
+					podStore.setExistPods({});
+				}
+			});
 	}
 
 	useEffect(() => {
@@ -383,7 +386,7 @@ export default function Page() {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{challenges.map((row) => (
+								{challenges?.map((row) => (
 									<Row row={row} key={row.id} />
 								))}
 							</TableBody>

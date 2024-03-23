@@ -1,46 +1,296 @@
-import { getChallenges, updateChallenge } from "@/api/challenge";
 import withAdmin from "@/components/layouts/withAdmin";
-import { useChallengeStore } from "@/store/challenge";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
-import { Challenge } from "@/types/challenge";
 import {
 	mdiBookEdit,
 	mdiBookPlus,
+	mdiContentSave,
 	mdiDelete,
-	mdiMagnify,
-	mdiStar,
-	mdiStarOutline,
+	mdiPuzzleEdit,
 } from "@mdi/js";
 import {
 	Box,
+	Button,
+	Card,
+	Dialog,
+	Divider,
 	IconButton,
-	MenuItem,
 	Paper,
-	Rating,
-	Select,
-	SelectChangeEvent,
-	Switch,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
 	TableHead,
-	TablePagination,
 	TableRow,
-	TableSortLabel,
 	TextField,
+	Typography,
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { useCategoryStore } from "@/store/category";
 import UIcon from "@/components/ui/UIcon";
 import { challenge as color } from "@/utils/color";
-import { getCategories } from "@/api/category";
+import { useCategoryApi } from "@/api/category";
 import { Category } from "@/types/category";
-import Loading from "@/components/ui/Loading";
+import { create } from "zustand";
+
+interface State {
+	editOpen: boolean;
+	setEditOpen: (editOpen: boolean) => void;
+	mode: "create" | "edit";
+	setMode: (mode: "create" | "edit") => void;
+	deleteOpen: boolean;
+	setDeleteOpen: (deleteOpen: boolean) => void;
+	category?: Category;
+	setCategory: (category: Category) => void;
+	clearCategory: () => void;
+}
+
+const useStore = create<State>((set) => ({
+	editOpen: false,
+	setEditOpen: (editOpen) => set({ editOpen }),
+	mode: "create",
+	setMode: (mode) => set({ mode }),
+	deleteOpen: false,
+	setDeleteOpen: (deleteOpen) => set({ deleteOpen }),
+	setCategory: (category) => set({ category }),
+	clearCategory: () => set({ category: undefined }),
+}));
+
+function Edit() {
+	const store = useStore();
+	const categoryStore = useCategoryStore();
+	const snackBarStore = useSnackBarStore();
+	const categoryApi = useCategoryApi();
+
+	const [name, setName] = useState<string>("");
+	const [description, setDescription] = useState<string>("");
+	const [color, setColor] = useState<string>("");
+	const [icon, setIcon] = useState<string>("");
+
+	function createCategory() {
+		categoryApi
+			.createCategory({
+				name: name,
+				description: description,
+				color: color,
+				icon: icon,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("创建成功");
+				}
+				store.setEditOpen(false);
+				store.clearCategory();
+				categoryStore.setRefresh(categoryStore.refresh + 1);
+			});
+	}
+
+	function updateCategory() {
+		categoryApi
+			.updateCategory({
+				id: store.category?.id as number,
+				name: name,
+				description: description,
+				color: color,
+				icon: icon,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("保存成功");
+				}
+				store.setEditOpen(false);
+				store.clearCategory();
+				categoryStore.setRefresh(categoryStore.refresh + 1);
+			});
+	}
+
+	useEffect(() => {
+		if (store.category) {
+			setName(store?.category?.name || "");
+			setDescription(store?.category?.description || "");
+			setColor(store?.category?.color || "");
+			setIcon(store?.category?.icon || "");
+		}
+	}, [store.category]);
+
+	return (
+		<Card
+			sx={{
+				width: "65vh",
+				padding: "1rem",
+				display: "flex",
+				flexDirection: "column",
+			}}
+		>
+			<Box sx={{ display: "flex", alignItems: "center" }}>
+				<Icon path={mdiPuzzleEdit} size={1} />
+				<Typography
+					sx={{
+						marginX: "0.5rem",
+						fontWeight: "bold",
+					}}
+				>
+					{store.mode === "create" ? "创建分类" : "编辑分类"}
+				</Typography>
+			</Box>
+			<Divider sx={{ marginY: "0.75rem" }} />
+			<Box
+				sx={{
+					display: "flex",
+				}}
+			>
+				<TextField
+					label="名称"
+					value={name}
+					sx={{
+						width: "60%",
+					}}
+					onChange={(e) => setName(e.target.value)}
+				/>
+				<TextField
+					label="颜色"
+					value={color}
+					sx={{
+						width: "40%",
+						marginLeft: "1rem",
+					}}
+					onChange={(e) => setColor(e.target.value)}
+				/>
+			</Box>
+			<Box>
+				<TextField
+					label="图标"
+					value={icon}
+					sx={{
+						width: "100%",
+						marginTop: "1rem",
+					}}
+					onChange={(e) => setIcon(e.target.value)}
+				/>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					marginTop: "1rem",
+				}}
+			>
+				<TextField
+					multiline
+					rows={4}
+					label="描述"
+					value={description}
+					sx={{
+						width: "100%",
+					}}
+					onChange={(e) => setDescription(e.target.value)}
+				/>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "end",
+					marginTop: "1rem",
+				}}
+			>
+				<Button
+					size="large"
+					variant="contained"
+					disableElevation
+					startIcon={<Icon path={mdiContentSave} size={1} />}
+					onClick={() => {
+						store.mode === "create"
+							? createCategory()
+							: updateCategory();
+					}}
+				>
+					{store.mode === "create" ? "创建" : "保存"}
+				</Button>
+			</Box>
+		</Card>
+	);
+}
+
+function Delete() {
+	const store = useStore();
+	const categoryStore = useCategoryStore();
+	const snackBarStore = useSnackBarStore();
+	const categoryApi = useCategoryApi();
+
+	function deleteCategory() {
+		categoryApi
+			.deleteCategory({
+				id: store.category?.id as number,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("删除成功");
+				}
+				store.setDeleteOpen(false);
+				store.clearCategory();
+				categoryStore.setRefresh(categoryStore.refresh + 1);
+			});
+	}
+
+	return (
+		<Card
+			sx={{
+				width: "65vh",
+				padding: "1rem",
+				display: "flex",
+				flexDirection: "column",
+			}}
+		>
+			<Box sx={{ display: "flex", alignItems: "center" }}>
+				<Icon path={mdiDelete} size={1} />
+				<Typography
+					sx={{
+						marginX: "0.5rem",
+						fontWeight: "bold",
+					}}
+				>
+					删除分类
+				</Typography>
+			</Box>
+			<Divider sx={{ marginY: "0.75rem" }} />
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "center",
+				}}
+			>
+				<Typography>确定删除 {store.category?.name} 吗？</Typography>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "end",
+					marginTop: "1rem",
+				}}
+			>
+				<Button
+					size="large"
+					variant="contained"
+					disableElevation
+					color="error"
+					startIcon={<Icon path={mdiDelete} size={1} />}
+					onClick={() => {
+						deleteCategory();
+					}}
+				>
+					删除
+				</Button>
+			</Box>
+		</Card>
+	);
+}
 
 function Row({ row }: { row: Category }) {
+	const store = useStore();
+
 	return (
 		<TableRow>
 			<TableCell align={"left"}>
@@ -94,10 +344,25 @@ function Row({ row }: { row: Category }) {
 				</Box>
 			</TableCell>
 			<TableCell align={"center"}>
-				<IconButton sx={{ marginX: "0.1rem" }} color="primary">
+				<IconButton
+					sx={{ marginX: "0.1rem" }}
+					color="primary"
+					onClick={() => {
+						store.setEditOpen(true);
+						store.setCategory(row);
+						store.setMode("edit");
+					}}
+				>
 					<Icon path={mdiBookEdit} size={1} />
 				</IconButton>
-				<IconButton sx={{ marginX: "0.1rem" }} color="error">
+				<IconButton
+					sx={{ marginX: "0.1rem" }}
+					color="error"
+					onClick={() => {
+						store.setDeleteOpen(true);
+						store.setCategory(row);
+					}}
+				>
 					<Icon path={mdiDelete} size={1} />
 				</IconButton>
 			</TableCell>
@@ -106,14 +371,18 @@ function Row({ row }: { row: Category }) {
 }
 
 function Page() {
+	const store = useStore();
 	const configStore = useConfigStore();
 	const snackBarStore = useSnackBarStore();
 	const categoryStore = useCategoryStore();
 
+	const categoryApi = useCategoryApi();
+
 	const [categories, setCategories] = useState<Array<Category>>([]);
 
 	function getCategoriesData() {
-		getCategories()
+		categoryApi
+			.getCategories()
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
@@ -130,7 +399,7 @@ function Page() {
 	}, [categoryStore.refresh]);
 
 	useEffect(() => {
-		document.title = `分类管理 - ${configStore.pltCfg.site.title}`;
+		document.title = `分类管理 - ${configStore?.pltCfg?.site?.title}`;
 	}, []);
 
 	return (
@@ -157,7 +426,13 @@ function Page() {
 								<TableCell align={"left"}>颜色</TableCell>
 								<TableCell align={"left"}>图标</TableCell>
 								<TableCell align={"center"}>
-									<IconButton>
+									<IconButton
+										onClick={() => {
+											store.clearCategory();
+											store.setEditOpen(true);
+											store.setMode("create");
+										}}
+									>
 										<Icon path={mdiBookPlus} size={1} />
 									</IconButton>
 								</TableCell>
@@ -171,6 +446,20 @@ function Page() {
 					</Table>
 				</TableContainer>
 			</Paper>
+			<Dialog
+				open={store.editOpen}
+				maxWidth={false}
+				onClose={() => store.setEditOpen(false)}
+			>
+				<Edit />
+			</Dialog>
+			<Dialog
+				open={store.deleteOpen}
+				maxWidth={false}
+				onClose={() => store.setDeleteOpen(false)}
+			>
+				<Delete />
+			</Dialog>
 		</>
 	);
 }

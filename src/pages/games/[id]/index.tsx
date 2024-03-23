@@ -1,4 +1,4 @@
-import { getGameByID } from "@/api/game";
+import { useGameApi } from "@/api/game";
 import Loading from "@/components/ui/Loading";
 import Markdown from "@/components/ui/Markdown";
 import { useConfigStore } from "@/store/config";
@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 export default function Page() {
+	const gameApi = useGameApi();
+
 	const { id } = useParams<{ id: string }>();
 	const [game, setGame] = useState<Game>();
 	const navigate = useNavigate();
@@ -29,7 +31,7 @@ export default function Page() {
 		((game?.ended_at as number) - (game?.started_at as number));
 
 	function getGameData() {
-		getGameByID(parseInt(id as string)).then((res) => {
+		gameApi.getGameByID(parseInt(id as string)).then((res) => {
 			const r = res.data;
 			if (r.code === 200) {
 				setGame(r.data);
@@ -42,7 +44,7 @@ export default function Page() {
 	}, []);
 
 	useEffect(() => {
-		document.title = `${game?.title} - ${configStore.pltCfg.site.title}`;
+		document.title = `${game?.title} - ${configStore?.pltCfg?.site?.title}`;
 	}, [game]);
 
 	return (

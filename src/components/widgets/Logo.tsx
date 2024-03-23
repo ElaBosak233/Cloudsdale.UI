@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material";
 import { useConfigStore } from "@/store/config";
 
 export default function Logo() {
-
 	const configStore = useConfigStore();
 
 	return (
@@ -23,7 +22,7 @@ export default function Logo() {
 				}}
 				color={"text.primary"}
 			>
-				{configStore.pltCfg.site.title}
+				{configStore?.pltCfg?.site?.title}
 			</Typography>
 		</Box>
 	);

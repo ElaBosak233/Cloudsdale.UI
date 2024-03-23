@@ -1,7 +1,6 @@
 import {
 	Alert,
 	Box,
-	CircularProgress,
 	CssBaseline,
 	Snackbar,
 	ThemeProvider,
@@ -13,8 +12,8 @@ import SideBar from "@/components/navigations/SideBar";
 import { useTheme } from "@/utils/theme";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
-import { getPltCfg } from "@/api/config";
-import { getCategories } from "@/api/category";
+import { useConfigApi } from "@/api/config";
+import { useCategoryApi } from "@/api/category";
 import { useCategoryStore } from "@/store/category";
 import Loading from "@/components/ui/Loading";
 
@@ -55,27 +54,31 @@ function ESnackBar(): React.ReactNode {
 export default function App() {
 	const configStore = useConfigStore();
 	const categoryStore = useCategoryStore();
+	const categoryApi = useCategoryApi();
+	const configApi = useConfigApi();
 
 	// Get platform config
 	useEffect(() => {
-		getPltCfg()
+		configApi
+			.getPltCfg()
 			.then((res) => {
-				configStore.setPltCfg(res.data["data"]);
+				const r = res.data;
+				configStore.setPltCfg(r.data);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-	}, []);
+	}, [configStore.refresh]);
 
 	// Get exists categories
 	useEffect(() => {
-		getCategories().then((res) => {
+		categoryApi.getCategories().then((res) => {
 			const r = res.data;
 			if (r.code === 200) {
 				categoryStore.setCategories(r.data);
 			}
 		});
-	}, []);
+	}, [categoryStore.refresh]);
 
 	return (
 		<>

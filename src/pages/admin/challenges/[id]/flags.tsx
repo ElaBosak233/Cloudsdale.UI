@@ -350,6 +350,10 @@ function Page() {
 		getChallengeData();
 	}, [challengeStore.refresh]);
 
+	useEffect(() => {
+		document.title = `Flag - ${challenge?.title}`;
+	}, [challenge]);
+
 	return (
 		<>
 			<Paper

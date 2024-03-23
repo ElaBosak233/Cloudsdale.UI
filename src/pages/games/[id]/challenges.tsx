@@ -1,4 +1,4 @@
-import { getGameByID, getGameChallenges } from "@/api/game";
+import { useGameApi } from "@/api/game";
 import ChallengeDialog from "@/components/modals/ChallengeDialog";
 import Loading from "@/components/ui/Loading";
 import UIcon from "@/components/ui/UIcon";
@@ -24,6 +24,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 export default function Page() {
+	const gameApi = useGameApi();
+
 	const { id } = useParams<{ id: string }>();
 	const challengeStore = useChallengeStore();
 
@@ -36,7 +38,7 @@ export default function Page() {
 	const [selectedChallenge, setSelectedChallenge] = useState<Challenge>();
 
 	function getGameData() {
-		getGameByID(parseInt(id as string)).then((res) => {
+		gameApi.getGameByID(parseInt(id as string)).then((res) => {
 			const r = res.data;
 			if (r.code === 200) {
 				setGame(r.data);
@@ -45,15 +47,17 @@ export default function Page() {
 	}
 
 	function getChallengesData() {
-		getGameChallenges({
-			game_id: game?.id,
-			is_enabled: true,
-		}).then((res) => {
-			const r = res.data;
-			if (r.code === 200) {
-				setChallenges(r.data);
-			}
-		});
+		gameApi
+			.getGameChallenges({
+				game_id: game?.id,
+				is_enabled: true,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					setChallenges(r.data);
+				}
+			});
 	}
 
 	useEffect(() => {

@@ -3,23 +3,7 @@ import {
 	CategoryDeleteRequest,
 	CategoryUpdateRequest,
 } from "@/types/category";
-import { auth, useAuth } from "@/utils/axios";
-
-export function getCategories() {
-	return auth.get("/categories/");
-}
-
-export function createCategory(request: CategoryCreateRequest) {
-	return auth.post("/categories/", request);
-}
-
-export function updateCategory(request: CategoryUpdateRequest) {
-	return auth.put(`/categories/${request.id}`, request);
-}
-
-export function deleteCategory(request: CategoryDeleteRequest) {
-	return auth.delete(`/categories/${request.id}`);
-}
+import { useAuth } from "@/utils/axios";
 
 export function useCategoryApi() {
 	const auth = useAuth();

@@ -37,6 +37,7 @@ function Page() {
 	const [isPracticable, setIsPracticable] = useState<boolean>(false);
 	const [isDynamic, setIsDynamic] = useState<boolean>(false);
 	const [practicePts, setPracticePts] = useState<number>(0);
+	const [duration, setDuration] = useState<number>(0);
 
 	function getChallengeData() {
 		challengeApi
@@ -55,6 +56,7 @@ function Page() {
 				setDifficulty(r.data[0].difficulty);
 				setHasAttachment(r.data[0].has_attachment);
 				setPracticePts(r.data[0].practice_pts);
+				setDuration(r.data[0].duration);
 			});
 	}
 
@@ -69,6 +71,7 @@ function Page() {
 				has_attachment: hasAttachment,
 				is_dynamic: isDynamic,
 				is_practicable: isPracticable,
+				duration: duration,
 				practice_pts: practicePts,
 			})
 			.then((res) => {
@@ -83,6 +86,10 @@ function Page() {
 	useEffect(() => {
 		getChallengeData();
 	}, [challengeStore.refresh]);
+
+	useEffect(() => {
+		document.title = `${challenge?.title} - 题库管理`;
+	}, [challenge]);
 
 	return (
 		<>
@@ -195,6 +202,14 @@ function Page() {
 							size="small"
 							onChange={(e) =>
 								setPracticePts(parseInt(e.target.value) || 0)
+							}
+						/>
+						<TextField
+							label="动态容器持续时长（秒）"
+							value={duration}
+							size="small"
+							onChange={(e) =>
+								setDuration(parseInt(e.target.value) || 0)
 							}
 						/>
 					</Box>

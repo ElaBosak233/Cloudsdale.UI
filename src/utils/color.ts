@@ -1,7 +1,7 @@
 import { useThemeStore } from "@/store/theme";
 
 export function hexToRGBA(hex: string, alpha = 1) {
-	if (hex.length === 4) {
+	if (hex?.length === 4) {
 		hex = "#" + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
 	}
 	const r = parseInt(hex.slice(1, 3), 16);

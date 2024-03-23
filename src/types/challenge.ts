@@ -51,3 +51,19 @@ export interface ChallengeUpdateRequest {
 	practice_pts?: number;
 	duration?: number;
 }
+
+export interface ChallengeCreateRequest {
+	title?: string;
+	description?: string;
+	category_id?: number;
+	has_attachment?: boolean;
+	is_practicable?: boolean;
+	is_dynamic?: boolean;
+	difficulty?: number;
+	practice_pts?: number;
+	duration?: number;
+}
+
+export interface ChallengeDeleteRequest {
+	id?: number;
+}

@@ -179,7 +179,7 @@ function Page() {
 	}, [page, rowsPerPage, search, sortKey, sortOrder, challengeStore.refresh]);
 
 	useEffect(() => {
-		document.title = `比赛管理 - ${configStore.pltCfg.site.title}`;
+		document.title = `比赛管理 - ${configStore?.pltCfg?.site?.title}`;
 	}, []);
 
 	return (

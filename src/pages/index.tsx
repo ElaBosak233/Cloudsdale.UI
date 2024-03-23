@@ -9,7 +9,7 @@ export default function Page() {
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
-		document.title = `${configStore.pltCfg.site.title}`;
+		document.title = `${configStore?.pltCfg?.site?.title}`;
 	}, []);
 
 	useEffect(() => {

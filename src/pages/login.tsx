@@ -18,7 +18,7 @@ export default function Page() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		document.title = `${configStore.pltCfg.site.title}`;
+		document.title = `${configStore?.pltCfg?.site?.title}`;
 	}, []);
 
 	const [username, setUsername] = useState("");
@@ -92,21 +92,22 @@ export default function Page() {
 							marginTop: "1rem",
 						}}
 					>
+						<Icon path={mdiLock} size={1} />
 						<TextField
 							label="密码"
 							variant="filled"
 							type="password"
 							value={password}
-							sx={{ marginRight: "1rem", flexGrow: 1 }}
+							sx={{ marginLeft: "1rem", flexGrow: 1 }}
 							onChange={(e) => {
 								setPassword(e.target.value);
 							}}
 						/>
-						<Icon path={mdiLock} size={1} />
 					</Box>
 					<LoadingButton
 						loading={loginLoading}
 						size={"large"}
+						disableElevation
 						variant="contained"
 						sx={{ marginTop: "2rem", bgcolor: "primary.700" }}
 						onClick={handleLogin}

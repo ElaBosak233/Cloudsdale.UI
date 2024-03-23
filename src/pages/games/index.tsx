@@ -23,7 +23,7 @@ export default function Page() {
 	const [page, setPage] = useState<number>(1);
 
 	useEffect(() => {
-		document.title = `比赛 - ${configStore.pltCfg.site.title}`;
+		document.title = `比赛 - ${configStore?.pltCfg?.site?.title}`;
 	}, []);
 
 	function getGamesData() {

@@ -28,7 +28,14 @@ import { memo, useEffect, useState } from "react";
 import { useChallengeApi } from "@/api/challenge";
 import { useParams } from "react-router";
 import Icon from "@mdi/react";
-import { mdiContentSave, mdiDelete, mdiFlagPlus, mdiPuzzleEdit } from "@mdi/js";
+import {
+	mdiContentSave,
+	mdiDelete,
+	mdiFlagPlus,
+	mdiPackageVariantMinus,
+	mdiPackageVariantPlus,
+	mdiPuzzleEdit,
+} from "@mdi/js";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import { create } from "zustand";
@@ -152,9 +159,7 @@ function Edit() {
 						fontWeight: "bold",
 					}}
 				>
-					{useStore.getState().mode === "create"
-						? "创建镜像"
-						: "编辑镜像"}
+					{store.mode === "create" ? "创建镜像" : "编辑镜像"}
 				</Typography>
 			</Box>
 			<Divider sx={{ marginY: "0.75rem" }} />
@@ -546,6 +551,10 @@ function Page() {
 		getChallengeData();
 	}, [challengeStore.refresh]);
 
+	useEffect(() => {
+		document.title = `镜像	 - ${challenge?.title}`;
+	}, [challenge]);
+
 	return (
 		<>
 			<Paper
@@ -583,7 +592,10 @@ function Page() {
 											store.clearImage();
 										}}
 									>
-										<Icon path={mdiFlagPlus} size={1} />
+										<Icon
+											path={mdiPackageVariantPlus}
+											size={1}
+										/>
 									</IconButton>
 								</TableCell>
 							</TableRow>
@@ -635,7 +647,10 @@ function Page() {
 												store.setImage(image);
 											}}
 										>
-											<Icon path={mdiDelete} size={1} />
+											<Icon
+												path={mdiPackageVariantMinus}
+												size={1}
+											/>
 										</IconButton>
 									</TableCell>
 								</TableRow>

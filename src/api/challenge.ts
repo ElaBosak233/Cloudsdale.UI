@@ -1,4 +1,6 @@
 import {
+	ChallengeCreateRequest,
+	ChallengeDeleteRequest,
 	ChallengeFindRequest,
 	ChallengeUpdateRequest,
 } from "@/types/challenge";
@@ -21,8 +23,16 @@ export function useChallengeApi() {
 		return auth.get("/challenges/", { params: request });
 	};
 
+	const createChallenge = (request: ChallengeCreateRequest) => {
+		return auth.post("/challenges/", request);
+	};
+
 	const updateChallenge = (request: ChallengeUpdateRequest) => {
 		return auth.put(`/challenges/${request.id}`, request);
+	};
+
+	const deleteChallenge = (request: ChallengeDeleteRequest) => {
+		return auth.delete(`/challenges/${request.id}`);
 	};
 
 	const updateChallengeFlag = (request: FlagUpdateRequest) => {
@@ -61,7 +71,9 @@ export function useChallengeApi() {
 
 	return {
 		getChallenges,
+		createChallenge,
 		updateChallenge,
+		deleteChallenge,
 		updateChallengeFlag,
 		createChallengeFlag,
 		deleteChallengeFlag,

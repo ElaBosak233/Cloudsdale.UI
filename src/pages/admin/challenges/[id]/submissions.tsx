@@ -16,6 +16,7 @@ import {
 	TableCell,
 	TableContainer,
 	TableHead,
+	TablePagination,
 	TableRow,
 	Typography,
 } from "@mui/material";
@@ -150,6 +151,10 @@ function Page() {
 	const [challenge, setChallenge] = useState<Challenge>();
 	const [submissions, setSubmissions] = useState<Array<Submission>>();
 
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(12);
+	const [total, setTotal] = useState(0);
+
 	function getChallenge() {
 		challengeApi
 			.getChallenges({
@@ -167,17 +172,24 @@ function Page() {
 			.getSubmissions({
 				challenge_id: parseInt(id as string),
 				is_detailed: true,
+				page: page + 1,
+				size: rowsPerPage,
 			})
 			.then((res) => {
 				const r = res.data;
 				setSubmissions(r.data as Array<Submission>);
+				setTotal(r.total as number);
 			});
 	}
 
 	useEffect(() => {
 		getChallenge();
 		getSubmissions();
-	}, [challengeStore.refresh]);
+	}, [challengeStore.refresh, page, rowsPerPage]);
+
+	useEffect(() => {
+		document.title = `提交记录 - ${challenge?.title}`;
+	}, [challenge]);
 
 	return (
 		<>
@@ -228,8 +240,8 @@ function Page() {
 									</TableCell>
 									<TableCell>
 										{submission?.status === 0 && "未判定"}
-										{submission?.status === 1 && "正确"}
-										{submission?.status === 2 && "错误"}
+										{submission?.status === 1 && "错误"}
+										{submission?.status === 2 && "正确"}
 										{submission?.status === 3 && "作弊"}
 										{submission?.status === 4 && "重复提交"}
 									</TableCell>
@@ -259,6 +271,26 @@ function Page() {
 						</TableBody>
 					</Table>
 				</TableContainer>
+				<TablePagination
+					rowsPerPageOptions={[12, 25, 50]}
+					component="div"
+					count={total}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					labelRowsPerPage={"每页显示"}
+					labelDisplayedRows={({ from, to, count }) =>
+						`${from}-${to} 共 ${count}`
+					}
+					onPageChange={(event: unknown, newPage: number) => {
+						setPage(newPage);
+					}}
+					onRowsPerPageChange={(
+						event: React.ChangeEvent<HTMLInputElement>
+					) => {
+						setRowsPerPage(parseInt(event.target.value));
+						setPage(0);
+					}}
+				/>
 			</Paper>
 			<Dialog
 				open={store.deleteOpen}
