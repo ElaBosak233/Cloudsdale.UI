@@ -23,8 +23,10 @@ import { useEffect, useState } from "react";
 import { Game } from "@/types/game";
 import { useGameApi } from "@/api/game";
 import { formatUnixTimestamp } from "@/utils/datetime";
+import { useNavigate } from "react-router";
 
 function Row({ row }: { row: Game }) {
+	const navigate = useNavigate();
 	const started_at = formatUnixTimestamp(row?.started_at as number);
 	const ended_at = formatUnixTimestamp(row?.ended_at as number);
 	const status = () => {
@@ -117,7 +119,11 @@ function Row({ row }: { row: Game }) {
 				</Box>
 			</TableCell>
 			<TableCell align={"center"}>
-				<IconButton sx={{ marginX: "0.1rem" }} color="primary">
+				<IconButton
+					sx={{ marginX: "0.1rem" }}
+					color="primary"
+					onClick={() => navigate(`/admin/games/${row.id}`)}
+				>
 					<Icon path={mdiBookEdit} size={1} />
 				</IconButton>
 				<IconButton sx={{ marginX: "0.1rem" }} color="error">

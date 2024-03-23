@@ -39,7 +39,7 @@ export default function ANavBar() {
 					<Button
 						disableElevation
 						variant={
-							path.includes("challenges")
+							path.startsWith("/challenges")
 								? "contained"
 								: "outlined"
 						}
@@ -58,7 +58,7 @@ export default function ANavBar() {
 					<Button
 						disableElevation
 						variant={
-							path.includes("categories")
+							path.startsWith("/categories")
 								? "contained"
 								: "outlined"
 						}
@@ -77,7 +77,7 @@ export default function ANavBar() {
 					<Button
 						disableElevation
 						variant={
-							path.includes("games") ? "contained" : "outlined"
+							path.startsWith("/games") ? "contained" : "outlined"
 						}
 						size="large"
 						sx={{
@@ -94,7 +94,7 @@ export default function ANavBar() {
 					<Button
 						disableElevation
 						variant={
-							path.includes("teams") ? "contained" : "outlined"
+							path.startsWith("/teams") ? "contained" : "outlined"
 						}
 						size="large"
 						sx={{
@@ -111,7 +111,7 @@ export default function ANavBar() {
 					<Button
 						disableElevation
 						variant={
-							path.includes("users") ? "contained" : "outlined"
+							path.startsWith("/users") ? "contained" : "outlined"
 						}
 						size="large"
 						sx={{

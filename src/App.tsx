@@ -16,6 +16,8 @@ import { useConfigApi } from "@/api/config";
 import { useCategoryApi } from "@/api/category";
 import { useCategoryStore } from "@/store/category";
 import Loading from "@/components/ui/Loading";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function ESnackBar(): React.ReactNode {
 	const snackBarStore = useSnackBarStore();
@@ -83,14 +85,16 @@ export default function App() {
 	return (
 		<>
 			<ThemeProvider theme={useTheme()}>
-				<SideBar />
-				<Suspense fallback={<Loading />}>
-					<CssBaseline />
-					<Box sx={{ marginLeft: "4.375rem" }}>
-						{useRoutes(routes)}
-					</Box>
-					<ESnackBar />
-				</Suspense>
+				<LocalizationProvider dateAdapter={AdapterDayjs}>
+					<SideBar />
+					<Suspense fallback={<Loading />}>
+						<CssBaseline />
+						<Box sx={{ marginLeft: "4.375rem" }}>
+							{useRoutes(routes)}
+						</Box>
+						<ESnackBar />
+					</Suspense>
+				</LocalizationProvider>
 			</ThemeProvider>
 		</>
 	);

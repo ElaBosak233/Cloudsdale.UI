@@ -1,4 +1,10 @@
-import { GameChallengeFindRequest, GameFindRequest } from "@/types/game";
+import {
+	GameChallengeCreateRequest,
+	GameChallengeFindRequest,
+	GameChallengeUpdateRequest,
+	GameFindRequest,
+	GameUpdateRequest,
+} from "@/types/game";
 import { useAuth } from "@/utils/axios";
 
 export function useGameApi() {
@@ -12,15 +18,33 @@ export function useGameApi() {
 		return auth.get(`/games/${id}`);
 	};
 
+	const updateGame = (request: GameUpdateRequest) => {
+		return auth.put(`/games/${request?.id}`, request);
+	};
+
 	const getGameChallenges = (request: GameChallengeFindRequest) => {
 		return auth.get(`/games/${request?.game_id}/challenges`, {
 			params: request,
 		});
 	};
 
+	const createGameChallenge = (request: GameChallengeCreateRequest) => {
+		return auth.post(`/games/${request?.game_id}/challenges`, request);
+	};
+
+	const updateGameChallenge = (request: GameChallengeUpdateRequest) => {
+		return auth.put(
+			`/games/${request?.game_id}/challenges/${request?.challenge_id}`,
+			request
+		);
+	};
+
 	return {
 		getGames,
 		getGameByID,
 		getGameChallenges,
+		updateGame,
+		updateGameChallenge,
+		createGameChallenge,
 	};
 }

@@ -20,6 +20,9 @@ export interface Challenge {
 	hints?: Array<Hint>;
 	solved?: Submission;
 	submissions?: Array<Submission>;
+	is_enabled?: boolean;
+	min_pts?: number;
+	max_pts?: number;
 }
 
 export interface ChallengeFindRequest {

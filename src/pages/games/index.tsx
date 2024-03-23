@@ -12,6 +12,7 @@ import { Icon } from "@mdi/react";
 import { useEffect, useState } from "react";
 import { useGameApi } from "@/api/game";
 import { Game } from "@/types/game";
+import { useNavigate } from "react-router";
 
 export default function Page() {
 	const gameApi = useGameApi();

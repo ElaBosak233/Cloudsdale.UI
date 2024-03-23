@@ -30,7 +30,7 @@ export default function Page() {
 				<Typography
 					sx={{ fontSize: "5rem", opacity: 0.2, textAlign: "center" }}
 				>
-					{configStore.pltCfg.site.description}
+					{configStore?.pltCfg?.site?.description}
 				</Typography>
 			</Box>
 		</>

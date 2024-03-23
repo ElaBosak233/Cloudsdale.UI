@@ -72,3 +72,20 @@ export interface GameUpdateRequest {
 	started_at?: number;
 	ended_at?: number;
 }
+
+export interface GameChallengeUpdateRequest {
+	id?: number;
+	challenge_id?: number;
+	game_id?: number;
+	is_enabled?: boolean;
+	max_pts?: number;
+	min_pts?: number;
+}
+
+export interface GameChallengeCreateRequest {
+	game_id?: number;
+	challenge_id?: number;
+	is_enabled?: boolean;
+	max_pts?: number;
+	min_pts?: number;
+}
