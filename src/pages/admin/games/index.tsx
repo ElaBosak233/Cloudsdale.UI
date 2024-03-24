@@ -194,6 +194,8 @@ function Page() {
 				sx={{
 					padding: "1.5rem",
 					minHeight: "82vh",
+					display: "flex",
+					flexDirection: "column",
 				}}
 			>
 				<Box
@@ -227,6 +229,7 @@ function Page() {
 					sx={{
 						borderTopLeftRadius: "0.5rem",
 						borderTopRightRadius: "0.5rem",
+						flexGrow: 1,
 					}}
 				>
 					<Table stickyHeader size={"small"}>

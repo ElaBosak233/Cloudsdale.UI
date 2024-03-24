@@ -6,6 +6,7 @@ import {
 	mdiAccountMultiple,
 	mdiAccount,
 	mdiShapePlus,
+	mdiShieldAccount,
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Box, Button } from "@mui/material";
@@ -107,6 +108,25 @@ export default function ANavBar() {
 						}}
 					>
 						团队
+					</Button>
+					<Button
+						disableElevation
+						variant={
+							path.startsWith("/groups")
+								? "contained"
+								: "outlined"
+						}
+						size="large"
+						sx={{
+							fontWeight: "bold",
+							marginX: "0.5rem",
+						}}
+						startIcon={<Icon path={mdiShieldAccount} size={1} />}
+						onClick={() => {
+							navigate("/admin/groups");
+						}}
+					>
+						用户组
 					</Button>
 					<Button
 						disableElevation

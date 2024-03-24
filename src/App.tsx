@@ -18,6 +18,8 @@ import { useCategoryStore } from "@/store/category";
 import Loading from "@/components/ui/Loading";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useGroupStore } from "./store/group";
+import { useGroupApi } from "./api/group";
 
 function ESnackBar(): React.ReactNode {
 	const snackBarStore = useSnackBarStore();
@@ -56,8 +58,10 @@ function ESnackBar(): React.ReactNode {
 export default function App() {
 	const configStore = useConfigStore();
 	const categoryStore = useCategoryStore();
+	const groupStore = useGroupStore();
 	const categoryApi = useCategoryApi();
 	const configApi = useConfigApi();
+	const groupApi = useGroupApi();
 
 	// Get platform config
 	useEffect(() => {
@@ -81,6 +85,26 @@ export default function App() {
 			}
 		});
 	}, [categoryStore.refresh]);
+
+	// Get exists categories
+	useEffect(() => {
+		categoryApi.getCategories().then((res) => {
+			const r = res.data;
+			if (r.code === 200) {
+				categoryStore.setCategories(r.data);
+			}
+		});
+	}, [categoryStore.refresh]);
+
+	// Get exists groups
+	useEffect(() => {
+		groupApi.getGroups().then((res) => {
+			const r = res.data;
+			if (r.code === 200) {
+				groupStore.setGroups(r.data);
+			}
+		});
+	}, [groupStore.refresh]);
 
 	return (
 		<>

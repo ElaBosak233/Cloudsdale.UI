@@ -151,16 +151,23 @@ export default function Page() {
 								flexDirection: "column",
 							}}
 						>
-							<Button
-								variant="contained"
-								disableElevation
-								startIcon={
-									<Icon path={mdiCloudUpload} size={1} />
-								}
-							>
-								上传题解
-							</Button>
-							<Divider sx={{ marginY: "1rem" }} />
+							{game?.is_need_write_up && (
+								<>
+									<Button
+										variant="contained"
+										disableElevation
+										startIcon={
+											<Icon
+												path={mdiCloudUpload}
+												size={1}
+											/>
+										}
+									>
+										上传题解
+									</Button>
+									<Divider sx={{ marginY: "1rem" }} />
+								</>
+							)}
 							<Button
 								variant="contained"
 								size="large"

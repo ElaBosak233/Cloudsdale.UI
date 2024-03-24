@@ -39,6 +39,12 @@ export function useGameApi() {
 		);
 	};
 
+	const deleteGameChallenge = (request: GameChallengeUpdateRequest) => {
+		return auth.delete(
+			`/games/${request?.game_id}/challenges/${request?.challenge_id}`
+		);
+	};
+
 	return {
 		getGames,
 		getGameByID,
@@ -46,5 +52,6 @@ export function useGameApi() {
 		updateGame,
 		updateGameChallenge,
 		createGameChallenge,
+		deleteGameChallenge,
 	};
 }
