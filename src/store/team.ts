@@ -1,11 +1,24 @@
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface TeamState {
+	selectedTeamID?: number;
+	setSelectedTeamID: (selectedTeamID?: number) => void;
 	refresh: number;
 	setRefresh: (refresh: number) => void;
 }
 
-export const useTeamStore = create<TeamState>()((set, _get) => ({
-	refresh: 0,
-	setRefresh: (refresh) => set({ refresh }),
-}));
+export const useTeamStore = create<TeamState>()(
+	persist(
+		(set, _get) => ({
+			selectedTeamID: 0,
+			setSelectedTeamID: (selectedTeamID) => set({ selectedTeamID }),
+			refresh: 0,
+			setRefresh: (refresh) => set({ refresh }),
+		}),
+		{
+			name: "team_storage",
+			storage: createJSONStorage(() => sessionStorage),
+		}
+	)
+);

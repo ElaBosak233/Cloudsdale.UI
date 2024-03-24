@@ -1,19 +1,228 @@
 import { useGameApi } from "@/api/game";
+import { useUserApi } from "@/api/user";
 import Loading from "@/components/ui/Loading";
 import Markdown from "@/components/ui/Markdown";
+import { useAuthStore } from "@/store/auth";
 import { useConfigStore } from "@/store/config";
 import { Game } from "@/types/game";
+import { Team } from "@/types/team";
 import { formatUnixTimestamp } from "@/utils/datetime";
 import {
 	Box,
 	Button,
+	Card,
 	Chip,
+	Dialog,
+	Divider,
+	IconButton,
 	LinearProgress,
 	Paper,
 	Typography,
 } from "@mui/material";
+import Icon from "@mdi/react";
+import { mdiPlay } from "@mdi/js";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { create } from "zustand";
+import { useTeamStore } from "@/store/team";
+
+interface State {
+	applyOpen: boolean;
+	setApplyOpen: (open: boolean) => void;
+	enterOpen: boolean;
+	setEnterOpen: (open: boolean) => void;
+}
+
+const useStore = create<State>()((set, _get) => ({
+	applyOpen: false,
+	setApplyOpen: (open) => set({ applyOpen: open }),
+	enterOpen: false,
+	setEnterOpen: (open) => set({ enterOpen: open }),
+}));
+
+function Enter() {
+	const authStore = useAuthStore();
+	const teamStore = useTeamStore();
+	const gameApi = useGameApi();
+	const userApi = useUserApi();
+	const navigate = useNavigate();
+
+	const { id } = useParams<{ id: string }>();
+	const [teams, setTeams] = useState<Array<Team>>();
+	const [ownedTeams, setOwnedTeams] = useState<Array<Team>>();
+	const [applyedTeams, setApplyedTeams] = useState<Array<Team>>();
+
+	function getUser() {
+		userApi
+			.getUsers({
+				id: authStore?.user?.id,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					setOwnedTeams(r.data[0].teams);
+				}
+			});
+	}
+
+	function getTeams() {
+		gameApi
+			.getGameTeams({
+				game_id: parseInt(id as string),
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					setApplyedTeams(r.data);
+				}
+			});
+	}
+
+	useEffect(() => {
+		if (ownedTeams && applyedTeams) {
+			setTeams(
+				ownedTeams.filter((ownedTeam) =>
+					applyedTeams.find(
+						(applyedTeam) =>
+							applyedTeam.id === ownedTeam.id &&
+							applyedTeam.is_allowed === true
+					)
+				)
+			);
+		}
+	}, [ownedTeams, applyedTeams]);
+
+	useEffect(() => {
+		getUser();
+		getTeams();
+	}, []);
+
+	return (
+		<Card
+			sx={{
+				width: "40rem",
+				padding: "1.5rem",
+			}}
+		>
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+				}}
+			>
+				<Icon path={mdiPlay} size={1} />
+				<Box
+					sx={{
+						fontSize: "1rem",
+						marginX: "0.5rem",
+						fontWeight: "bolder",
+					}}
+				>
+					进入比赛
+				</Box>
+			</Box>
+			<Divider
+				sx={{
+					marginY: "1rem",
+				}}
+			/>
+			{teams?.map((team) => (
+				<Box
+					sx={{
+						borderRadius: "0.5rem",
+						borderWidth: "1px",
+						borderStyle: "ridge",
+						borderColor: "primary",
+						paddingX: "1rem",
+						paddingY: "0.5rem",
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						marginY: "0.5rem",
+					}}
+				>
+					<Box>{team?.name}</Box>
+					<Box>
+						<IconButton
+							size="small"
+							onClick={() => {
+								teamStore.setSelectedTeamID(team?.id as number);
+								navigate(`/games/${id}/challenges`);
+							}}
+						>
+							<Icon path={mdiPlay} size={1} />
+						</IconButton>
+					</Box>
+				</Box>
+			))}
+		</Card>
+	);
+}
+
+function Apply() {
+	const authStore = useAuthStore();
+	const gameApi = useGameApi();
+	const userApi = useUserApi();
+
+	const { id } = useParams<{ id: string }>();
+	const [teams, setTeams] = useState<Array<Team>>();
+	const [ownedTeams, setOwnedTeams] = useState<Array<Team>>();
+	const [applyedTeams, setApplyedTeams] = useState<Array<Team>>();
+
+	function getUser() {
+		userApi
+			.getUsers({
+				id: authStore?.user?.id,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					setOwnedTeams(r.data[0].teams);
+				}
+			});
+	}
+
+	function getTeams() {
+		gameApi
+			.getGameTeams({
+				game_id: parseInt(id as string),
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					setApplyedTeams(r.data);
+				}
+			});
+	}
+
+	useEffect(() => {
+		if (ownedTeams && applyedTeams) {
+			setTeams(
+				ownedTeams.filter(
+					(ownedTeam) =>
+						!applyedTeams.find(
+							(applyedTeam) => applyedTeam.id === ownedTeam.id
+						)
+				)
+			);
+		}
+	}, [ownedTeams, applyedTeams]);
+
+	useEffect(() => {
+		getUser();
+		getTeams();
+	}, []);
+
+	return (
+		<Card
+			sx={{
+				width: "40rem",
+			}}
+		>
+			{teams?.map((team) => <Box>{team?.name}</Box>)}
+		</Card>
+	);
+}
 
 export default function Page() {
 	const gameApi = useGameApi();
@@ -22,13 +231,15 @@ export default function Page() {
 	const [game, setGame] = useState<Game>();
 	const navigate = useNavigate();
 	const configStore = useConfigStore();
+	const store = useStore();
 
 	const started_at = formatUnixTimestamp(game?.started_at as number);
 	const ended_at = formatUnixTimestamp(game?.ended_at as number);
 
 	const progress =
-		(Math.floor(Date.now() / 1000) - (game?.started_at as number)) /
-		((game?.ended_at as number) - (game?.started_at as number));
+		((Math.floor(Date.now() / 1000) - (game?.started_at as number)) /
+			((game?.ended_at as number) - (game?.started_at as number))) *
+		100;
 
 	function getGameData() {
 		gameApi.getGameByID(parseInt(id as string)).then((res) => {
@@ -81,9 +292,16 @@ export default function Page() {
 								<Box sx={{ marginX: "0.5rem" }}>→</Box>
 								<Chip size={"small"} label={ended_at}></Chip>
 							</Box>
-							<LinearProgress value={progress} />
+							<LinearProgress
+								variant="determinate"
+								value={progress}
+							/>
 							<Box sx={{ display: "flex", marginY: "1rem" }}>
-								<Button variant="contained" disableElevation>
+								<Button
+									variant="contained"
+									disableElevation
+									onClick={() => store.setApplyOpen(true)}
+								>
 									申请参赛
 								</Button>
 								<Button
@@ -99,9 +317,7 @@ export default function Page() {
 								<Button
 									variant="contained"
 									disableElevation
-									onClick={() => {
-										navigate(`/games/${id}/challenges`);
-									}}
+									onClick={() => store.setEnterOpen(true)}
 								>
 									进入比赛
 								</Button>
@@ -123,6 +339,20 @@ export default function Page() {
 				<Box sx={{ marginX: "25%", marginY: "2rem" }}>
 					<Markdown content={game?.description} />
 				</Box>
+				<Dialog
+					maxWidth={false}
+					open={store.applyOpen}
+					onClose={() => store.setApplyOpen(false)}
+				>
+					<Apply />
+				</Dialog>
+				<Dialog
+					maxWidth={false}
+					open={store.enterOpen}
+					onClose={() => store.setEnterOpen(false)}
+				>
+					<Enter />
+				</Dialog>
 			</Box>
 		</>
 	);

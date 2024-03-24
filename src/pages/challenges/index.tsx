@@ -417,7 +417,10 @@ export default function Page() {
 					open={store.open}
 					onClose={() => store.setOpen(false)}
 				>
-					<ChallengeDialog challenge={store.challenge} />
+					<ChallengeDialog
+						mode="practice"
+						challenge={store.challenge}
+					/>
 				</Dialog>
 			</Box>
 		</>

@@ -31,11 +31,15 @@ import { Submission } from "@/types/submission";
 import { usePodApi } from "@/api/pod";
 import { LoadingButton } from "@mui/lab";
 import { Instance } from "@/types/instance";
+import { useTeamStore } from "@/store/team";
+import { useGameStore } from "@/store/game";
 
 export default function ChallengeDialog({
 	challenge,
+	mode,
 }: {
 	challenge?: Challenge;
+	mode: "practice" | "game";
 }) {
 	const submissionApi = useSubmissionApi();
 	const podApi = usePodApi();
@@ -43,6 +47,8 @@ export default function ChallengeDialog({
 	const snackBarStore = useSnackBarStore();
 	const challengeStore = useChallengeStore();
 	const podStore = usePodStore();
+	const teamStore = useTeamStore();
+	const gameStore = useGameStore();
 
 	// Flag 输入框
 	const [flag, setFlag] = useState<string>("");
@@ -80,6 +86,10 @@ export default function ChallengeDialog({
 			.createSubmission({
 				challenge_id: challenge?.id as number,
 				flag: flag,
+				team_id:
+					mode === "game" ? teamStore?.selectedTeamID : undefined,
+				game_id:
+					mode === "game" ? gameStore?.selectedGameID : undefined,
 			})
 			.then((res) => {
 				const r = res.data;
@@ -113,6 +123,10 @@ export default function ChallengeDialog({
 		podApi
 			.createPod({
 				challenge_id: challenge?.id as number,
+				team_id:
+					mode === "game" ? teamStore?.selectedTeamID : undefined,
+				game_id:
+					mode === "game" ? gameStore?.selectedGameID : undefined,
 			})
 			.then((res) => {
 				const r = res.data;
@@ -180,8 +194,8 @@ export default function ChallengeDialog({
 	return (
 		<Card
 			sx={{
-				width: "65vh",
-				minHeight: "30vh",
+				width: "40rem",
+				minHeight: "20rem",
 				padding: "1rem",
 				display: "flex",
 				flexDirection: "column",

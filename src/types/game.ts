@@ -92,6 +92,7 @@ export interface GameChallengeCreateRequest {
 
 export interface GameTeamFindRequest {
 	game_id?: number;
+	team_id?: number;
 }
 
 export interface GameTeamCreateRequest {

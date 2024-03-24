@@ -4,9 +4,13 @@ import Loading from "@/components/ui/Loading";
 import UIcon from "@/components/ui/UIcon";
 import ChallengeCard from "@/components/widgets/ChallengeCard";
 import { useChallengeStore } from "@/store/challenge";
+import { useGameStore } from "@/store/game";
+import { useSnackBarStore } from "@/store/snackBar";
+import { useTeamStore } from "@/store/team";
 import { Category } from "@/types/category";
 import { Challenge } from "@/types/challenge";
 import { Game } from "@/types/game";
+import { Team } from "@/types/team";
 import { mdiCloudUpload, mdiFlag, mdiPuzzle, mdiTrendingUp } from "@mdi/js";
 import Icon from "@mdi/react";
 import {
@@ -21,15 +25,20 @@ import {
 	Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export default function Page() {
 	const gameApi = useGameApi();
 
 	const { id } = useParams<{ id: string }>();
 	const challengeStore = useChallengeStore();
+	const snackBarStore = useSnackBarStore();
+	const teamStore = useTeamStore();
+	const gameStore = useGameStore();
+	const navigate = useNavigate();
 
 	const [game, setGame] = useState<Game>();
+	const [team, setTeam] = useState<Team>();
 	const [categories, setCategories] = useState<Record<number, Category>>({});
 	const [selectedCategory, setSelectedCategory] = useState<number>(0);
 	const [challenges, setChallenges] = useState<Array<Challenge>>();
@@ -37,7 +46,7 @@ export default function Page() {
 	const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 	const [selectedChallenge, setSelectedChallenge] = useState<Challenge>();
 
-	function getGameData() {
+	function getGame() {
 		gameApi.getGameByID(parseInt(id as string)).then((res) => {
 			const r = res.data;
 			if (r.code === 200) {
@@ -46,11 +55,32 @@ export default function Page() {
 		});
 	}
 
-	function getChallengesData() {
+	function getTeam() {
+		gameApi
+			.getGameTeamByID({
+				game_id: game?.id,
+				team_id: teamStore?.selectedTeamID as number,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					if (r.data && teamStore.selectedTeamID !== 0) {
+						setTeam(r.data);
+						gameStore.setSelectedGameID(game?.id as number);
+					} else {
+						navigate(`/games/${game?.id}`);
+						snackBarStore.error("你没有参赛权限");
+					}
+				}
+			});
+	}
+
+	function getChallenges() {
 		gameApi
 			.getGameChallenges({
 				game_id: game?.id,
 				is_enabled: true,
+				team_id: teamStore?.selectedTeamID as number,
 			})
 			.then((res) => {
 				const r = res.data;
@@ -61,12 +91,12 @@ export default function Page() {
 	}
 
 	useEffect(() => {
-		getGameData();
+		getGame();
 	}, []);
 
 	useEffect(() => {
 		if (game) {
-			getChallengesData();
+			getChallenges();
 		}
 	}, [game, challengeStore.refresh]);
 
@@ -89,6 +119,12 @@ export default function Page() {
 			});
 		}
 	}, [challenges]);
+
+	useEffect(() => {
+		if (game) {
+			getTeam();
+		}
+	}, [game]);
 
 	useEffect(() => {
 		document.title = `题目 - ${game?.title}`;
@@ -365,7 +401,10 @@ export default function Page() {
 					open={dialogOpen}
 					onClose={() => setDialogOpen(false)}
 				>
-					<ChallengeDialog challenge={selectedChallenge} />
+					<ChallengeDialog
+						mode="game"
+						challenge={selectedChallenge}
+					/>
 				</Dialog>
 			</Box>
 		</>

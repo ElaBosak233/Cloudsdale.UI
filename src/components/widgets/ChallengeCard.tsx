@@ -23,9 +23,9 @@ export default function ChallengeCard({
 }): JSX.Element {
 	const themeStore = useThemeStore();
 
-	// const isSolved: boolean = challenge.solved ? true : false;
+	const isSolved: boolean = challenge.solved ? true : false;
 
-	const isSolved: boolean = false;
+	console.log(challenge);
 
 	const bgColor = () => {
 		switch (themeStore.mode) {
