@@ -14,6 +14,7 @@ export interface User {
 }
 
 export interface UserFindRequest {
+	id?: number;
 	name?: string;
 	username?: string;
 	nickname?: string;

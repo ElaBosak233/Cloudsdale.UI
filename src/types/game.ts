@@ -89,3 +89,23 @@ export interface GameChallengeCreateRequest {
 	max_pts?: number;
 	min_pts?: number;
 }
+
+export interface GameTeamFindRequest {
+	game_id?: number;
+}
+
+export interface GameTeamCreateRequest {
+	game_id?: number;
+	team_id?: number;
+}
+
+export interface GameTeamUpdateRequest {
+	game_id?: number;
+	team_id?: number;
+	is_allowed?: boolean;
+}
+
+export interface GameTeamDeleteRequest {
+	game_id?: number;
+	team_id?: number;
+}

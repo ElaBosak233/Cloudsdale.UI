@@ -1,18 +1,15 @@
-import { useChallengeApi } from "@/api/challenge";
 import withAdmin from "@/components/layouts/withAdmin";
-import { useChallengeStore } from "@/store/challenge";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
-import { Challenge } from "@/types/challenge";
 import {
-	mdiBookEdit,
-	mdiBookPlus,
+	mdiAccountEdit,
+	mdiAccountMinus,
+	mdiAccountPlus,
+	mdiCheck,
 	mdiContentSave,
 	mdiDelete,
 	mdiMagnify,
 	mdiPuzzleEdit,
-	mdiStar,
-	mdiStarOutline,
 } from "@mdi/js";
 import {
 	Box,
@@ -20,16 +17,9 @@ import {
 	Card,
 	Dialog,
 	Divider,
-	FormControl,
-	FormControlLabel,
 	IconButton,
-	InputLabel,
-	MenuItem,
+	Pagination,
 	Paper,
-	Rating,
-	Select,
-	SelectChangeEvent,
-	Switch,
 	Table,
 	TableBody,
 	TableCell,
@@ -37,26 +27,36 @@ import {
 	TableHead,
 	TablePagination,
 	TableRow,
-	TableSortLabel,
 	TextField,
 	Typography,
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
-import { useCategoryStore } from "@/store/category";
-import UIcon from "@/components/ui/UIcon";
-import { challenge as color } from "@/utils/color";
-import { useNavigate } from "react-router";
 import { create } from "zustand";
+import { useUserStore } from "@/store/user";
+import { Team } from "@/types/team";
+import { useTeamApi } from "@/api/team";
+import { useTeamStore } from "@/store/team";
+import { useUserApi } from "@/api/user";
+import { User } from "@/types/user";
+import Users from "../users";
 
 interface State {
 	editOpen: boolean;
 	setEditOpen: (editOpen: boolean) => void;
+
 	deleteOpen: boolean;
 	setDeleteOpen: (deleteOpen: boolean) => void;
-	challenge?: Challenge;
-	setChallenge: (challenge: Challenge) => void;
-	clearChallenge: () => void;
+
+	mode: "edit" | "create";
+	setMode: (mode: "edit" | "create") => void;
+
+	selectOpen: boolean;
+	setSelectOpen: (open: boolean) => void;
+
+	team?: Team;
+	setTeam: (team: Team) => void;
+	clearTeam: () => void;
 }
 
 const useStore = create<State>((set) => ({
@@ -64,64 +64,216 @@ const useStore = create<State>((set) => ({
 	setEditOpen: (editOpen) => set({ editOpen }),
 	deleteOpen: false,
 	setDeleteOpen: (deleteOpen) => set({ deleteOpen }),
-	challenge: {} as Challenge,
-	setChallenge: (challenge) => set({ challenge }),
-	clearChallenge: () => set({ challenge: undefined }),
+	mode: "create",
+	setMode: (mode) => set({ mode }),
+	selectOpen: false,
+	setSelectOpen: (selectOpen) => set({ selectOpen }),
+	setTeam: (team) => set({ team }),
+	clearTeam: () => set({ team: undefined }),
 }));
 
-function Edit() {
-	const challengeApi = useChallengeApi();
-	const snackBarStore = useSnackBarStore();
+function UserSelect() {
+	const userApi = useUserApi();
 	const store = useStore();
-	const categoryStore = useCategoryStore();
-	const challengeStore = useChallengeStore();
 
-	const [title, setTitle] = useState<string>("");
-	const [categoryID, setCategoryID] = useState<number>(1);
-	const [description, setDescription] = useState<string>("");
-	const [difficulty, setDifficulty] = useState<number>(1);
-	const [isPracticable, setIsPracticable] = useState<boolean>(false);
-	const [isDynamic, setIsDynamic] = useState<boolean>(false);
-	const [hasAttachment, setHasAttachment] = useState<boolean>(false);
-	const [practicePts, setPracticePts] = useState<number>(0);
-	const [duration, setDuration] = useState<number>(0);
+	const [users, setUsers] = useState<Array<User>>([]);
+	const [searchName, setSearchName] = useState<string>("");
+	const [searchID, setSearchID] = useState<number>(0);
+	const [page, setPage] = useState<number>(1);
+	const [totalPages, setTotalPages] = useState<number>(0);
 
-	function createChallenge() {
-		challengeApi
-			.createChallenge({
-				title: title,
-				category_id: categoryID,
-				description: description,
-				difficulty: difficulty,
-				is_practicable: isPracticable,
-				is_dynamic: isDynamic,
-				practice_pts: practicePts,
-				duration: duration,
+	function getUsers() {
+		userApi
+			.getUsers({
+				id: searchID,
+				name: searchName,
+				page: page,
+				size: 5,
 			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
-					snackBarStore.success("题目创建成功");
-					challengeStore.setRefresh(challengeStore.refresh + 1);
+					setUsers(r.data);
+					setTotalPages(r.pages);
 				}
-				store.setEditOpen(false);
-				store.clearChallenge();
 			});
 	}
 
 	useEffect(() => {
-		if (store.challenge) {
-			setTitle(store?.challenge?.title || "");
-			setCategoryID(store?.challenge?.category_id || 1);
-			setDescription(store?.challenge?.description || "");
-			setDifficulty(store?.challenge?.difficulty || 1);
-			setIsPracticable(store?.challenge?.is_practicable || false);
-			setIsDynamic(store?.challenge?.is_dynamic || false);
-			setHasAttachment(store?.challenge?.has_attachment || false);
-			setPracticePts(store?.challenge?.practice_pts || 0);
-			setDuration(store?.challenge?.duration || 0);
+		getUsers();
+	}, [page, searchID, searchName]);
+
+	return (
+		<Card
+			sx={{
+				width: "45rem",
+				padding: "1.5rem",
+				display: "flex",
+				flexDirection: "column",
+			}}
+		>
+			<Box>
+				<Typography
+					sx={{
+						fontWeight: "bold",
+					}}
+				>
+					用户选择器
+				</Typography>
+			</Box>
+			<Divider
+				sx={{
+					marginY: "1rem",
+				}}
+			/>
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+				}}
+			>
+				<TextField
+					label="用户ID"
+					variant="outlined"
+					value={searchID}
+					onChange={(e) => setSearchID(parseInt(e.target.value))}
+					sx={{
+						width: "20%",
+					}}
+				/>
+				<TextField
+					label="用户名"
+					variant="outlined"
+					value={searchName}
+					onChange={(e) => setSearchName(e.target.value)}
+					sx={{
+						width: "80%",
+						marginLeft: "1rem",
+					}}
+				/>
+			</Box>
+			<Box
+				sx={{
+					marginY: "1rem",
+				}}
+			>
+				{users?.map((user) => (
+					<Box
+						key={user.id}
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							height: "2.5rem",
+							alignItems: "center",
+						}}
+					>
+						<Box>{user.id}</Box>
+						<Box>{user.username}</Box>
+						<Box
+							sx={{
+								maxWidth: "10rem",
+								overflow: "hidden",
+								textOverflow: "ellipsis",
+								whiteSpace: "nowrap",
+							}}
+						>
+							{user.nickname}
+						</Box>
+						<IconButton
+							size="small"
+							onClick={() => {
+								store.setTeam({
+									...store.team,
+									captain_id: user.id,
+									captain: user,
+								});
+								store.setSelectOpen(false);
+							}}
+						>
+							<Icon path={mdiCheck} size={1} />
+						</IconButton>
+					</Box>
+				))}
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "center",
+				}}
+			>
+				<Pagination
+					count={totalPages}
+					page={page}
+					onChange={(
+						e: React.ChangeEvent<unknown>,
+						value: number
+					) => {
+						setPage(value);
+					}}
+				/>
+			</Box>
+		</Card>
+	);
+}
+
+function Edit() {
+	const teamApi = useTeamApi();
+	const snackBarStore = useSnackBarStore();
+	const teamStore = useTeamStore();
+	const store = useStore();
+
+	const [name, setName] = useState<string>("");
+	const [description, setDescription] = useState<string>("");
+	const [captainID, setCaptainID] = useState<number>(0);
+
+	function createTeam() {
+		teamApi
+			.createTeam({
+				name: name,
+				description: description,
+				captain_id: captainID,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("团队创建成功");
+					teamStore.setRefresh(teamStore.refresh + 1);
+				}
+				store.setEditOpen(false);
+				store.clearTeam();
+			});
+	}
+
+	function updateTeam() {
+		teamApi
+			.updateTeam({
+				id: store.team?.id as number,
+				description: description,
+				captain_id: captainID,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("团队更新成功");
+					teamStore.setRefresh(teamStore.refresh + 1);
+				}
+				store.setEditOpen(false);
+				store.clearTeam();
+			});
+	}
+
+	useEffect(() => {
+		if (store.team) {
+			setName(store.team?.name || "");
+			setDescription(store.team?.description || "");
+			setCaptainID(store.team?.captain_id || 0);
 		}
-	}, [store.challenge]);
+	}, []);
+
+	useEffect(() => {
+		setCaptainID(store.team?.captain_id || 0);
+	}, [store.team]);
 
 	return (
 		<Card
@@ -140,7 +292,7 @@ function Edit() {
 						fontWeight: "bold",
 					}}
 				>
-					创建题目
+					{store.mode === "edit" ? "编辑团队" : "创建团队"}
 				</Typography>
 			</Box>
 			<Divider sx={{ marginY: "0.75rem" }} />
@@ -150,104 +302,10 @@ function Edit() {
 				}}
 			>
 				<TextField
-					label="标题"
-					value={title}
-					sx={{
-						width: "70%",
-					}}
-					onChange={(e) => setTitle(e.target.value)}
-				/>
-				<FormControl
-					sx={{
-						width: "30%",
-						marginLeft: "1rem",
-					}}
-				>
-					<InputLabel>分类</InputLabel>
-					<Select
-						value={String(categoryID)}
-						label="分类"
-						onChange={(e: SelectChangeEvent) => {
-							setCategoryID(parseInt(e.target.value));
-						}}
-					>
-						{categoryStore?.categories?.map((category) => (
-							<MenuItem value={String(category?.id)}>
-								{category?.name}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Box>
-			<Box
-				sx={{
-					display: "flex",
-					alignItems: "center",
-					marginTop: "1rem",
-					justifyContent: "space-between",
-				}}
-			>
-				<Rating
-					value={difficulty}
-					size="large"
-					onChange={(event, newValue) => {
-						setDifficulty(newValue as number);
-					}}
-				/>
-				<FormControlLabel
-					control={<Switch checked={hasAttachment} color="primary" />}
-					label="是否有附件"
-					labelPlacement="start"
-					onClick={() => {
-						setHasAttachment(!hasAttachment);
-					}}
-				/>
-				<FormControlLabel
-					control={<Switch checked={isDynamic} color="primary" />}
-					label="是否为动态题"
-					labelPlacement="start"
-					onClick={() => {
-						setIsDynamic(!isDynamic);
-					}}
-				/>
-			</Box>
-			<Box
-				sx={{
-					display: "flex",
-					alignItems: "center",
-					marginTop: "1rem",
-					justifyContent: "space-between",
-				}}
-			>
-				<FormControlLabel
-					control={<Switch checked={isPracticable} color="primary" />}
-					label="是否为练习题"
-					labelPlacement="start"
-					onClick={() => {
-						setIsPracticable(!isPracticable);
-					}}
-				/>
-				<TextField
-					label="练习分数"
-					value={practicePts}
-					size="small"
-					sx={{
-						flexGrow: 1,
-						marginLeft: "1rem",
-					}}
-					onChange={(e) =>
-						setPracticePts(parseInt(e.target.value) || 0)
-					}
-				/>
-				<TextField
-					label="动态容器持续时间"
-					value={duration}
-					size="small"
-					sx={{
-						flexGrow: 1,
-						marginLeft: "1rem",
-					}}
-					onChange={(e) => setDuration(parseInt(e.target.value) || 0)}
+					label="团队名"
+					value={name}
+					fullWidth
+					onChange={(e) => setName(e.target.value)}
 				/>
 			</Box>
 			<Box
@@ -256,13 +314,67 @@ function Edit() {
 				}}
 			>
 				<TextField
-					label="描述"
+					label="小队简介"
 					value={description}
 					fullWidth
 					multiline
 					rows={4}
 					onChange={(e) => setDescription(e.target.value)}
 				/>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "space-between",
+					borderWidth: "1px",
+					borderStyle: "ridge",
+					padding: "1rem",
+					borderColor: "grey.300",
+					borderRadius: "0.5rem",
+					marginTop: "1rem",
+				}}
+			>
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "space-between",
+						flexGrow: 1,
+					}}
+				>
+					<Box>{captainID}</Box>
+					<Box
+						sx={{
+							width: "10rem",
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+							whiteSpace: "nowrap",
+							fontWeight: "bold",
+						}}
+					>
+						{store?.team?.captain?.username}
+					</Box>
+					<Box
+						sx={{
+							width: "15rem",
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+							whiteSpace: "nowrap",
+						}}
+					>
+						{store?.team?.captain?.nickname}
+					</Box>
+				</Box>
+				<IconButton
+					size="small"
+					onClick={() => store.setSelectOpen(true)}
+					sx={{
+						marginLeft: "2rem",
+					}}
+				>
+					<Icon path={mdiPuzzleEdit} size={1} />
+				</IconButton>
 			</Box>
 			<Box
 				sx={{
@@ -276,9 +388,11 @@ function Edit() {
 					variant="contained"
 					disableElevation
 					startIcon={<Icon path={mdiContentSave} size={1} />}
-					onClick={createChallenge}
+					onClick={() => {
+						store.mode === "edit" ? updateTeam() : createTeam();
+					}}
 				>
-					创建
+					{store.mode === "edit" ? "保存" : "创建"}
 				</Button>
 			</Box>
 		</Card>
@@ -286,24 +400,24 @@ function Edit() {
 }
 
 function Delete() {
-	const challengeApi = useChallengeApi();
+	const teamStore = useTeamStore();
+	const teamApi = useTeamApi();
 	const snackBarStore = useSnackBarStore();
 	const store = useStore();
-	const challengeStore = useChallengeStore();
 
-	function deleteChallenge() {
-		challengeApi
-			.deleteChallenge({
-				id: store.challenge?.id as number,
+	function deleteTeam() {
+		teamApi
+			.deleteTeam({
+				id: store.team?.id as number,
 			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
-					snackBarStore.success("题目删除成功");
+					snackBarStore.success("团队删除成功");
 				}
 				store.setDeleteOpen(false);
-				store.clearChallenge();
-				challengeStore.setRefresh(challengeStore.refresh + 1);
+				store.clearTeam();
+				teamStore.setRefresh(teamStore.refresh + 1);
 			});
 	}
 
@@ -322,7 +436,7 @@ function Delete() {
 						fontWeight: "bold",
 					}}
 				>
-					删除题目
+					删除团队
 				</Typography>
 			</Box>
 			<Divider
@@ -343,14 +457,14 @@ function Delete() {
 						fontWeight: "bold",
 					}}
 				>
-					是否永久删除题目，真的很久！
+					是否永久删除团队，真的很久！
 				</Typography>
 				<Box
 					sx={{
 						marginY: "0.5rem",
 					}}
 				>
-					{store.challenge?.title}
+					{store.team?.name}
 				</Box>
 			</Box>
 			<Box
@@ -364,7 +478,7 @@ function Delete() {
 					color="error"
 					disableElevation
 					startIcon={<Icon path={mdiDelete} size={1} />}
-					onClick={deleteChallenge}
+					onClick={deleteTeam}
 				>
 					删除
 				</Button>
@@ -373,41 +487,8 @@ function Delete() {
 	);
 }
 
-function Row({ row }: { row: Challenge }) {
-	const snackBarStore = useSnackBarStore();
-	const challengeApi = useChallengeApi();
+function Row({ row }: { row: Team }) {
 	const store = useStore();
-
-	const navigate = useNavigate();
-
-	const [isPracticable, setIsPracticable] = useState<boolean>(
-		row?.is_practicable as boolean
-	);
-
-	function updateChallengeData() {
-		challengeApi
-			.updateChallenge({
-				id: row.id,
-				is_practicable: isPracticable,
-			})
-			.then((res) => {
-				const r = res.data;
-				if (r.code === 200) {
-					snackBarStore.success("题目更新成功");
-				}
-			});
-	}
-
-	function handlePracticableChange() {
-		setIsPracticable(!isPracticable);
-	}
-
-	useEffect(() => {
-		if (isPracticable !== row.is_practicable) {
-			updateChallengeData();
-			row.is_practicable = isPracticable;
-		}
-	}, [isPracticable]);
 
 	return (
 		<TableRow>
@@ -423,13 +504,13 @@ function Row({ row }: { row: Challenge }) {
 						textOverflow: "ellipsis",
 					}}
 				>
-					{row.title}
+					{row.name}
 				</Box>
 			</TableCell>
 			<TableCell align={"left"}>
 				<Box
 					sx={{
-						width: "20rem",
+						width: "10rem",
 						overflow: "hidden",
 						whiteSpace: "nowrap",
 						textOverflow: "ellipsis",
@@ -438,54 +519,47 @@ function Row({ row }: { row: Challenge }) {
 					{row.description}
 				</Box>
 			</TableCell>
-			<TableCell align={"left"}>
-				<Box
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						color: color.useTextColor(false, row.category?.color),
-					}}
-				>
-					<UIcon
-						path={`mdi${row.category?.icon as string}`}
-						size={1}
-					/>
-					<Box sx={{ marginX: "0.5rem" }}>{row.category?.name}</Box>
-				</Box>
+			<TableCell
+				sx={{
+					width: "20rem",
+					overflow: "hidden",
+					whiteSpace: "nowrap",
+					textOverflow: "ellipsis",
+				}}
+			>
+				{row.captain?.nickname}
 			</TableCell>
-			<TableCell align={"left"}>
-				<Rating
-					readOnly
-					value={row.difficulty}
-					sx={{
-						display: "flex",
-						alignItems: "center",
-					}}
-					size="large"
-					icon={<Icon path={mdiStar} size={1} />}
-					emptyIcon={<Icon path={mdiStarOutline} size={1} />}
-				/>
-			</TableCell>
-			<TableCell align={"left"} onClick={handlePracticableChange}>
-				<Switch checked={isPracticable} />
+			<TableCell
+				sx={{
+					width: "20rem",
+					overflow: "hidden",
+					whiteSpace: "nowrap",
+					textOverflow: "ellipsis",
+				}}
+			>
+				{row?.users?.map((user) => user.nickname).join(", ")}
 			</TableCell>
 			<TableCell align={"center"}>
 				<IconButton
 					sx={{ marginX: "0.1rem" }}
 					color="primary"
-					onClick={() => navigate(`/admin/challenges/${row.id}`)}
+					onClick={() => {
+						store.setTeam(row);
+						store.setMode("edit");
+						store.setEditOpen(true);
+					}}
 				>
-					<Icon path={mdiBookEdit} size={1} />
+					<Icon path={mdiAccountEdit} size={1} />
 				</IconButton>
 				<IconButton
 					sx={{ marginX: "0.1rem" }}
 					color="error"
 					onClick={() => {
-						store.setChallenge(row);
+						store.setTeam(row);
 						store.setDeleteOpen(true);
 					}}
 				>
-					<Icon path={mdiDelete} size={1} />
+					<Icon path={mdiAccountMinus} size={1} />
 				</IconButton>
 			</TableCell>
 		</TableRow>
@@ -493,43 +567,32 @@ function Row({ row }: { row: Challenge }) {
 }
 
 function Page() {
-	const challengeApi = useChallengeApi();
+	const teamApi = useTeamApi();
 
 	const configStore = useConfigStore();
 	const snackBarStore = useSnackBarStore();
-	const challengeStore = useChallengeStore();
-	const categoryStore = useCategoryStore();
+	const teamStore = useTeamStore();
 	const store = useStore();
 
-	const [challenges, setChallenges] = useState<Array<Challenge>>([]);
+	const [teams, setTeams] = useState<Array<Team>>([]);
 	const [search, setSearch] = useState<string>("");
 	const [searchInput, setSearchInput] = useState<string>("");
 	const [page, setPage] = useState<number>(0);
 	const [rowsPerPage, setRowsPerPage] = useState<number>(11);
 	const [total, setTotal] = useState<number>(0);
-	const [category, setCategory] = useState<string>("0");
-	const [sortKey, setSortKey] = useState<
-		"id" | "difficulty" | "created_at" | undefined
-	>();
-	const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>();
 
-	function getChallengesData() {
-		challengeApi
-			.getChallenges({
+	function getTeams() {
+		teamApi
+			.getTeams({
+				name: search,
 				page: page + 1,
 				size: rowsPerPage,
-				submission_qty: 3,
-				title: search,
-				category_id: category === "0" ? undefined : parseInt(category),
-				sort_key: sortKey,
-				sort_order: sortOrder,
 			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
-					setChallenges(r.data as Array<Challenge>);
+					setTeams(r.data as Array<Team>);
 					setTotal(r.total as number);
-					console.log(r.data);
 				}
 			})
 			.catch((err) => {
@@ -537,31 +600,12 @@ function Page() {
 			});
 	}
 
-	function handleSort(key: "id" | "difficulty" | "created_at") {
-		const isAsc = sortKey === key && sortOrder === "asc";
-		setPage(0);
-		setSortOrder(isAsc ? "desc" : "asc");
-		setSortKey(key);
-	}
-
-	function handleCategorySelect(event: SelectChangeEvent) {
-		setCategory(event.target.value);
-	}
+	useEffect(() => {
+		getTeams();
+	}, [page, rowsPerPage, search, teamStore.refresh]);
 
 	useEffect(() => {
-		getChallengesData();
-	}, [
-		page,
-		rowsPerPage,
-		category,
-		search,
-		sortKey,
-		sortOrder,
-		challengeStore.refresh,
-	]);
-
-	useEffect(() => {
-		document.title = `题库管理 - ${configStore?.pltCfg?.site?.title}`;
+		document.title = `团队管理 - ${configStore?.pltCfg?.site?.title}`;
 	}, []);
 
 	return (
@@ -570,6 +614,8 @@ function Page() {
 				sx={{
 					padding: "1.5rem",
 					minHeight: "82vh",
+					display: "flex",
+					flexDirection: "column",
 				}}
 			>
 				<Box
@@ -588,27 +634,6 @@ function Page() {
 						fullWidth
 						onChange={(e) => setSearchInput(e.target.value)}
 					/>
-					<Select
-						value={category}
-						size="small"
-						onChange={handleCategorySelect}
-						sx={{
-							width: "10rem",
-							marginLeft: "1rem",
-						}}
-					>
-						<MenuItem value={"0"}>
-							<em>All</em>
-						</MenuItem>
-						{categoryStore.categories.map((category) => (
-							<MenuItem
-								value={String(category?.id)}
-								key={category?.id}
-							>
-								{category?.name}
-							</MenuItem>
-						))}
-					</Select>
 					<IconButton
 						sx={{ marginX: "0.5rem" }}
 						onClick={() => setSearch(searchInput)}
@@ -621,39 +646,32 @@ function Page() {
 					sx={{
 						borderTopLeftRadius: "0.5rem",
 						borderTopRightRadius: "0.5rem",
+						flexGrow: 1,
 					}}
 				>
 					<Table stickyHeader size={"small"}>
 						<TableHead sx={{ height: "3.5rem" }}>
 							<TableRow>
-								<TableCell align={"left"}>
-									<TableSortLabel
-										active={sortKey === "id"}
-										direction={sortOrder}
-										onClick={() => handleSort("id")}
-									>
-										ID
-									</TableSortLabel>
-								</TableCell>
-								<TableCell align={"left"}>标题</TableCell>
-								<TableCell align={"left"}>描述</TableCell>
-								<TableCell align={"left"}>分类</TableCell>
-								<TableCell align={"left"}>难度</TableCell>
-								<TableCell align={"left"}>练习题</TableCell>
+								<TableCell align={"left"}>ID</TableCell>
+								<TableCell align={"left"}>团队名</TableCell>
+								<TableCell align={"left"}>小队简介</TableCell>
+								<TableCell align={"left"}>队长</TableCell>
+								<TableCell align={"left"}>队员</TableCell>
 								<TableCell align={"center"}>
 									<IconButton
 										onClick={() => {
-											store.clearChallenge();
+											store.clearTeam();
+											store.setMode("create");
 											store.setEditOpen(true);
 										}}
 									>
-										<Icon path={mdiBookPlus} size={1} />
+										<Icon path={mdiAccountPlus} size={1} />
 									</IconButton>
 								</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{challenges.map((row) => (
+							{teams?.map((row) => (
 								<Row row={row} key={row.id} />
 							))}
 						</TableBody>
@@ -669,7 +687,7 @@ function Page() {
 					labelDisplayedRows={({ from, to, count }) =>
 						`${from}-${to} 共 ${count}`
 					}
-					onPageChange={(event: unknown, newPage: number) => {
+					onPageChange={(e: unknown, newPage: number) => {
 						setPage(newPage);
 					}}
 					onRowsPerPageChange={(
@@ -693,6 +711,13 @@ function Page() {
 				onClose={() => store.setDeleteOpen(false)}
 			>
 				<Delete />
+			</Dialog>
+			<Dialog
+				open={store.selectOpen}
+				maxWidth={false}
+				onClose={() => store.setSelectOpen(false)}
+			>
+				<UserSelect />
 			</Dialog>
 		</>
 	);

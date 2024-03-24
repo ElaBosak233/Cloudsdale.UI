@@ -3,6 +3,10 @@ import {
 	GameChallengeFindRequest,
 	GameChallengeUpdateRequest,
 	GameFindRequest,
+	GameTeamCreateRequest,
+	GameTeamDeleteRequest,
+	GameTeamFindRequest,
+	GameTeamUpdateRequest,
 	GameUpdateRequest,
 } from "@/types/game";
 import { useAuth } from "@/utils/axios";
@@ -45,6 +49,29 @@ export function useGameApi() {
 		);
 	};
 
+	const getGameTeams = (request: GameTeamFindRequest) => {
+		return auth.get(`/games/${request?.game_id}/teams`, {
+			params: request,
+		});
+	};
+
+	const createGameTeam = (request: GameTeamCreateRequest) => {
+		return auth.post(`/games/${request?.game_id}/teams`, request);
+	};
+
+	const updateGameTeam = (request: GameTeamUpdateRequest) => {
+		return auth.put(
+			`/games/${request?.game_id}/teams/${request?.team_id}`,
+			request
+		);
+	};
+
+	const deleteGameTeam = (request: GameTeamDeleteRequest) => {
+		return auth.delete(
+			`/games/${request?.game_id}/teams/${request?.team_id}`
+		);
+	};
+
 	return {
 		getGames,
 		getGameByID,
@@ -53,5 +80,9 @@ export function useGameApi() {
 		updateGameChallenge,
 		createGameChallenge,
 		deleteGameChallenge,
+		getGameTeams,
+		createGameTeam,
+		updateGameTeam,
+		deleteGameTeam,
 	};
 }

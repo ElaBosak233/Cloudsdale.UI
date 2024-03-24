@@ -16,11 +16,6 @@ import {
 	Card,
 	Button,
 	Divider,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	SelectChangeEvent,
 	TextField,
 	Typography,
 	Dialog,
@@ -451,13 +446,6 @@ function Edit() {
 					保存
 				</Button>
 			</Box>
-			<Dialog
-				maxWidth={false}
-				open={store.selectOpen}
-				onClose={() => store.setSelectOpen(false)}
-			>
-				<ChallengeSelect />
-			</Dialog>
 		</Card>
 	);
 }
@@ -591,7 +579,6 @@ function Delete() {
 function Row({ row }: { row: Challenge }) {
 	const gameApi = useGameApi();
 	const snackBarStore = useSnackBarStore();
-	const challengeStore = useChallengeStore();
 	const store = useStore();
 	const navigate = useNavigate();
 
@@ -800,6 +787,13 @@ function Page() {
 				onClose={() => store.setDeleteOpen(false)}
 			>
 				<Delete />
+			</Dialog>
+			<Dialog
+				maxWidth={false}
+				open={store.selectOpen}
+				onClose={() => store.setSelectOpen(false)}
+			>
+				<ChallengeSelect />
 			</Dialog>
 		</Paper>
 	);
