@@ -711,7 +711,6 @@ function Page() {
 			const r = res.data;
 			if (r.code === 200) {
 				setChallenges(r.data);
-				console.log(challenge);
 			}
 		});
 	}

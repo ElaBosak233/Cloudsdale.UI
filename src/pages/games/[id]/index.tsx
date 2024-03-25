@@ -81,17 +81,15 @@ function Enter() {
 	}
 
 	useEffect(() => {
-		if (ownedTeams && applyedTeams) {
-			setTeams(
-				ownedTeams.filter((ownedTeam) =>
-					applyedTeams.find(
-						(applyedTeam) =>
-							applyedTeam.id === ownedTeam.id &&
-							applyedTeam.is_allowed === true
-					)
+		setTeams(
+			ownedTeams?.filter((ownedTeam) =>
+				applyedTeams?.find(
+					(applyedTeam) =>
+						applyedTeam?.id === ownedTeam?.id &&
+						applyedTeam?.is_allowed === true
 				)
-			);
-		}
+			)
+		);
 	}, [ownedTeams, applyedTeams]);
 
 	useEffect(() => {
@@ -130,6 +128,7 @@ function Enter() {
 			/>
 			{teams?.map((team) => (
 				<Box
+					key={team?.id}
 					sx={{
 						borderRadius: "0.5rem",
 						borderWidth: "1px",
@@ -171,8 +170,8 @@ function Apply() {
 
 	const { id } = useParams<{ id: string }>();
 	const [teams, setTeams] = useState<Array<Team>>();
-	const [ownedTeams, setOwnedTeams] = useState<Array<Team>>();
-	const [applyedTeams, setApplyedTeams] = useState<Array<Team>>();
+	const [ownedTeams, setOwnedTeams] = useState<Array<Team>>([]);
+	const [applyedTeams, setApplyedTeams] = useState<Array<Team>>([]);
 
 	function getUser() {
 		userApi
@@ -182,7 +181,7 @@ function Apply() {
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
-					setOwnedTeams(r.data[0].teams);
+					setOwnedTeams(r.data[0].teams as Array<Team>);
 				}
 			});
 	}
@@ -195,7 +194,7 @@ function Apply() {
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
-					setApplyedTeams(r.data);
+					setApplyedTeams(r.data as Array<Team>);
 				}
 			});
 	}
@@ -215,16 +214,14 @@ function Apply() {
 	}
 
 	useEffect(() => {
-		if (ownedTeams && applyedTeams) {
-			setTeams(
-				ownedTeams.filter(
-					(ownedTeam) =>
-						!applyedTeams.find(
-							(applyedTeam) => applyedTeam.id === ownedTeam.id
-						)
-				)
-			);
-		}
+		setTeams(
+			ownedTeams?.filter(
+				(ownedTeam) =>
+					!applyedTeams?.find(
+						(applyedTeam) => applyedTeam?.id === ownedTeam?.id
+					)
+			)
+		);
 	}, [ownedTeams, applyedTeams]);
 
 	useEffect(() => {
@@ -263,6 +260,7 @@ function Apply() {
 			/>
 			{teams?.map((team) => (
 				<Box
+					key={team?.id}
 					sx={{
 						borderRadius: "0.5rem",
 						borderWidth: "1px",

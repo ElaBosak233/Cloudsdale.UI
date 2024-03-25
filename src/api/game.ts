@@ -2,6 +2,7 @@ import {
 	GameChallengeCreateRequest,
 	GameChallengeFindRequest,
 	GameChallengeUpdateRequest,
+	GameDeleteRequest,
 	GameFindRequest,
 	GameTeamCreateRequest,
 	GameTeamDeleteRequest,
@@ -24,6 +25,10 @@ export function useGameApi() {
 
 	const updateGame = (request: GameUpdateRequest) => {
 		return auth.put(`/games/${request?.id}`, request);
+	};
+
+	const deleteGame = (request: GameDeleteRequest) => {
+		return auth.delete(`/games/${request?.id}`);
 	};
 
 	const getGameChallenges = (request: GameChallengeFindRequest) => {
@@ -81,6 +86,7 @@ export function useGameApi() {
 		getGameByID,
 		getGameChallenges,
 		updateGame,
+		deleteGame,
 		updateGameChallenge,
 		createGameChallenge,
 		deleteGameChallenge,

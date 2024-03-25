@@ -16,8 +16,8 @@ export interface Submission {
 	game_id: number;
 	game: Game;
 	pts: number;
-	created_at: string;
-	updated_at: string;
+	created_at: number;
+	updated_at: number;
 }
 
 export interface SubmissionCreateRequest {

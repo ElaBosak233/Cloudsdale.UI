@@ -25,8 +25,6 @@ export default function ChallengeCard({
 
 	const isSolved: boolean = challenge.solved ? true : false;
 
-	console.log(challenge);
-
 	const bgColor = () => {
 		switch (themeStore.mode) {
 			case "dark":

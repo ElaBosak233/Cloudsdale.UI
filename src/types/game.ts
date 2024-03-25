@@ -6,7 +6,6 @@ export interface Game {
 	public_key?: string;
 	is_enabled?: boolean;
 	is_public?: boolean;
-	password?: string;
 	member_limit_min?: number;
 	member_limit_max?: number;
 	parallel_container_limit?: number;
@@ -42,7 +41,6 @@ export interface GameCreateRequest {
 	description?: string;
 	is_enabled?: boolean;
 	is_public?: boolean;
-	password?: string;
 	member_limit_min?: number;
 	member_limit_max?: number;
 	parallel_container_limit?: number;
@@ -71,6 +69,10 @@ export interface GameUpdateRequest {
 	is_need_write_up?: boolean;
 	started_at?: number;
 	ended_at?: number;
+}
+
+export interface GameDeleteRequest {
+	id?: number;
 }
 
 export interface GameChallengeUpdateRequest {

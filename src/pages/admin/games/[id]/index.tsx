@@ -267,16 +267,6 @@ function Page() {
 						labelPlacement="start"
 						onClick={() => setIsPublic(!isPublic)}
 					/>
-					{!isPublic && (
-						<TextField
-							value={password}
-							label="密码"
-							size="small"
-							onChange={(e) => {
-								setPassword(e.target.value);
-							}}
-						/>
-					)}
 					<FormControlLabel
 						control={
 							<Switch checked={isNeedWriteUp} color="primary" />

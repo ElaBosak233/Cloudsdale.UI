@@ -529,7 +529,6 @@ function Page() {
 				if (r.code === 200) {
 					setChallenges(r.data as Array<Challenge>);
 					setTotal(r.total as number);
-					console.log(r.data);
 				}
 			})
 			.catch((err) => {

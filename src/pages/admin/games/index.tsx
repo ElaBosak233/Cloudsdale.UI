@@ -2,10 +2,20 @@ import withAdmin from "@/components/layouts/withAdmin";
 import { useChallengeStore } from "@/store/challenge";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
-import { mdiBookEdit, mdiBookPlus, mdiDelete, mdiMagnify } from "@mdi/js";
+import {
+	mdiPuzzleEdit,
+	mdiDelete,
+	mdiFlagMinus,
+	mdiFlagPlus,
+	mdiMagnify,
+} from "@mdi/js";
 import {
 	Box,
+	Button,
+	Card,
 	Chip,
+	Dialog,
+	Divider,
 	IconButton,
 	Paper,
 	Table,
@@ -17,6 +27,7 @@ import {
 	TableRow,
 	TableSortLabel,
 	TextField,
+	Typography,
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
@@ -24,8 +35,96 @@ import { Game } from "@/types/game";
 import { useGameApi } from "@/api/game";
 import { formatUnixTimestamp } from "@/utils/datetime";
 import { useNavigate } from "react-router";
+import { create } from "zustand";
+import { useGameStore } from "@/store/game";
+
+interface State {
+	deleteOpen: boolean;
+	setDeleteOpen: (deleteOpen: boolean) => void;
+	game?: Game;
+	setGame: (game: Game) => void;
+}
+
+const useStore = create<State>((set) => ({
+	deleteOpen: false,
+	setDeleteOpen: (deleteOpen) => set({ deleteOpen }),
+	setGame: (game) => set({ game }),
+}));
+
+function Delete() {
+	const store = useStore();
+	const gameApi = useGameApi();
+	const gameStore = useGameStore();
+	const snackBarStore = useSnackBarStore();
+
+	function deleteGame() {
+		gameApi
+			.deleteGame({
+				id: store.game?.id as number,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("删除成功");
+				}
+				gameStore.setRefresh(gameStore.refresh + 1);
+				store.setDeleteOpen(false);
+			});
+	}
+
+	return (
+		<Card
+			sx={{
+				width: "65vh",
+				padding: "1rem",
+				display: "flex",
+				flexDirection: "column",
+			}}
+		>
+			<Box sx={{ display: "flex", alignItems: "center" }}>
+				<Icon path={mdiDelete} size={1} />
+				<Typography
+					sx={{
+						marginX: "0.5rem",
+						fontWeight: "bold",
+					}}
+				>
+					删除分类
+				</Typography>
+			</Box>
+			<Divider sx={{ marginY: "0.75rem" }} />
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "center",
+				}}
+			>
+				<Typography>确定删除 {store.game?.title} 吗？</Typography>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "end",
+					marginTop: "1rem",
+				}}
+			>
+				<Button
+					size="large"
+					variant="contained"
+					disableElevation
+					color="error"
+					startIcon={<Icon path={mdiDelete} size={1} />}
+					onClick={deleteGame}
+				>
+					删除
+				</Button>
+			</Box>
+		</Card>
+	);
+}
 
 function Row({ row }: { row: Game }) {
+	const store = useStore();
 	const navigate = useNavigate();
 	const started_at = formatUnixTimestamp(row?.started_at as number);
 	const ended_at = formatUnixTimestamp(row?.ended_at as number);
@@ -124,10 +223,17 @@ function Row({ row }: { row: Game }) {
 					color="primary"
 					onClick={() => navigate(`/admin/games/${row.id}`)}
 				>
-					<Icon path={mdiBookEdit} size={1} />
+					<Icon path={mdiPuzzleEdit} size={1} />
 				</IconButton>
-				<IconButton sx={{ marginX: "0.1rem" }} color="error">
-					<Icon path={mdiDelete} size={1} />
+				<IconButton
+					sx={{ marginX: "0.1rem" }}
+					color="error"
+					onClick={() => {
+						store.setGame(row);
+						store.setDeleteOpen(true);
+					}}
+				>
+					<Icon path={mdiFlagMinus} size={1} />
 				</IconButton>
 			</TableCell>
 		</TableRow>
@@ -139,7 +245,8 @@ function Page() {
 
 	const configStore = useConfigStore();
 	const snackBarStore = useSnackBarStore();
-	const challengeStore = useChallengeStore();
+	const store = useStore();
+	const gameStore = useGameStore();
 
 	const [games, setGames] = useState<Array<Game>>([]);
 	const [search, setSearch] = useState<string>("");
@@ -152,7 +259,7 @@ function Page() {
 	>();
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>();
 
-	function getGamesData() {
+	function getGame() {
 		gameApi
 			.getGames({
 				page: page + 1,
@@ -181,8 +288,8 @@ function Page() {
 	}
 
 	useEffect(() => {
-		getGamesData();
-	}, [page, rowsPerPage, search, sortKey, sortOrder, challengeStore.refresh]);
+		getGame();
+	}, [page, rowsPerPage, search, sortKey, sortOrder, gameStore.refresh]);
 
 	useEffect(() => {
 		document.title = `比赛管理 - ${configStore?.pltCfg?.site?.title}`;
@@ -221,7 +328,7 @@ function Page() {
 						<Icon path={mdiMagnify} size={1} />
 					</IconButton>
 					<IconButton sx={{ marginRight: "0.5rem" }}>
-						<Icon path={mdiBookPlus} size={1} />
+						<Icon path={mdiFlagPlus} size={1} />
 					</IconButton>
 				</Box>
 				<TableContainer
@@ -282,6 +389,13 @@ function Page() {
 					}}
 				/>
 			</Paper>
+			<Dialog
+				maxWidth={false}
+				open={store.deleteOpen}
+				onClose={() => store.setDeleteOpen(false)}
+			>
+				<Delete />
+			</Dialog>
 		</>
 	);
 }
