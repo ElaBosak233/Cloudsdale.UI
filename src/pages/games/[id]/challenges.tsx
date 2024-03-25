@@ -354,7 +354,7 @@ export default function Page() {
 											fontWeight: "bold",
 										}}
 									>
-										Spark1e
+										{team?.name}
 									</Typography>
 								</Box>
 								<Box
@@ -367,7 +367,7 @@ export default function Page() {
 								>
 									<Box sx={{ textAlign: "center" }}>
 										<Box sx={{ fontWeight: "bold" }}>
-											600
+											{team?.pts}
 										</Box>
 										<Box sx={{ fontSize: "0.8rem" }}>
 											得分
@@ -375,14 +375,18 @@ export default function Page() {
 									</Box>
 									<Box sx={{ textAlign: "center" }}>
 										<Box sx={{ fontWeight: "bold" }}>
-											61
+											{(team?.pts as number) > 0
+												? team?.rank
+												: "无排名"}
 										</Box>
 										<Box sx={{ fontSize: "0.8rem" }}>
 											排名
 										</Box>
 									</Box>
 									<Box sx={{ textAlign: "center" }}>
-										<Box sx={{ fontWeight: "bold" }}>3</Box>
+										<Box sx={{ fontWeight: "bold" }}>
+											{team?.solved}
+										</Box>
 										<Box sx={{ fontSize: "0.8rem" }}>
 											已解决
 										</Box>

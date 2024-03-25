@@ -7,6 +7,7 @@ import {
 	mdiBookshelf,
 	mdiBookMultiple,
 	mdiAccountMultiple,
+	mdiBullhorn,
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Box, Button, Divider } from "@mui/material";
@@ -89,6 +90,18 @@ export default function GameSideBar() {
 				onClick={() => navigate(`/admin/games/${id}/submissions`)}
 			>
 				提交记录
+			</Button>
+			<Button
+				variant={path === "/notices" ? "contained" : "text"}
+				disableElevation
+				startIcon={<Icon path={mdiBullhorn} size={1} />}
+				sx={{
+					fontWeight: "bold",
+					marginY: "0.25rem",
+				}}
+				onClick={() => navigate(`/admin/games/${id}/notices`)}
+			>
+				公告
 			</Button>
 		</Box>
 	);

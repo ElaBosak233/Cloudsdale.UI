@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { create } from "zustand";
 import { useTeamStore } from "@/store/team";
+import { useSnackBarStore } from "@/store/snackBar";
 
 interface State {
 	applyOpen: boolean;
@@ -43,6 +44,7 @@ const useStore = create<State>()((set, _get) => ({
 function Enter() {
 	const authStore = useAuthStore();
 	const teamStore = useTeamStore();
+	const store = useStore();
 	const gameApi = useGameApi();
 	const userApi = useUserApi();
 	const navigate = useNavigate();
@@ -147,6 +149,7 @@ function Enter() {
 							size="small"
 							onClick={() => {
 								teamStore.setSelectedTeamID(team?.id as number);
+								store.setEnterOpen(false);
 								navigate(`/games/${id}/challenges`);
 							}}
 						>
@@ -161,6 +164,8 @@ function Enter() {
 
 function Apply() {
 	const authStore = useAuthStore();
+	const snackBarStore = useSnackBarStore();
+	const store = useStore();
 	const gameApi = useGameApi();
 	const userApi = useUserApi();
 
@@ -195,6 +200,20 @@ function Apply() {
 			});
 	}
 
+	function createTeam(team_id: number) {
+		gameApi
+			.createGameTeam({
+				game_id: parseInt(id as string),
+				team_id: team_id,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("申请成功");
+				}
+			});
+	}
+
 	useEffect(() => {
 		if (ownedTeams && applyedTeams) {
 			setTeams(
@@ -217,9 +236,60 @@ function Apply() {
 		<Card
 			sx={{
 				width: "40rem",
+				padding: "1.5rem",
 			}}
 		>
-			{teams?.map((team) => <Box>{team?.name}</Box>)}
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+				}}
+			>
+				<Icon path={mdiPlay} size={1} />
+				<Box
+					sx={{
+						fontSize: "1rem",
+						marginX: "0.5rem",
+						fontWeight: "bolder",
+					}}
+				>
+					申请参赛
+				</Box>
+			</Box>
+			<Divider
+				sx={{
+					marginY: "1rem",
+				}}
+			/>
+			{teams?.map((team) => (
+				<Box
+					sx={{
+						borderRadius: "0.5rem",
+						borderWidth: "1px",
+						borderStyle: "ridge",
+						borderColor: "primary",
+						paddingX: "1rem",
+						paddingY: "0.5rem",
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						marginY: "0.5rem",
+					}}
+				>
+					<Box>{team?.name}</Box>
+					<Box>
+						<IconButton
+							size="small"
+							onClick={() => {
+								createTeam(team?.id as number);
+								store.setApplyOpen(false);
+							}}
+						>
+							<Icon path={mdiPlay} size={1} />
+						</IconButton>
+					</Box>
+				</Box>
+			))}
 		</Card>
 	);
 }

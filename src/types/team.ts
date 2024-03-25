@@ -12,6 +12,9 @@ export interface Team {
 	users?: Array<User>;
 	is_allowed?: boolean;
 	signature?: string;
+	pts?: number;
+	rank?: number;
+	solved?: number;
 }
 
 export interface TeamFindRequest {
