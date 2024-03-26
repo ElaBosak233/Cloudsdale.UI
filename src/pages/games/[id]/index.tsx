@@ -404,6 +404,7 @@ export default function Page() {
 								backgroundImage: `url('${game?.cover_url}')`,
 								backgroundSize: "cover",
 								backgroundRepeat: "no-repeat",
+								backgroundPosition: "center center",
 								borderRadius: "0.5rem",
 							}}
 						/>

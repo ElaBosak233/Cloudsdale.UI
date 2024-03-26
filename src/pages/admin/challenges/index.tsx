@@ -94,6 +94,7 @@ function Edit() {
 				description: description,
 				difficulty: difficulty,
 				is_practicable: isPracticable,
+				has_attachment: hasAttachment,
 				is_dynamic: isDynamic,
 				practice_pts: practicePts,
 				duration: duration,
