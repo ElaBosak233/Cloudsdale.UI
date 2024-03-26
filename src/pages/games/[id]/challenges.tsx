@@ -80,12 +80,14 @@ export default function Page() {
 			.getGameChallenges({
 				game_id: game?.id,
 				is_enabled: true,
-				team_id: teamStore?.selectedTeamID as number,
+				team_id: teamStore?.selectedTeamID!,
+				submission_qty: 3,
 			})
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
 					setChallenges(r.data);
+					console.log(r.data);
 				}
 			});
 	}
@@ -168,6 +170,9 @@ export default function Page() {
 								fontWeight: "bold",
 							}}
 							startIcon={<Icon path={mdiTrendingUp} size={1} />}
+							onClick={() => {
+								navigate(`/games/${id}/scoreboard`);
+							}}
 						>
 							积分总榜
 						</Button>

@@ -18,6 +18,11 @@ export interface Submission {
 	pts: number;
 	created_at: number;
 	updated_at: number;
+
+	// Frontend only
+	first_blood?: boolean;
+	second_blood?: boolean;
+	third_blood?: boolean;
 }
 
 export interface SubmissionCreateRequest {

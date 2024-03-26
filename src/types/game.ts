@@ -33,6 +33,7 @@ export interface GameChallengeFindRequest {
 	game_id?: number;
 	is_enabled?: boolean;
 	team_id?: number;
+	submission_qty?: number;
 }
 
 export interface GameCreateRequest {

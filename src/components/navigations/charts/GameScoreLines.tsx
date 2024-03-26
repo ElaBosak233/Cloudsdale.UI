@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { Team } from "@/types/team";
 
-export default function GameScoreLines() {
+export default function GameScoreLines({ game_id }: { game_id: number }) {
 	const submissionApi = useSubmissionApi();
 	const [submissions, setSubmissions] = useState<Array<Submission>>([]);
 	const [series, setSeries] = useState<
@@ -19,7 +19,7 @@ export default function GameScoreLines() {
 	function getSubmissions() {
 		submissionApi
 			.getSubmissions({
-				game_id: 4,
+				game_id: game_id,
 			})
 			.then((res) => {
 				const r = res.data;
@@ -101,9 +101,19 @@ export default function GameScoreLines() {
 
 	return (
 		<LineChart
-			height={300}
+			height={500}
 			series={series}
-			xAxis={[{ data: xData, scaleType: "time" }]}
+			xAxis={[
+				{
+					data: xData,
+					scaleType: "time",
+					valueFormatter(value, _) {
+						return new Date(value).toLocaleString();
+					},
+				},
+			]}
+			grid={{ vertical: true, horizontal: true }}
+			tooltip={{ trigger: "axis" }}
 		/>
 	);
 }
