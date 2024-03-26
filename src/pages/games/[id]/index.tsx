@@ -395,8 +395,7 @@ export default function Page() {
 							sx={{
 								width: "50%",
 								marginLeft: "5%",
-								backgroundImage:
-									"url('https://cdn.vuetifyjs.com/images/parallax/material.jpg')",
+								backgroundImage: `url('${game?.cover_url}')`,
 								backgroundSize: "cover",
 								backgroundRepeat: "no-repeat",
 								borderRadius: "0.5rem",

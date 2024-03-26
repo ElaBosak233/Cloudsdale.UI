@@ -415,6 +415,7 @@ function Page() {
 					sx={{
 						borderTopLeftRadius: "0.5rem",
 						borderTopRightRadius: "0.5rem",
+						minHeight: "75vh",
 					}}
 				>
 					<Table stickyHeader size={"small"}>
@@ -439,7 +440,7 @@ function Page() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{categories.map((row) => (
+							{categories?.map((row) => (
 								<Row row={row} key={row.id} />
 							))}
 						</TableBody>

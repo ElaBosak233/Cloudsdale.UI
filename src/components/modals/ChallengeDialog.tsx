@@ -307,7 +307,7 @@ export default function ChallengeDialog({
 								marginTop: "1rem",
 							}}
 						>
-							{podInstances.map((instance, index) => (
+							{podInstances?.map((instance, index) => (
 								<>
 									<Box
 										sx={{
@@ -330,7 +330,7 @@ export default function ChallengeDialog({
 											容器 {index + 1}
 										</Box>
 									</Box>
-									{instance.nats.map((nat) => (
+									{instance.nats?.map((nat) => (
 										<TextField
 											size="small"
 											variant="filled"

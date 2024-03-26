@@ -216,7 +216,7 @@ export default function Page() {
 						<TableHead>
 							<TableRow>
 								<TableCell colSpan={4}></TableCell>
-								{Object.values(categoriedChallenges).map(
+								{Object.values(categoriedChallenges)?.map(
 									(categoriedChallenge) => (
 										<TableCell
 											colSpan={
@@ -274,9 +274,9 @@ export default function Page() {
 								<TableCell sx={{ whiteSpace: "nowrap" }}>
 									总分
 								</TableCell>
-								{Object.values(categoriedChallenges).map(
+								{Object.values(categoriedChallenges)?.map(
 									(categoriedChallenge) =>
-										categoriedChallenge.challenges.map(
+										categoriedChallenge.challenges?.map(
 											(challenge) => (
 												<TableCell
 													key={challenge.id}
@@ -293,7 +293,7 @@ export default function Page() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{rows.map((row) => (
+							{rows?.map((row) => (
 								<TableRow key={row.id}>
 									<TableCell>{row.rank}</TableCell>
 									<TableCell
@@ -321,9 +321,9 @@ export default function Page() {
 									</TableCell>
 									<TableCell>{row.solvedCount}</TableCell>
 									<TableCell>{row.totalScore}</TableCell>
-									{Object.values(categoriedChallenges).map(
+									{Object.values(categoriedChallenges)?.map(
 										(categoriedChallenge) =>
-											categoriedChallenge.challenges.map(
+											categoriedChallenge.challenges?.map(
 												(challenge) => {
 													const submission =
 														row.submissions.find(

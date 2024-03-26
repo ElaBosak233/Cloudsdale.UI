@@ -35,7 +35,9 @@ export default function GameScoreLines({ game_id }: { game_id: number }) {
 		if (submissions.length === 0) return;
 
 		// 提取所有唯一的时间戳
-		const xData = Array.from(new Set(submissions.map((s) => s.created_at)));
+		const xData = Array.from(
+			new Set(submissions?.map((s) => s.created_at))
+		);
 		xData.sort((a, b) => a - b); // 对时间戳进行排序
 
 		// 初始化累加器对象的类型
@@ -67,10 +69,10 @@ export default function GameScoreLines({ game_id }: { game_id: number }) {
 		});
 
 		// 生成图表数据
-		const series = Object.values(teamScores).map((teamScore) => {
+		const series = Object.values(teamScores)?.map((teamScore) => {
 			// 对每个队伍的分数进行累加
 			let cumulativeScore = 0;
-			const data = xData.map((timestamp) => {
+			const data = xData?.map((timestamp) => {
 				const temp =
 					cumulativeScore + teamScore.scores[timestamp] || null;
 				cumulativeScore += teamScore.scores[timestamp] || 0;

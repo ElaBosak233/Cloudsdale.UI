@@ -297,9 +297,7 @@ function Row({ row }: { row: Game }) {
 				}}
 			>
 				<img
-					src={
-						"https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-					}
+					src={row?.cover_url}
 					style={{
 						width: "16rem",
 						height: "9rem",
@@ -514,7 +512,7 @@ function Page() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{games.map((row) => (
+							{games?.map((row) => (
 								<Row row={row} key={row.id} />
 							))}
 						</TableBody>

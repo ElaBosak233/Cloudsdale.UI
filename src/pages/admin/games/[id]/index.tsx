@@ -42,7 +42,7 @@ function Page() {
 	const [isNeedWriteUp, setIsNeedWriteUp] = useState<boolean>(false);
 	const [isEnabled, setIsEnabled] = useState<boolean>(false);
 	const [isPublic, setIsPublic] = useState<boolean>(false);
-	const [password, setPassword] = useState<string>("");
+	const [coverURL, setCoverURL] = useState<string>("");
 	const [startedAt, setStartedAt] = useState<number>(0);
 	const [endedAt, setEndedAt] = useState<number>(0);
 
@@ -54,6 +54,7 @@ function Page() {
 				setTitle(r.data.title);
 				setBio(r.data.bio);
 				setDescription(r.data.description);
+				setCoverURL(r.data.cover_url);
 				setMemberLimitMin(r.data.member_limit_min);
 				setMemberLimitMax(r.data.member_limit_max);
 				setParallelContainerLimit(r.data.parallel_container_limit);
@@ -87,6 +88,7 @@ function Page() {
 				is_public: isPublic,
 				started_at: startedAt,
 				ended_at: endedAt,
+				cover_url: coverURL,
 			})
 			.then((res) => {
 				const r = res.data;
@@ -154,11 +156,25 @@ function Page() {
 					}}
 				>
 					<TextField
+						value={coverURL}
+						label="比赛封面 URL"
+						fullWidth
+						onChange={(e) => {
+							setCoverURL(e.target.value);
+						}}
+					/>
+				</Box>
+				<Box
+					sx={{
+						marginTop: "1rem",
+					}}
+				>
+					<TextField
 						value={description}
 						label="详细描述"
 						fullWidth
 						multiline
-						rows={10}
+						minRows={6}
 						onChange={(e) => {
 							setDescription(e.target.value);
 						}}

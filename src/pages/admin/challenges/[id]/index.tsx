@@ -138,7 +138,7 @@ function Page() {
 								width: "20rem",
 							}}
 						>
-							{categoryStore.categories.map((category) => (
+							{categoryStore.categories?.map((category) => (
 								<MenuItem key={category.id} value={category.id}>
 									{category.name}
 								</MenuItem>

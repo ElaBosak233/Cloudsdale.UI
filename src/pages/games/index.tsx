@@ -47,10 +47,7 @@ export default function Page() {
 		getGamesData();
 	}, [page]);
 
-	function handlePageChange(
-		event: React.ChangeEvent<unknown>,
-		value: number
-	) {
+	function handlePageChange(_: React.ChangeEvent<unknown>, value: number) {
 		setPage(value);
 	}
 
@@ -79,6 +76,7 @@ export default function Page() {
 			<Box
 				sx={{
 					marginY: "2rem",
+					minHeight: "70vh",
 				}}
 			>
 				<Box sx={{ display: "flex" }}>

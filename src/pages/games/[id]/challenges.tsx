@@ -237,42 +237,44 @@ export default function Page() {
 							>
 								All
 							</Button>
-							{Object.entries(categories).map(([_, category]) => (
-								<Button
-									key={category?.id}
-									variant="contained"
-									size="large"
-									disableElevation
-									startIcon={
-										<UIcon
-											path={`mdi${category?.icon}`}
-											size={1}
-										/>
-									}
-									sx={{
-										bgcolor:
-											selectedCategory === category.id
-												? category?.color
-												: "transparent",
-										color:
-											selectedCategory === category.id
-												? "white"
-												: category?.color,
-										"&:hover": {
-											bgcolor: category?.color,
-											color: "white",
-										},
-										marginY: "0.25rem",
-									}}
-									onClick={() => {
-										setSelectedCategory(
-											category?.id as number
-										);
-									}}
-								>
-									{category?.name}
-								</Button>
-							))}
+							{Object.entries(categories)?.map(
+								([_, category]) => (
+									<Button
+										key={category?.id}
+										variant="contained"
+										size="large"
+										disableElevation
+										startIcon={
+											<UIcon
+												path={`mdi${category?.icon}`}
+												size={1}
+											/>
+										}
+										sx={{
+											bgcolor:
+												selectedCategory === category.id
+													? category?.color
+													: "transparent",
+											color:
+												selectedCategory === category.id
+													? "white"
+													: category?.color,
+											"&:hover": {
+												bgcolor: category?.color,
+												color: "white",
+											},
+											marginY: "0.25rem",
+										}}
+										onClick={() => {
+											setSelectedCategory(
+												category?.id as number
+											);
+										}}
+									>
+										{category?.name}
+									</Button>
+								)
+							)}
 						</Box>
 						<Box
 							sx={{

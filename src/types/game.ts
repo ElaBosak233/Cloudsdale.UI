@@ -3,6 +3,7 @@ export interface Game {
 	title?: string;
 	bio?: string;
 	description?: string;
+	cover_url?: string;
 	public_key?: string;
 	is_enabled?: boolean;
 	is_public?: boolean;
@@ -51,6 +52,7 @@ export interface GameCreateRequest {
 	is_need_write_up?: boolean;
 	started_at?: number;
 	ended_at?: number;
+	cover_url?: string;
 }
 
 export interface GameUpdateRequest {
@@ -70,6 +72,7 @@ export interface GameUpdateRequest {
 	is_need_write_up?: boolean;
 	started_at?: number;
 	ended_at?: number;
+	cover_url?: string;
 }
 
 export interface GameDeleteRequest {

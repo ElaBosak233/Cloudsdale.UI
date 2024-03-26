@@ -27,8 +27,7 @@ export default function GameCard({ game }: { game: Game }) {
 				<Paper
 					sx={{
 						width: "35%",
-						backgroundImage:
-							"url('https://cdn.vuetifyjs.com/images/parallax/material.jpg')",
+						backgroundImage: `url('${game?.cover_url}')`,
 						backgroundSize: "cover",
 						backgroundRepeat: "no-repeat",
 						borderTopRightRadius: 0,

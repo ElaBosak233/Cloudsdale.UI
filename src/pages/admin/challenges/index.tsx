@@ -601,7 +601,7 @@ function Page() {
 						<MenuItem value={"0"}>
 							<em>All</em>
 						</MenuItem>
-						{categoryStore.categories.map((category) => (
+						{categoryStore.categories?.map((category) => (
 							<MenuItem
 								value={String(category?.id)}
 								key={category?.id}
@@ -655,7 +655,7 @@ function Page() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{challenges.map((row) => (
+							{challenges?.map((row) => (
 								<Row row={row} key={row.id} />
 							))}
 						</TableBody>
