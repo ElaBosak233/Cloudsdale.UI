@@ -8,6 +8,7 @@ import {
 	mdiFlagMinus,
 	mdiFlagPlus,
 	mdiMagnify,
+	mdiContentSave,
 } from "@mdi/js";
 import {
 	Box,
@@ -16,8 +17,16 @@ import {
 	Chip,
 	Dialog,
 	Divider,
+	FormControl,
+	FormControlLabel,
 	IconButton,
+	InputLabel,
+	MenuItem,
 	Paper,
+	Rating,
+	Select,
+	SelectChangeEvent,
+	Switch,
 	Table,
 	TableBody,
 	TableCell,
@@ -28,6 +37,7 @@ import {
 	TableSortLabel,
 	TextField,
 	Typography,
+	duration,
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
@@ -37,19 +47,155 @@ import { formatUnixTimestamp } from "@/utils/datetime";
 import { useNavigate } from "react-router";
 import { create } from "zustand";
 import { useGameStore } from "@/store/game";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 interface State {
+	editOpen: boolean;
+	setEditOpen: (editOpen: boolean) => void;
 	deleteOpen: boolean;
 	setDeleteOpen: (deleteOpen: boolean) => void;
 	game?: Game;
 	setGame: (game: Game) => void;
+	clearGame: () => void;
 }
 
 const useStore = create<State>((set) => ({
+	editOpen: false,
+	setEditOpen: (editOpen) => set({ editOpen }),
 	deleteOpen: false,
 	setDeleteOpen: (deleteOpen) => set({ deleteOpen }),
 	setGame: (game) => set({ game }),
+	clearGame: () => set({ game: undefined }),
 }));
+
+function Edit() {
+	const store = useStore();
+	const gameApi = useGameApi();
+	const gameStore = useGameStore();
+	const snackBarStore = useSnackBarStore();
+
+	const [title, setTitle] = useState<string>("");
+	const [bio, setBio] = useState<string>("");
+	const [startedAt, setStartedAt] = useState<number>(0);
+	const [endedAt, setEndedAt] = useState<number>(0);
+
+	function createGame() {
+		gameApi
+			.createGame({
+				title: title,
+				bio: bio,
+				started_at: startedAt,
+				ended_at: endedAt,
+				is_enabled: false,
+				member_limit_min: 1,
+				member_limit_max: 3,
+			})
+			.then((res) => {
+				const r = res.data;
+				if (r.code === 200) {
+					snackBarStore.success("创建成功");
+					store.setEditOpen(false);
+					gameStore.setRefresh(gameStore.refresh + 1);
+				}
+			});
+	}
+
+	return (
+		<Card
+			sx={{
+				width: "65vh",
+				padding: "1rem",
+				display: "flex",
+				flexDirection: "column",
+			}}
+		>
+			<Box sx={{ display: "flex", alignItems: "center" }}>
+				<Icon path={mdiPuzzleEdit} size={1} />
+				<Typography
+					sx={{
+						marginX: "0.5rem",
+						fontWeight: "bold",
+					}}
+				>
+					创建比赛
+				</Typography>
+			</Box>
+			<Divider sx={{ marginY: "0.75rem" }} />
+			<Box
+				sx={{
+					display: "flex",
+				}}
+			>
+				<TextField
+					label="标题"
+					value={title}
+					fullWidth
+					onChange={(e) => setTitle(e.target.value)}
+				/>
+			</Box>
+			<Box
+				sx={{
+					marginTop: "1rem",
+				}}
+			>
+				<TextField
+					label="简述"
+					value={bio}
+					fullWidth
+					multiline
+					rows={4}
+					onChange={(e) => setBio(e.target.value)}
+				/>
+			</Box>
+			<Box
+				sx={{
+					marginTop: "1rem",
+					display: "flex",
+				}}
+			>
+				<DateTimePicker
+					label="开始时间"
+					value={dayjs(new Date(startedAt * 1000))}
+					onChange={(newStartedAt) =>
+						setStartedAt(newStartedAt?.unix() as number)
+					}
+					sx={{
+						width: "100%",
+					}}
+				/>
+				<DateTimePicker
+					label="结束时间"
+					value={dayjs(new Date(endedAt * 1000))}
+					onChange={(newEndedAt) =>
+						setEndedAt(newEndedAt?.unix() as number)
+					}
+					sx={{
+						marginLeft: "1rem",
+						width: "100%",
+					}}
+				/>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "end",
+					marginTop: "1rem",
+				}}
+			>
+				<Button
+					size="large"
+					variant="contained"
+					disableElevation
+					startIcon={<Icon path={mdiContentSave} size={1} />}
+					onClick={createGame}
+				>
+					创建
+				</Button>
+			</Box>
+		</Card>
+	);
+}
 
 function Delete() {
 	const store = useStore();
@@ -327,7 +473,13 @@ function Page() {
 					>
 						<Icon path={mdiMagnify} size={1} />
 					</IconButton>
-					<IconButton sx={{ marginRight: "0.5rem" }}>
+					<IconButton
+						sx={{ marginRight: "0.5rem" }}
+						onClick={() => {
+							store.clearGame();
+							store.setEditOpen(true);
+						}}
+					>
 						<Icon path={mdiFlagPlus} size={1} />
 					</IconButton>
 				</Box>
@@ -395,6 +547,13 @@ function Page() {
 				onClose={() => store.setDeleteOpen(false)}
 			>
 				<Delete />
+			</Dialog>
+			<Dialog
+				maxWidth={false}
+				open={store.editOpen}
+				onClose={() => store.setEditOpen(false)}
+			>
+				<Edit />
 			</Dialog>
 		</>
 	);
