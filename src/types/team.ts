@@ -4,6 +4,7 @@ export interface Team {
 	id?: number;
 	name?: string;
 	description?: string;
+	email?: string;
 	captain_id?: number;
 	captain?: User;
 	is_locked?: boolean;
@@ -29,6 +30,7 @@ export interface TeamUpdateRequest {
 	id: number;
 	name?: string;
 	description?: string;
+	email?: string;
 	captain_id?: number;
 	is_locked?: boolean;
 }
@@ -36,6 +38,7 @@ export interface TeamUpdateRequest {
 export interface TeamCreateRequest {
 	name: string;
 	description: string;
+	email?: string;
 	captain_id: number;
 }
 

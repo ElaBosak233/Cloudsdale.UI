@@ -24,10 +24,7 @@ import { useGroupApi } from "./api/group";
 function ESnackBar(): React.ReactNode {
 	const snackBarStore = useSnackBarStore();
 
-	const handleClose = (
-		event?: React.SyntheticEvent | Event,
-		reason?: string
-	) => {
+	const handleClose = (_?: React.SyntheticEvent | Event, reason?: string) => {
 		if (reason === "clickaway") {
 			return;
 		}
@@ -46,8 +43,9 @@ function ESnackBar(): React.ReactNode {
 		>
 			<Alert
 				onClose={handleClose}
+				variant="filled"
 				severity={snackBarStore.severity}
-				sx={{ width: "100%" }}
+				sx={{ width: "100%", color: "#FFF" }}
 			>
 				{snackBarStore.msg}
 			</Alert>

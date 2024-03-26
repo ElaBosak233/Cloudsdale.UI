@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import CryptoJS from "crypto-js";
 
 export default function Page() {
 	const gameApi = useGameApi();
@@ -347,6 +348,7 @@ export default function Page() {
 									}}
 								>
 									<Avatar
+										src={`https://cravatar.cn/avatar/${CryptoJS.MD5(team?.email).toString()}`}
 										sx={{
 											width: "3.5rem",
 											height: "3.5rem",

@@ -1,5 +1,5 @@
 import { PaletteOptions, createTheme } from "@mui/material/styles";
-import { blue, yellow, red, green, grey } from "@mui/material/colors";
+import { blue, yellow, red, green, grey, orange } from "@mui/material/colors";
 import { useThemeStore } from "@/store/theme";
 
 declare module "@mui/material/styles" {
@@ -35,7 +35,7 @@ function getPalette(mode: string): PaletteOptions {
 			return {
 				mode: "light",
 				primary: blue,
-				warning: yellow,
+				warning: orange,
 				error: red,
 				success: green,
 				background: {

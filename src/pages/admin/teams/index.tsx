@@ -12,6 +12,7 @@ import {
 	mdiPuzzleEdit,
 } from "@mdi/js";
 import {
+	Avatar,
 	Box,
 	Button,
 	Card,
@@ -33,13 +34,12 @@ import {
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { create } from "zustand";
-import { useUserStore } from "@/store/user";
 import { Team } from "@/types/team";
 import { useTeamApi } from "@/api/team";
 import { useTeamStore } from "@/store/team";
 import { useUserApi } from "@/api/user";
 import { User } from "@/types/user";
-import Users from "../users";
+import CryptoJS from "crypto-js";
 
 interface State {
 	editOpen: boolean;
@@ -225,6 +225,7 @@ function Edit() {
 
 	const [name, setName] = useState<string>("");
 	const [description, setDescription] = useState<string>("");
+	const [email, setEmail] = useState<string>("");
 	const [captainID, setCaptainID] = useState<number>(0);
 
 	function createTeam() {
@@ -233,6 +234,7 @@ function Edit() {
 				name: name,
 				description: description,
 				captain_id: captainID,
+				email: email,
 			})
 			.then((res) => {
 				const r = res.data;
@@ -251,6 +253,7 @@ function Edit() {
 				id: store.team?.id as number,
 				description: description,
 				captain_id: captainID,
+				email: email,
 			})
 			.then((res) => {
 				const r = res.data;
@@ -320,6 +323,20 @@ function Edit() {
 					multiline
 					rows={4}
 					onChange={(e) => setDescription(e.target.value)}
+				/>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					marginTop: "1rem",
+				}}
+			>
+				<TextField
+					label="邮箱"
+					value={email}
+					fullWidth
+					size="small"
+					onChange={(e) => setEmail(e.target.value)}
 				/>
 			</Box>
 			<Box
@@ -498,13 +515,28 @@ function Row({ row }: { row: Team }) {
 			<TableCell align={"left"}>
 				<Box
 					sx={{
-						width: "10rem",
-						overflow: "hidden",
-						whiteSpace: "nowrap",
-						textOverflow: "ellipsis",
+						display: "flex",
+						alignItems: "center",
 					}}
 				>
-					{row.name}
+					<Avatar
+						src={`https://cravatar.cn/avatar/${CryptoJS.MD5(row.email).toString()}`}
+						sx={{
+							width: 36,
+							height: 36,
+						}}
+					/>
+					<Box
+						sx={{
+							width: "10rem",
+							overflow: "hidden",
+							whiteSpace: "nowrap",
+							textOverflow: "ellipsis",
+							marginX: "0.7rem",
+						}}
+					>
+						{row.name}
+					</Box>
 				</Box>
 			</TableCell>
 			<TableCell align={"left"}>
@@ -517,6 +549,18 @@ function Row({ row }: { row: Team }) {
 					}}
 				>
 					{row.description}
+				</Box>
+			</TableCell>
+			<TableCell align={"left"}>
+				<Box
+					sx={{
+						width: "10rem",
+						overflow: "hidden",
+						whiteSpace: "nowrap",
+						textOverflow: "ellipsis",
+					}}
+				>
+					{row.email}
 				</Box>
 			</TableCell>
 			<TableCell
@@ -655,6 +699,7 @@ function Page() {
 								<TableCell align={"left"}>ID</TableCell>
 								<TableCell align={"left"}>团队名</TableCell>
 								<TableCell align={"left"}>小队简介</TableCell>
+								<TableCell align={"left"}>邮箱</TableCell>
 								<TableCell align={"left"}>队长</TableCell>
 								<TableCell align={"left"}>队员</TableCell>
 								<TableCell align={"center"}>

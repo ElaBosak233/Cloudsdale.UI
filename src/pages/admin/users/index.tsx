@@ -1,9 +1,6 @@
-import { useChallengeApi } from "@/api/challenge";
 import withAdmin from "@/components/layouts/withAdmin";
-import { useChallengeStore } from "@/store/challenge";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
-import { Challenge } from "@/types/challenge";
 import {
 	mdiAccountEdit,
 	mdiAccountMinus,
@@ -18,6 +15,7 @@ import {
 	mdiStarOutline,
 } from "@mdi/js";
 import {
+	Avatar,
 	Box,
 	Button,
 	Card,
@@ -51,6 +49,7 @@ import { useUserApi } from "@/api/user";
 import { User } from "@/types/user";
 import { useUserStore } from "@/store/user";
 import { useGroupStore } from "@/store/group";
+import CryptoJS from "crypto-js";
 
 interface State {
 	editOpen: boolean;
@@ -354,7 +353,6 @@ function Delete() {
 }
 
 function Row({ row }: { row: User }) {
-	const snackBarStore = useSnackBarStore();
 	const store = useStore();
 
 	return (
@@ -365,13 +363,28 @@ function Row({ row }: { row: User }) {
 			<TableCell align={"left"}>
 				<Box
 					sx={{
-						width: "10rem",
-						overflow: "hidden",
-						whiteSpace: "nowrap",
-						textOverflow: "ellipsis",
+						display: "flex",
+						alignItems: "center",
 					}}
 				>
-					{row.username}
+					<Avatar
+						src={`https://cravatar.cn/avatar/${CryptoJS.MD5(row.email).toString()}`}
+						sx={{
+							width: 36,
+							height: 36,
+						}}
+					/>
+					<Box
+						sx={{
+							width: "10rem",
+							overflow: "hidden",
+							whiteSpace: "nowrap",
+							textOverflow: "ellipsis",
+							marginX: "0.7rem",
+						}}
+					>
+						{row.username}
+					</Box>
 				</Box>
 			</TableCell>
 			<TableCell align={"left"}>
