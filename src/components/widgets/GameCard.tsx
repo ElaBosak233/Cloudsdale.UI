@@ -53,7 +53,12 @@ export default function GameCard({ game }: { game: Game }) {
 						>
 							<Chip
 								size="small"
-								label="个人赛"
+								label={
+									game?.member_limit_min === 1 &&
+									game?.member_limit_max === 1
+										? "单人赛"
+										: "多人赛"
+								}
 								sx={{
 									fontSize: "0.7rem",
 									fontWeight: "bold",

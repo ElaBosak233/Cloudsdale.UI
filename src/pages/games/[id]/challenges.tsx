@@ -22,11 +22,15 @@ import {
 	Divider,
 	Grid,
 	Paper,
+	Tab,
+	Tabs,
 	Typography,
+	tabsClasses,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import CryptoJS from "crypto-js";
+import { formatUnixTimestamp } from "@/utils/datetime";
 
 export default function Page() {
 	const gameApi = useGameApi();
@@ -46,6 +50,8 @@ export default function Page() {
 
 	const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 	const [selectedChallenge, setSelectedChallenge] = useState<Challenge>();
+
+	const [progress, setProgress] = useState<number>(0);
 
 	function getGame() {
 		gameApi.getGameByID(parseInt(id as string)).then((res) => {
@@ -99,8 +105,28 @@ export default function Page() {
 	useEffect(() => {
 		if (game) {
 			getChallenges();
+			setProgress(
+				((Math.floor(Date.now() / 1000) -
+					(game?.started_at as number)) /
+					((game?.ended_at as number) -
+						(game?.started_at as number))) *
+					100
+			);
 		}
 	}, [game, challengeStore.refresh]);
+
+	useEffect(() => {
+		if (game && progress) {
+			if (progress >= 100) {
+				snackBarStore.error("比赛已结束");
+				navigate(`/games/${game?.id}`);
+			}
+			if (progress <= 0) {
+				snackBarStore.error("比赛尚未开始");
+				navigate(`/games/${game?.id}`);
+			}
+		}
+	}, [game, progress]);
 
 	useEffect(() => {
 		if (challenges) {
@@ -402,8 +428,48 @@ export default function Page() {
 								</Box>
 							</Paper>
 							<Box sx={{ marginY: "1rem" }}></Box>
-							<Paper sx={{ padding: "1rem", height: "35rem" }}>
-								111
+							<Paper sx={{ height: "35rem" }}>
+								<Tabs
+									variant="scrollable"
+									scrollButtons
+									value={0}
+									sx={{
+										[`& .${tabsClasses.scrollButtons}`]: {
+											"&.Mui-disabled": { opacity: 0.3 },
+										},
+										"& .MuiTabs-root": {
+											minHeight: "1rem",
+										},
+										borderTopLeftRadius: "0.3rem",
+										borderTopRightRadius: "0.3rem",
+									}}
+								>
+									<Tab
+										label="全部"
+										sx={{
+											"& .MuiTab-root": {
+												padding: "0.5rem 1rem",
+											},
+										}}
+									/>
+									<Tab
+										label="题目"
+										sx={{
+											"& .MuiTab-root .MuiButtonBase-root":
+												{
+													padding: "0.5rem 1rem",
+												},
+										}}
+									/>
+									<Tab
+										label="通知"
+										sx={{
+											"& .MuiTab-root": {
+												padding: "0.5rem 1rem",
+											},
+										}}
+									/>
+								</Tabs>
 							</Paper>
 						</Box>
 					</Box>

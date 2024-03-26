@@ -361,14 +361,19 @@ export default function Page() {
 								<Chip size={"small"} label={ended_at}></Chip>
 							</Box>
 							<LinearProgress
-								variant="determinate"
-								value={progress}
+								variant={
+									progress < 0
+										? "indeterminate"
+										: "determinate"
+								}
+								value={progress < 100 ? progress : 100}
 							/>
 							<Box sx={{ display: "flex", marginY: "1rem" }}>
 								<Button
 									variant="contained"
 									disableElevation
 									onClick={() => store.setApplyOpen(true)}
+									disabled={progress < 0 || progress >= 100}
 								>
 									申请参赛
 								</Button>
@@ -385,6 +390,7 @@ export default function Page() {
 								<Button
 									variant="contained"
 									disableElevation
+									disabled={progress < 0 || progress >= 100}
 									onClick={() => store.setEnterOpen(true)}
 								>
 									进入比赛

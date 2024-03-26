@@ -6,6 +6,7 @@ interface PodState {
 	existPods?: Record<number, Pod>;
 	addExistPod: (challenge_id: number, pod: Pod) => void;
 	setExistPods: (existPods: Record<number, Pod>) => void;
+	removeExistPod: (challenge_id: number) => void;
 }
 
 export const usePodStore = create<PodState>()(
@@ -19,6 +20,13 @@ export const usePodStore = create<PodState>()(
 						[challenge_id]: pod,
 					},
 				})),
+			removeExistPod: (challenge_id) => {
+				set((state) => {
+					const existPods = { ...state.existPods };
+					delete existPods[challenge_id];
+					return { existPods };
+				});
+			},
 		}),
 		{
 			name: "pod_storage",

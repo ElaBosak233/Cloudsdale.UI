@@ -183,6 +183,7 @@ export default function ChallengeDialog({
 				const r = res.data;
 				if (r.code === 200) {
 					snackBarStore.success("删除成功");
+					podStore.removeExistPod(challenge?.id as number);
 				}
 			})
 			.catch((err) => {
