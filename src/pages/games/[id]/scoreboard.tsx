@@ -83,7 +83,6 @@ export default function Page() {
 	}, []);
 
 	useEffect(() => {
-		console.log(challenges);
 		if (!challenges) return;
 
 		const categoriedChallenges: Record<
@@ -108,7 +107,6 @@ export default function Page() {
 	}, [challenges]);
 
 	useEffect(() => {
-		console.log(challenges);
 		if (!challenges) return;
 
 		// 初始化团队提交数据的对象
@@ -155,8 +153,6 @@ export default function Page() {
 			row.rank = index + 1;
 		});
 
-		// 更新状态
-		console.log(rowsArray);
 		setRows(rowsArray);
 	}, [challenges]);
 

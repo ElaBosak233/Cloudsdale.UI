@@ -352,7 +352,7 @@ export default function Page() {
 						sx={{
 							borderTopLeftRadius: "0.5rem",
 							borderTopRightRadius: "0.5rem",
-							minHeight: "73vh",
+							minHeight: "71.6vh",
 						}}
 					>
 						<Table stickyHeader size={"small"}>

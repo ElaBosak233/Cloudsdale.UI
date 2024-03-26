@@ -4,6 +4,7 @@ import {
 	mdiFlag,
 	mdiPackageVariant,
 	mdiCheckDecagram,
+	mdiAttachment,
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Box, Button, Divider } from "@mui/material";
@@ -74,6 +75,18 @@ export default function ChallengeSideBar() {
 				onClick={() => navigate(`/admin/challenges/${id}/images`)}
 			>
 				镜像
+			</Button>
+			<Button
+				variant={path === "/attachments" ? "contained" : "text"}
+				disableElevation
+				startIcon={<Icon path={mdiAttachment} size={1} />}
+				sx={{
+					fontWeight: "bold",
+					marginY: "0.25rem",
+				}}
+				onClick={() => navigate(`/admin/challenges/${id}/attachments`)}
+			>
+				附件
 			</Button>
 			<Button
 				variant={path === "/submissions" ? "contained" : "text"}

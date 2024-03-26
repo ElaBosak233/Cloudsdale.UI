@@ -8,6 +8,7 @@ import {
 	mdiBookMultiple,
 	mdiAccountMultiple,
 	mdiBullhorn,
+	mdiFileDocumentCheck,
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Box, Button, Divider } from "@mui/material";
@@ -103,6 +104,19 @@ export default function GameSideBar() {
 				onClick={() => navigate(`/admin/games/${id}/notices`)}
 			>
 				公告
+			</Button>
+			<Button
+				variant={path === "/writeups" ? "contained" : "text"}
+				disableElevation
+				startIcon={<Icon path={mdiFileDocumentCheck} size={1} />}
+				sx={{
+					fontWeight: "bold",
+					marginY: "0.25rem",
+				}}
+				disabled={true}
+				onClick={() => navigate(`/admin/games/${id}/writeups`)}
+			>
+				题解
 			</Button>
 		</Box>
 	);

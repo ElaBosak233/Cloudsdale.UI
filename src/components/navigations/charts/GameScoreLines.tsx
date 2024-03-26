@@ -95,8 +95,6 @@ export default function GameScoreLines({ game_id }: { game_id: number }) {
 			series.length = 10; // 只保留前十名
 		}
 
-		console.log(series);
-
 		setSeries(series);
 		setXData(xData);
 	}, [submissions]);
