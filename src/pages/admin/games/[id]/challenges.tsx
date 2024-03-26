@@ -530,7 +530,7 @@ function Delete() {
 					</Box>
 					<Box
 						sx={{
-							width: "15rem",
+							maxWidth: "20rem",
 							overflow: "hidden",
 							textOverflow: "ellipsis",
 							whiteSpace: "nowrap",
