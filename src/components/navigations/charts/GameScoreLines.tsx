@@ -106,7 +106,6 @@ export default function GameScoreLines({ game_id }: { game_id: number }) {
 			xAxis={[
 				{
 					data: xData,
-					scaleType: "time",
 					valueFormatter(value, _) {
 						return new Date(value).toLocaleString();
 					},

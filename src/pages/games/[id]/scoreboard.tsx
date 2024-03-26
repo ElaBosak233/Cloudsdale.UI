@@ -18,6 +18,7 @@ import {
 	Table,
 	TableCell,
 	TableBody,
+	Avatar,
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { useNavigate, useParams } from "react-router";
@@ -28,6 +29,8 @@ import { Challenge } from "@/types/challenge";
 import { Category } from "@/types/category";
 import { Submission } from "@/types/submission";
 import { Team } from "@/types/team";
+import CryptoJS from "crypto-js";
+import UIcon from "@/components/ui/UIcon";
 
 interface S {
 	id?: number;
@@ -232,7 +235,28 @@ export default function Page() {
 												categoriedChallenge.category.id
 											}
 										>
-											{categoriedChallenge.category.name}
+											<Box
+												sx={{
+													display: "flex",
+													alignItems: "center",
+													justifyContent: "center",
+												}}
+											>
+												<UIcon
+													path={`mdi${categoriedChallenge?.category?.icon}`}
+													size={1}
+												/>
+												<Box
+													sx={{
+														marginX: "0.5rem",
+													}}
+												>
+													{
+														categoriedChallenge
+															.category.name
+													}
+												</Box>
+											</Box>
 										</TableCell>
 									)
 								)}
@@ -272,7 +296,29 @@ export default function Page() {
 							{rows.map((row) => (
 								<TableRow key={row.id}>
 									<TableCell>{row.rank}</TableCell>
-									<TableCell>{row.team.name}</TableCell>
+									<TableCell
+										sx={{
+											display: "flex",
+											alignItems: "center",
+										}}
+									>
+										<Box>
+											<Avatar
+												src={`https://cravatar.cn/avatar/${CryptoJS.MD5(row?.team?.email || "").toString()}`}
+												sx={{
+													width: 36,
+													height: 36,
+												}}
+											/>
+										</Box>
+										<Box
+											sx={{
+												marginX: "0.7rem",
+											}}
+										>
+											{row.team.name}
+										</Box>
+									</TableCell>
 									<TableCell>{row.solvedCount}</TableCell>
 									<TableCell>{row.totalScore}</TableCell>
 									{Object.values(categoriedChallenges).map(
@@ -296,7 +342,9 @@ export default function Page() {
 													}
 													return (
 														<TableCell
-															key={challenge.id}
+															key={
+																submission?.id!
+															}
 															align="center"
 														>
 															{submission.status ===

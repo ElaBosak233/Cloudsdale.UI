@@ -348,7 +348,7 @@ export default function Page() {
 									}}
 								>
 									<Avatar
-										src={`https://cravatar.cn/avatar/${CryptoJS.MD5(team?.email).toString()}`}
+										src={`https://cravatar.cn/avatar/${CryptoJS.MD5(team?.email || "").toString()}`}
 										sx={{
 											width: "3.5rem",
 											height: "3.5rem",

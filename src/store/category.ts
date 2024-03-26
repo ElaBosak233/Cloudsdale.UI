@@ -11,7 +11,7 @@ interface CategoryState {
 
 export const useCategoryStore = create<CategoryState>()(
 	persist(
-		(set, _get) => ({
+		(set) => ({
 			categories: [],
 			setCategories: (categories) => set({ categories }),
 			refresh: 0,

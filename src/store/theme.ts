@@ -8,7 +8,7 @@ interface ThemeState {
 
 export const useThemeStore = create<ThemeState>()(
 	persist(
-		(set, _get) => ({
+		(set) => ({
 			mode: "light",
 			toggleMode: (mode: string) =>
 				set({

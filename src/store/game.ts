@@ -10,7 +10,7 @@ interface GameState {
 
 export const useGameStore = create<GameState>()(
 	persist(
-		(set, _get) => ({
+		(set) => ({
 			selectedGameID: 0,
 			setSelectedGameID: (selectedGameID) => set({ selectedGameID }),
 			refresh: 0,

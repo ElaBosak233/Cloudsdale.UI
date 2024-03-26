@@ -5,7 +5,7 @@ interface ChallengeState {
 	setRefresh: (refresh: number) => void;
 }
 
-export const useChallengeStore = create<ChallengeState>()((set, _get) => ({
+export const useChallengeStore = create<ChallengeState>()((set) => ({
 	refresh: 0,
 	setRefresh: (refresh) => set({ refresh }),
 }));

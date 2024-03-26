@@ -5,7 +5,7 @@ interface UserState {
 	setRefresh: (refresh: number) => void;
 }
 
-export const useUserStore = create<UserState>()((set, _get) => ({
+export const useUserStore = create<UserState>()((set) => ({
 	refresh: 0,
 	setRefresh: (refresh) => set({ refresh }),
 }));

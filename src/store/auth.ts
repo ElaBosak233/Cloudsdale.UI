@@ -11,7 +11,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
 	persist(
-		(set, _get) => ({
+		(set) => ({
 			setUser: (user) => set({ user }),
 			setPgsToken: (pgsToken) => set({ pgsToken }),
 		}),

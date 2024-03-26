@@ -12,11 +12,11 @@ interface SnackBarState {
 	close: () => void;
 }
 
-export const useSnackBarStore = create<SnackBarState>()((_set, _get) => ({
+export const useSnackBarStore = create<SnackBarState>()((set) => ({
 	open: false,
-	info: (msg) => _set({ msg, severity: "info", open: true }),
-	success: (msg) => _set({ msg, severity: "success", open: true }),
-	error: (msg) => _set({ msg, severity: "error", open: true }),
-	warning: (msg) => _set({ msg, severity: "warning", open: true }),
-	close: () => _set({ open: false }),
+	info: (msg) => set({ msg, severity: "info", open: true }),
+	success: (msg) => set({ msg, severity: "success", open: true }),
+	error: (msg) => set({ msg, severity: "error", open: true }),
+	warning: (msg) => set({ msg, severity: "warning", open: true }),
+	close: () => set({ open: false }),
 }));

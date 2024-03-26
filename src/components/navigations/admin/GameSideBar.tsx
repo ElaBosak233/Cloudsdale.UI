@@ -99,6 +99,7 @@ export default function GameSideBar() {
 					fontWeight: "bold",
 					marginY: "0.25rem",
 				}}
+				disabled={true}
 				onClick={() => navigate(`/admin/games/${id}/notices`)}
 			>
 				公告

@@ -10,7 +10,7 @@ interface TeamState {
 
 export const useTeamStore = create<TeamState>()(
 	persist(
-		(set, _get) => ({
+		(set) => ({
 			selectedTeamID: 0,
 			setSelectedTeamID: (selectedTeamID) => set({ selectedTeamID }),
 			refresh: 0,

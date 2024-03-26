@@ -1,5 +1,5 @@
 import { PaletteOptions, createTheme } from "@mui/material/styles";
-import { blue, yellow, red, green, grey, orange } from "@mui/material/colors";
+import { blue, red, green, grey, orange } from "@mui/material/colors";
 import { useThemeStore } from "@/store/theme";
 
 declare module "@mui/material/styles" {

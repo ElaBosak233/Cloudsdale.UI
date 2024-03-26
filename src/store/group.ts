@@ -8,7 +8,7 @@ interface GroupState {
 	setRefresh: (refresh: number) => void;
 }
 
-export const useGroupStore = create<GroupState>()((set, _get) => ({
+export const useGroupStore = create<GroupState>()((set) => ({
 	setGroups: (groups) => set({ groups }),
 	refresh: 0,
 	setRefresh: (refresh) => set({ refresh }),

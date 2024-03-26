@@ -10,7 +10,7 @@ interface PodState {
 
 export const usePodStore = create<PodState>()(
 	persist(
-		(set, _get) => ({
+		(set) => ({
 			setExistPods: (existPods) => set({ existPods }),
 			addExistPod: (challenge_id, pod) =>
 				set((state) => ({

@@ -368,7 +368,7 @@ function Row({ row }: { row: User }) {
 					}}
 				>
 					<Avatar
-						src={`https://cravatar.cn/avatar/${CryptoJS.MD5(row.email).toString()}`}
+						src={`https://cravatar.cn/avatar/${CryptoJS.MD5(row.email || "").toString()}`}
 						sx={{
 							width: 36,
 							height: 36,
