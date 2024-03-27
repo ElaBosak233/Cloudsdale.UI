@@ -10,6 +10,7 @@ export interface Challenge {
 	category_id?: number;
 	category?: Category;
 	has_attachment?: boolean;
+	attachment_url?: string;
 	is_practicable?: boolean;
 	is_dynamic?: boolean;
 	difficulty?: number;
@@ -48,6 +49,7 @@ export interface ChallengeUpdateRequest {
 	description?: string;
 	category_id?: number;
 	has_attachment?: boolean;
+	attachment_url?: string;
 	is_practicable?: boolean;
 	is_dynamic?: boolean;
 	difficulty?: number;

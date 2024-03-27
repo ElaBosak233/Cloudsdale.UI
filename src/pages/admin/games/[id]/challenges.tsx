@@ -623,7 +623,7 @@ function Row({ row }: { row: Challenge }) {
 			</TableCell>
 			<TableCell
 				sx={{
-					width: "20rem",
+					maxWidth: "20rem",
 					overflow: "hidden",
 					textOverflow: "ellipsis",
 					whiteSpace: "nowrap",

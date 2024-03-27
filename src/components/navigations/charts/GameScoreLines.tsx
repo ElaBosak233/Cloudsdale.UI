@@ -20,6 +20,7 @@ export default function GameScoreLines({ game_id }: { game_id: number }) {
 		submissionApi
 			.getSubmissions({
 				game_id: game_id,
+				status: 2,
 			})
 			.then((res) => {
 				const r = res.data;

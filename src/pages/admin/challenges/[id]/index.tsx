@@ -34,12 +34,13 @@ function Page() {
 	const [description, setDescription] = useState<string>("");
 	const [difficulty, setDifficulty] = useState<number>(1);
 	const [hasAttachment, setHasAttachment] = useState<boolean>(false);
+	const [attachmentURL, setAttachmentURL] = useState<string>("");
 	const [isPracticable, setIsPracticable] = useState<boolean>(false);
 	const [isDynamic, setIsDynamic] = useState<boolean>(false);
 	const [practicePts, setPracticePts] = useState<number>(0);
 	const [duration, setDuration] = useState<number>(0);
 
-	function getChallengeData() {
+	function getChallenge() {
 		challengeApi
 			.getChallenges({
 				id: parseInt(id as string),
@@ -55,12 +56,13 @@ function Page() {
 				setIsPracticable(r.data[0].is_practicable);
 				setDifficulty(r.data[0].difficulty);
 				setHasAttachment(r.data[0].has_attachment);
+				setAttachmentURL(r.data[0].attachment_url);
 				setPracticePts(r.data[0].practice_pts);
 				setDuration(r.data[0].duration);
 			});
 	}
 
-	function handleUpdateChallenge() {
+	function updateChallenge() {
 		challengeApi
 			.updateChallenge({
 				id: parseInt(id as string),
@@ -69,6 +71,7 @@ function Page() {
 				description: description,
 				difficulty: difficulty,
 				has_attachment: hasAttachment,
+				attachment_url: attachmentURL,
 				is_dynamic: isDynamic,
 				is_practicable: isPracticable,
 				duration: duration,
@@ -84,7 +87,7 @@ function Page() {
 	}
 
 	useEffect(() => {
-		getChallengeData();
+		getChallenge();
 	}, [challengeStore.refresh]);
 
 	useEffect(() => {
@@ -147,7 +150,7 @@ function Page() {
 						<Rating
 							value={difficulty}
 							size="large"
-							onChange={(event, newValue) => {
+							onChange={(_, newValue) => {
 								setDifficulty(newValue as number);
 							}}
 						/>
@@ -215,9 +218,22 @@ function Page() {
 					</Box>
 					<Box sx={{ marginY: "1rem" }}>
 						<TextField
+							label="附件 URL"
+							value={attachmentURL}
+							variant="outlined"
+							sx={{
+								width: "100%",
+							}}
+							onChange={(e) => {
+								setAttachmentURL(e.target.value);
+							}}
+						/>
+					</Box>
+					<Box sx={{ marginY: "1rem" }}>
+						<TextField
 							label="描述"
 							multiline
-							rows={23}
+							rows={20}
 							value={description}
 							variant="outlined"
 							sx={{
@@ -240,7 +256,7 @@ function Page() {
 						disableElevation
 						size="large"
 						startIcon={<Icon path={mdiContentSave} size={1} />}
-						onClick={handleUpdateChallenge}
+						onClick={updateChallenge}
 					>
 						保存
 					</Button>

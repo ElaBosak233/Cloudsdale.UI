@@ -33,8 +33,6 @@ import { LoadingButton } from "@mui/lab";
 import { Instance } from "@/types/instance";
 import { useTeamStore } from "@/store/team";
 import { useGameStore } from "@/store/game";
-import { useMediaApi } from "@/api/media";
-import { saveAs } from "file-saver";
 
 export default function ChallengeDialog({
 	challenge,
@@ -45,7 +43,6 @@ export default function ChallengeDialog({
 }) {
 	const submissionApi = useSubmissionApi();
 	const podApi = usePodApi();
-	const mediaApi = useMediaApi();
 
 	const snackBarStore = useSnackBarStore();
 	const challengeStore = useChallengeStore();
@@ -54,26 +51,7 @@ export default function ChallengeDialog({
 	const gameStore = useGameStore();
 
 	function downloadAttachment() {
-		let info: any = {};
-		mediaApi
-			.getChallengeAttachmentInfoByChallengeID(challenge?.id as number)
-			.then((res) => {
-				const r = res.data;
-				if (r.code !== 200) {
-					snackBarStore.error("获取附件信息失败");
-					return;
-				}
-				info = r;
-				mediaApi
-					.getChallengeAttachmentByChallengeID(
-						challenge?.id as number
-					)
-					.then((res) => {
-						const r = res.data;
-						const blob = new Blob([r]);
-						saveAs(blob, info?.file_name || "attachment");
-					});
-			});
+		window.open(challenge?.attachment_url, "_blank");
 	}
 
 	// Flag 输入框

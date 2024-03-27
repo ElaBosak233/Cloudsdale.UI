@@ -67,7 +67,6 @@ export default function Page() {
 			.getGameChallenges({
 				game_id: parseInt(id as string),
 				is_enabled: true,
-				submission_qty: 3,
 			})
 			.then((res) => {
 				const r = res.data;
@@ -383,6 +382,21 @@ export default function Page() {
 																			color={
 																				"#f98539"
 																			}
+																		/>
+																	)}
+																	{!(
+																		submission.third_blood ||
+																		submission.second_blood ||
+																		submission.first_blood
+																	) && (
+																		<Icon
+																			path={
+																				mdiFlag
+																			}
+																			size={
+																				1
+																			}
+																			color="green"
 																		/>
 																	)}
 																</>

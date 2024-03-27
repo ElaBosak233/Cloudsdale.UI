@@ -237,7 +237,10 @@ function Page() {
 									<TableCell
 										sx={{
 											fontWeight: "bold",
-											width: "20rem",
+											maxWidth: "20rem",
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											whiteSpace: "nowrap",
 										}}
 									>
 										{submission.flag}
