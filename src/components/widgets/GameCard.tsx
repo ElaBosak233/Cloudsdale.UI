@@ -30,6 +30,7 @@ export default function GameCard({ game }: { game: Game }) {
 						backgroundImage: `url('${game?.cover_url}')`,
 						backgroundSize: "cover",
 						backgroundRepeat: "no-repeat",
+						backgroundPosition: "center center",
 						borderTopRightRadius: 0,
 						borderBottomRightRadius: 0,
 					}}
