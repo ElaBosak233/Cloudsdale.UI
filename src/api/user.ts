@@ -4,17 +4,18 @@ import {
 	UserFindRequest,
 	UserUpdateRequest,
 } from "@/types/user";
-import { api, useAuth } from "@/utils/axios";
-
-export function login(username: string, password: string) {
-	return api.post("/users/login", {
-		username,
-		password,
-	});
-}
+import { useApi, useAuth } from "@/utils/axios";
 
 export function useUserApi() {
+	const api = useApi();
 	const auth = useAuth();
+
+	const login = (username: string, password: string) => {
+		return api.post("/users/login", {
+			username,
+			password,
+		});
+	};
 
 	const getUsers = (request: UserFindRequest) => {
 		return auth.get("/users/", { params: request });
@@ -37,6 +38,7 @@ export function useUserApi() {
 	};
 
 	return {
+		login,
 		getUsers,
 		getUserByID,
 		updateUser,

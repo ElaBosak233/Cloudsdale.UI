@@ -3,9 +3,13 @@ import { useAuthStore } from "@/store/auth";
 import { useMemo } from "react";
 import { useNavigate } from "react-router";
 
-export const api = axios.create({
-	baseURL: import.meta.env.VITE_BASE_API as string,
-});
+export const useApi = () => {
+	return useMemo(() => {
+		return axios.create({
+			baseURL: import.meta.env.VITE_BASE_API as string,
+		});
+	}, []);
+};
 
 export const useAuth = () => {
 	const { pgsToken } = useAuthStore();

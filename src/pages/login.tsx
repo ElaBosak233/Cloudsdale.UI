@@ -5,7 +5,7 @@ import { useAuthStore } from "@/store/auth";
 import { useNavigate } from "react-router";
 import { Box, TextField, Icon } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { login } from "@/api/user";
+import { useUserApi } from "@/api/user";
 import Logo from "@/components/widgets/Logo";
 import { User } from "@/types/user";
 
@@ -14,6 +14,7 @@ export default function Page() {
 	const snackBarStore = useSnackBarStore();
 	const authStore = useAuthStore();
 	const navigate = useNavigate();
+	const userApi = useUserApi();
 
 	useEffect(() => {
 		document.title = `${configStore?.pltCfg?.site?.title}`;
@@ -23,13 +24,14 @@ export default function Page() {
 	const [password, setPassword] = useState("");
 	const [loginLoading, setLoginLoading] = useState(false);
 
-	function handleLogin() {
+	function login() {
 		if (username === "" || password === "") {
 			snackBarStore.error("用户名或密码不能为空");
 			return;
 		}
 		setLoginLoading(true);
-		login(username, password)
+		userApi
+			.login(username, password)
 			.then((res) => {
 				const r = res.data;
 				if (r.code === 200) {
@@ -71,50 +73,48 @@ export default function Page() {
 						marginTop: "2rem",
 					}}
 				>
-					<form onSubmit={handleLogin}>
-						<Box sx={{ display: "flex", alignItems: "center" }}>
-							<Icon>person</Icon>
-							<TextField
-								label="用户名"
-								variant="filled"
-								value={username}
-								sx={{ marginLeft: "1rem", flexGrow: 1 }}
-								onChange={(e) => {
-									setUsername(e.target.value);
-								}}
-							/>
-						</Box>
-						<Box
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								marginTop: "1rem",
+					<Box sx={{ display: "flex", alignItems: "center" }}>
+						<Icon>person</Icon>
+						<TextField
+							label="用户名"
+							variant="filled"
+							value={username}
+							sx={{ marginLeft: "1rem", flexGrow: 1 }}
+							onChange={(e) => {
+								setUsername(e.target.value);
 							}}
-						>
-							<Icon>lock</Icon>
-							<TextField
-								label="密码"
-								variant="filled"
-								type="password"
-								value={password}
-								sx={{ marginLeft: "1rem", flexGrow: 1 }}
-								onChange={(e) => {
-									setPassword(e.target.value);
-								}}
-							/>
-						</Box>
-						<LoadingButton
-							loading={loginLoading}
-							size={"large"}
-							fullWidth
-							disableElevation
-							variant="contained"
-							sx={{ marginTop: "2rem", bgcolor: "primary.700" }}
-							type="submit"
-						>
-							登录
-						</LoadingButton>
-					</form>
+						/>
+					</Box>
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							marginTop: "1rem",
+						}}
+					>
+						<Icon>lock</Icon>
+						<TextField
+							label="密码"
+							variant="filled"
+							type="password"
+							value={password}
+							sx={{ marginLeft: "1rem", flexGrow: 1 }}
+							onChange={(e) => {
+								setPassword(e.target.value);
+							}}
+						/>
+					</Box>
+					<LoadingButton
+						loading={loginLoading}
+						size={"large"}
+						fullWidth
+						disableElevation
+						variant="contained"
+						sx={{ marginTop: "2rem", bgcolor: "primary.700" }}
+						onClick={login}
+					>
+						登录
+					</LoadingButton>
 				</Box>
 			</Box>
 		</>
