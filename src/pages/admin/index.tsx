@@ -2,9 +2,7 @@ import { useConfigApi } from "@/api/config";
 import withAdmin from "@/components/layouts/withAdmin";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
-import { mdiWeb } from "@mdi/js";
-import Icon from "@mdi/react";
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Paper, TextField, Typography, Icon } from "@mui/material";
 import { useEffect, useState } from "react";
 
 function Page() {
@@ -67,7 +65,13 @@ function Page() {
 						color: "text.secondary",
 					}}
 				>
-					<Icon path={mdiWeb} size={1.5} />
+					<Icon
+						sx={{
+							fontSize: "1.5rem",
+						}}
+					>
+						language
+					</Icon>
 					<Typography
 						sx={{
 							fontSize: "1.5rem",

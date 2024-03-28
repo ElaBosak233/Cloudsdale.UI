@@ -8,6 +8,7 @@ import {
 	Divider,
 	FormControl,
 	Grid,
+	Icon,
 	IconButton,
 	InputLabel,
 	MenuItem,
@@ -24,18 +25,9 @@ import {
 	Typography,
 } from "@mui/material";
 import { Challenge } from "@/types/challenge";
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useChallengeApi } from "@/api/challenge";
 import { useParams } from "react-router";
-import Icon from "@mdi/react";
-import {
-	mdiContentSave,
-	mdiDelete,
-	mdiFlagPlus,
-	mdiPackageVariantMinus,
-	mdiPackageVariantPlus,
-	mdiPuzzleEdit,
-} from "@mdi/js";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import { create } from "zustand";
@@ -152,7 +144,7 @@ function Edit() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiPuzzleEdit} size={1} />
+				<Icon>edit</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -417,7 +409,7 @@ function Edit() {
 				<Button
 					variant="contained"
 					disableElevation
-					startIcon={<Icon path={mdiContentSave} size={1} />}
+					startIcon={<Icon>save</Icon>}
 					onClick={() =>
 						store.mode === "create" ? createImage() : updateImage()
 					}
@@ -462,7 +454,7 @@ function Delete() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiDelete} size={1} />
+				<Icon>delete</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -510,7 +502,7 @@ function Delete() {
 					variant="contained"
 					color="error"
 					disableElevation
-					startIcon={<Icon path={mdiDelete} size={1} />}
+					startIcon={<Icon>delete</Icon>}
 					onClick={() => {
 						deleteImage();
 						store.setDeleteOpen(false);
@@ -592,10 +584,7 @@ function Page() {
 											store.clearImage();
 										}}
 									>
-										<Icon
-											path={mdiPackageVariantPlus}
-											size={1}
-										/>
+										<Icon>deployed_code</Icon>
 									</IconButton>
 								</TableCell>
 							</TableRow>
@@ -634,10 +623,7 @@ function Page() {
 												store.setImage(image);
 											}}
 										>
-											<Icon
-												path={mdiPuzzleEdit}
-												size={1}
-											/>
+											<Icon>edit</Icon>
 										</IconButton>
 										<IconButton
 											sx={{ marginX: "0.1rem" }}
@@ -647,10 +633,7 @@ function Page() {
 												store.setImage(image);
 											}}
 										>
-											<Icon
-												path={mdiPackageVariantMinus}
-												size={1}
-											/>
+											<Icon>delete</Icon>
 										</IconButton>
 									</TableCell>
 								</TableRow>

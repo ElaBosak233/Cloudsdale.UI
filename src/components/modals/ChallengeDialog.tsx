@@ -4,27 +4,16 @@ import {
 	Button,
 	Card,
 	Divider,
+	Icon,
 	IconButton,
 	InputAdornment,
 	TextField,
 	Tooltip,
 } from "@mui/material";
-import UIcon from "@/components/ui/UIcon";
-import {
-	mdiFlag,
-	mdiServerNetwork,
-	mdiOpenInNew,
-	mdiDownload,
-	mdiHexagonSlice6,
-	mdiHexagonSlice4,
-	mdiHexagonSlice2,
-	mdiPackageVariant,
-} from "@mdi/js";
 import { useSubmissionApi } from "@/api/submission";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import { usePodStore } from "@/store/pod";
-import Icon from "@mdi/react";
 import Markdown from "@/components/ui/Markdown";
 import { useEffect, useState } from "react";
 import { Submission } from "@/types/submission";
@@ -33,6 +22,9 @@ import { LoadingButton } from "@mui/lab";
 import { Instance } from "@/types/instance";
 import { useTeamStore } from "@/store/team";
 import { useGameStore } from "@/store/game";
+import FirstBlood from "@/components/icons/hexagons/FirstBlood";
+import SecondBlood from "@/components/icons/hexagons/SecondBlood";
+import ThirdBlood from "@/components/icons/hexagons/ThirdBlood";
 
 export default function ChallengeDialog({
 	challenge,
@@ -228,10 +220,7 @@ export default function ChallengeDialog({
 								alignItems: "center",
 							}}
 						>
-							<UIcon
-								path={`mdi${challenge?.category?.icon}`}
-								size={1}
-							/>
+							<Icon>{challenge?.category?.icon}</Icon>
 						</Box>
 						<Box
 							sx={{ fontWeight: "bold", marginX: "0.5rem" }}
@@ -251,11 +240,18 @@ export default function ChallengeDialog({
 								title={`一血 ${(challenge?.submissions as Array<Submission>)[0]?.user?.nickname}`}
 								placement={"top"}
 							>
-								<Icon
-									path={mdiHexagonSlice6}
-									size={1}
-									color={"#fcc419"}
-								/>
+								<Box
+									sx={{
+										display: "flex",
+										alignItems: "center",
+									}}
+								>
+									<FirstBlood
+										sx={{
+											color: "#fcc419",
+										}}
+									/>
+								</Box>
 							</Tooltip>
 						)}
 						{(challenge?.submissions?.length as number) > 1 && (
@@ -263,11 +259,18 @@ export default function ChallengeDialog({
 								title={`二血 ${(challenge?.submissions as Array<Submission>)[1]?.user?.nickname}`}
 								placement={"top"}
 							>
-								<Icon
-									path={mdiHexagonSlice4}
-									size={1}
-									color={"#a6a6a6"}
-								/>
+								<Box
+									sx={{
+										display: "flex",
+										alignItems: "center",
+									}}
+								>
+									<SecondBlood
+										sx={{
+											color: "#a6a6a6",
+										}}
+									/>
+								</Box>
 							</Tooltip>
 						)}
 						{(challenge?.submissions?.length as number) > 2 && (
@@ -275,11 +278,18 @@ export default function ChallengeDialog({
 								title={`三血 ${(challenge?.submissions as Array<Submission>)[2]?.user?.nickname}`}
 								placement={"top"}
 							>
-								<Icon
-									path={mdiHexagonSlice2}
-									size={1}
-									color={"#f98539"}
-								/>
+								<Box
+									sx={{
+										display: "flex",
+										alignItems: "center",
+									}}
+								>
+									<ThirdBlood
+										sx={{
+											color: "#f98539",
+										}}
+									/>
+								</Box>
 							</Tooltip>
 						)}
 					</Box>
@@ -297,7 +307,7 @@ export default function ChallengeDialog({
 								}}
 								onClick={downloadAttachment}
 							>
-								<Icon path={mdiDownload} size={1} />
+								<Icon>download</Icon>
 							</IconButton>
 						</Box>
 					)}
@@ -323,10 +333,7 @@ export default function ChallengeDialog({
 											marginTop: "1rem",
 										}}
 									>
-										<Icon
-											path={mdiPackageVariant}
-											size={1}
-										/>
+										<Icon>deployed_code</Icon>
 										<Box
 											sx={{
 												marginX: "0.5rem",
@@ -362,12 +369,7 @@ export default function ChallengeDialog({
 																	"center",
 															}}
 														>
-															<Icon
-																path={
-																	mdiServerNetwork
-																}
-																size={1}
-															/>
+															<Icon>lan</Icon>
 															<Box
 																sx={{
 																	marginX:
@@ -391,10 +393,7 @@ export default function ChallengeDialog({
 															);
 														}}
 													>
-														<Icon
-															path={mdiOpenInNew}
-															size={1}
-														/>
+														<Icon>open_in_new</Icon>
 													</InputAdornment>
 												),
 											}}
@@ -509,7 +508,7 @@ export default function ChallengeDialog({
 						InputProps={{
 							startAdornment: (
 								<InputAdornment position="start">
-									<Icon path={mdiFlag} size={1} />
+									<Icon>flag</Icon>
 								</InputAdornment>
 							),
 						}}

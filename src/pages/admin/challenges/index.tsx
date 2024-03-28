@@ -5,16 +5,6 @@ import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
 import { Challenge } from "@/types/challenge";
 import {
-	mdiBookEdit,
-	mdiBookPlus,
-	mdiContentSave,
-	mdiDelete,
-	mdiMagnify,
-	mdiPuzzleEdit,
-	mdiStar,
-	mdiStarOutline,
-} from "@mdi/js";
-import {
 	Box,
 	Button,
 	Card,
@@ -22,6 +12,7 @@ import {
 	Divider,
 	FormControl,
 	FormControlLabel,
+	Icon,
 	IconButton,
 	InputLabel,
 	MenuItem,
@@ -41,13 +32,13 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { useCategoryStore } from "@/store/category";
-import UIcon from "@/components/ui/UIcon";
 import { challenge as color } from "@/utils/color";
 import { useNavigate } from "react-router";
 import { create } from "zustand";
+import Star from "@/components/icons/stars/Star";
+import StarOutlined from "@/components/icons/stars/StarOutlined";
 
 interface State {
 	editOpen: boolean;
@@ -134,7 +125,7 @@ function Edit() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiPuzzleEdit} size={1} />
+				<Icon>edit</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -276,7 +267,7 @@ function Edit() {
 					size="large"
 					variant="contained"
 					disableElevation
-					startIcon={<Icon path={mdiContentSave} size={1} />}
+					startIcon={<Icon>save</Icon>}
 					onClick={createChallenge}
 				>
 					创建
@@ -316,7 +307,7 @@ function Delete() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiDelete} size={1} />
+				<Icon>delete</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -364,7 +355,7 @@ function Delete() {
 					variant="contained"
 					color="error"
 					disableElevation
-					startIcon={<Icon path={mdiDelete} size={1} />}
+					startIcon={<Icon>delete</Icon>}
 					onClick={deleteChallenge}
 				>
 					删除
@@ -447,10 +438,7 @@ function Row({ row }: { row: Challenge }) {
 						color: color.useTextColor(false, row.category?.color),
 					}}
 				>
-					<UIcon
-						path={`mdi${row.category?.icon as string}`}
-						size={1}
-					/>
+					<Icon>{row.category?.icon as string}</Icon>
 					<Box sx={{ marginX: "0.5rem" }}>{row.category?.name}</Box>
 				</Box>
 			</TableCell>
@@ -463,8 +451,8 @@ function Row({ row }: { row: Challenge }) {
 						alignItems: "center",
 					}}
 					size="large"
-					icon={<Icon path={mdiStar} size={1} />}
-					emptyIcon={<Icon path={mdiStarOutline} size={1} />}
+					icon={<Star />}
+					emptyIcon={<StarOutlined />}
 				/>
 			</TableCell>
 			<TableCell align={"left"} onClick={handlePracticableChange}>
@@ -476,7 +464,7 @@ function Row({ row }: { row: Challenge }) {
 					color="primary"
 					onClick={() => navigate(`/admin/challenges/${row.id}`)}
 				>
-					<Icon path={mdiBookEdit} size={1} />
+					<Icon>edit</Icon>
 				</IconButton>
 				<IconButton
 					sx={{ marginX: "0.1rem" }}
@@ -486,7 +474,7 @@ function Row({ row }: { row: Challenge }) {
 						store.setDeleteOpen(true);
 					}}
 				>
-					<Icon path={mdiDelete} size={1} />
+					<Icon>delete</Icon>
 				</IconButton>
 			</TableCell>
 		</TableRow>
@@ -615,7 +603,7 @@ function Page() {
 						sx={{ marginX: "0.5rem" }}
 						onClick={() => setSearch(searchInput)}
 					>
-						<Icon path={mdiMagnify} size={1} />
+						<Icon>search</Icon>
 					</IconButton>
 				</Box>
 				<TableContainer
@@ -650,7 +638,7 @@ function Page() {
 											store.setEditOpen(true);
 										}}
 									>
-										<Icon path={mdiBookPlus} size={1} />
+										<Icon>add</Icon>
 									</IconButton>
 								</TableCell>
 							</TableRow>

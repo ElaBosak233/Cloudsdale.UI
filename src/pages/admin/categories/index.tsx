@@ -2,19 +2,13 @@ import withAdmin from "@/components/layouts/withAdmin";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
 import {
-	mdiBookEdit,
-	mdiBookPlus,
-	mdiContentSave,
-	mdiDelete,
-	mdiPuzzleEdit,
-} from "@mdi/js";
-import {
 	Box,
 	Button,
 	Card,
 	Dialog,
 	Divider,
 	IconButton,
+	Icon,
 	Paper,
 	Table,
 	TableBody,
@@ -25,10 +19,8 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { useCategoryStore } from "@/store/category";
-import UIcon from "@/components/ui/UIcon";
 import { challenge as color } from "@/utils/color";
 import { useCategoryApi } from "@/api/category";
 import { Category } from "@/types/category";
@@ -126,7 +118,7 @@ function Edit() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiPuzzleEdit} size={1} />
+				<Icon>edit</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -199,7 +191,7 @@ function Edit() {
 					size="large"
 					variant="contained"
 					disableElevation
-					startIcon={<Icon path={mdiContentSave} size={1} />}
+					startIcon={<Icon>save</Icon>}
 					onClick={() => {
 						store.mode === "create"
 							? createCategory()
@@ -245,7 +237,7 @@ function Delete() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiDelete} size={1} />
+				<Icon>delete</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -276,7 +268,7 @@ function Delete() {
 					variant="contained"
 					disableElevation
 					color="error"
-					startIcon={<Icon path={mdiDelete} size={1} />}
+					startIcon={<Icon>delete</Icon>}
 					onClick={() => {
 						deleteCategory();
 					}}
@@ -339,7 +331,7 @@ function Row({ row }: { row: Category }) {
 						color: color.useTextColor(false, row.color),
 					}}
 				>
-					<UIcon path={`mdi${row?.icon as string}`} size={1} />
+					<Icon>{row?.icon as string}</Icon>
 					<Box sx={{ marginX: "0.5rem" }}>{row?.icon}</Box>
 				</Box>
 			</TableCell>
@@ -353,7 +345,7 @@ function Row({ row }: { row: Category }) {
 						store.setMode("edit");
 					}}
 				>
-					<Icon path={mdiBookEdit} size={1} />
+					<Icon>edit</Icon>
 				</IconButton>
 				<IconButton
 					sx={{ marginX: "0.1rem" }}
@@ -363,7 +355,7 @@ function Row({ row }: { row: Category }) {
 						store.setCategory(row);
 					}}
 				>
-					<Icon path={mdiDelete} size={1} />
+					<Icon>delete</Icon>
 				</IconButton>
 			</TableCell>
 		</TableRow>
@@ -434,7 +426,7 @@ function Page() {
 											store.setMode("create");
 										}}
 									>
-										<Icon path={mdiBookPlus} size={1} />
+										<Icon>add</Icon>
 									</IconButton>
 								</TableCell>
 							</TableRow>

@@ -1,6 +1,6 @@
 import {
-	Divider,
 	Drawer,
+	Icon,
 	IconButton,
 	ListItemIcon,
 	Menu,
@@ -12,17 +12,6 @@ import { Box } from "@mui/material";
 import React, { useState } from "react";
 import { useThemeStore } from "@/store/theme";
 import { useNavigate } from "react-router";
-import Icon from "@mdi/react";
-import {
-	mdiHome,
-	mdiBookMultiple,
-	mdiFlag,
-	mdiAccountMultiple,
-	mdiCog,
-	mdiThemeLightDark,
-	mdiAccount,
-	mdiLogout,
-} from "@mdi/js";
 import { useAuthStore } from "@/store/auth";
 
 function SideBarTooltip({
@@ -124,7 +113,7 @@ export default function SideBar() {
 							sx={{ color: "white", marginTop: "5px" }}
 							onClick={() => navigate("/")}
 						>
-							<Icon path={mdiHome} size={1} />
+							<Icon>home</Icon>
 						</IconButton>
 					</SideBarTooltip>
 					<SideBarTooltip title="练习场">
@@ -132,7 +121,7 @@ export default function SideBar() {
 							sx={{ color: "white", marginTop: "5px" }}
 							onClick={() => navigate("/challenges")}
 						>
-							<Icon path={mdiBookMultiple} size={1} />
+							<Icon>collections_bookmark</Icon>
 						</IconButton>
 					</SideBarTooltip>
 					<SideBarTooltip title="比赛">
@@ -140,7 +129,7 @@ export default function SideBar() {
 							sx={{ color: "white", marginTop: "5px" }}
 							onClick={() => navigate("/games")}
 						>
-							<Icon path={mdiFlag} size={1} />
+							<Icon>flag</Icon>
 						</IconButton>
 					</SideBarTooltip>
 					<SideBarTooltip title="团队">
@@ -148,7 +137,7 @@ export default function SideBar() {
 							sx={{ color: "white", marginTop: "5px" }}
 							onClick={() => navigate("/teams")}
 						>
-							<Icon path={mdiAccountMultiple} size={1} />
+							<Icon>group</Icon>
 						</IconButton>
 					</SideBarTooltip>
 					{authStore.user?.group?.name === "admin" && (
@@ -157,7 +146,7 @@ export default function SideBar() {
 								sx={{ color: "white", marginTop: "5px" }}
 								onClick={() => navigate("/admin")}
 							>
-								<Icon path={mdiCog} size={1} />
+								<Icon>settings</Icon>
 							</IconButton>
 						</SideBarTooltip>
 					)}
@@ -178,14 +167,14 @@ export default function SideBar() {
 							toggleMode(mode === "dark" ? "light" : "dark")
 						}
 					>
-						<Icon path={mdiThemeLightDark} size={1} />
+						<Icon>dark_mode</Icon>
 					</IconButton>
 					{!authStore.user && (
 						<IconButton
 							sx={{ color: "white", marginTop: "5px" }}
 							onClick={() => navigate("/login")}
 						>
-							<Icon path={mdiAccount} size={1} />
+							<Icon>person</Icon>
 						</IconButton>
 					)}
 					{authStore.user && (
@@ -193,7 +182,7 @@ export default function SideBar() {
 							sx={{ color: "white", marginTop: "5px" }}
 							onClick={() => setMenuOpen(true)}
 						>
-							<Icon path={mdiAccount} size={1} />
+							<Icon>person</Icon>
 						</IconButton>
 					)}
 				</Box>
@@ -214,7 +203,7 @@ export default function SideBar() {
 			>
 				<MenuItem onClick={() => navigate("/profile")}>
 					<ListItemIcon>
-						<Icon path={mdiAccount} size={0.8} />
+						<Icon>person</Icon>
 					</ListItemIcon>
 					<Typography sx={{ fontSize: "0.8rem" }}>
 						{authStore.user?.nickname}
@@ -222,7 +211,7 @@ export default function SideBar() {
 				</MenuItem>
 				<MenuItem onClick={handleLogout}>
 					<ListItemIcon>
-						<Icon path={mdiLogout} size={0.8} />
+						<Icon>logout</Icon>
 					</ListItemIcon>
 					<Typography sx={{ fontSize: "0.8rem" }}>登出</Typography>
 				</MenuItem>

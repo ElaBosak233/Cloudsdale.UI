@@ -6,6 +6,7 @@ import {
 	Box,
 	Button,
 	FormControlLabel,
+	Icon,
 	Paper,
 	Switch,
 	TextField,
@@ -14,8 +15,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import Icon from "@mdi/react";
-import { mdiContentSave } from "@mdi/js";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useGameStore } from "@/store/game";
 
@@ -332,7 +331,7 @@ function Page() {
 					variant="contained"
 					disableElevation
 					size="large"
-					startIcon={<Icon path={mdiContentSave} size={1} />}
+					startIcon={<Icon>save</Icon>}
 					onClick={updateGame}
 				>
 					保存

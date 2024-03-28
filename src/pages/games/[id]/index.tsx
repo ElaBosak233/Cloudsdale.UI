@@ -14,13 +14,12 @@ import {
 	Chip,
 	Dialog,
 	Divider,
+	Icon,
 	IconButton,
 	LinearProgress,
 	Paper,
 	Typography,
 } from "@mui/material";
-import Icon from "@mdi/react";
-import { mdiPlay } from "@mdi/js";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { create } from "zustand";
@@ -110,7 +109,7 @@ function Enter() {
 					alignItems: "center",
 				}}
 			>
-				<Icon path={mdiPlay} size={1} />
+				<Icon>play_arrow</Icon>
 				<Box
 					sx={{
 						fontSize: "1rem",
@@ -152,7 +151,7 @@ function Enter() {
 								navigate(`/games/${id}/challenges`);
 							}}
 						>
-							<Icon path={mdiPlay} size={1} />
+							<Icon>play_arrow</Icon>
 						</IconButton>
 					</Box>
 				</Box>
@@ -242,7 +241,7 @@ function Apply() {
 					alignItems: "center",
 				}}
 			>
-				<Icon path={mdiPlay} size={1} />
+				<Icon>play_arrow</Icon>
 				<Box
 					sx={{
 						fontSize: "1rem",
@@ -283,7 +282,7 @@ function Apply() {
 								store.setApplyOpen(false);
 							}}
 						>
-							<Icon path={mdiPlay} size={1} />
+							<Icon>play_arrow</Icon>
 						</IconButton>
 					</Box>
 				</Box>

@@ -1,13 +1,4 @@
-import {
-	mdiArrowLeft,
-	mdiInformation,
-	mdiFlag,
-	mdiPackageVariant,
-	mdiCheckDecagram,
-	mdiAttachment,
-} from "@mdi/js";
-import Icon from "@mdi/react";
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Button, Divider, Icon } from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router";
 
 export default function ChallengeSideBar() {
@@ -27,7 +18,7 @@ export default function ChallengeSideBar() {
 			<Button
 				variant="contained"
 				disableElevation
-				startIcon={<Icon path={mdiArrowLeft} size={1} />}
+				startIcon={<Icon>arrow_back</Icon>}
 				sx={{
 					fontWeight: "bold",
 				}}
@@ -43,7 +34,7 @@ export default function ChallengeSideBar() {
 			<Button
 				variant={path === "" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiInformation} size={1} />}
+				startIcon={<Icon>info</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",
@@ -55,7 +46,7 @@ export default function ChallengeSideBar() {
 			<Button
 				variant={path === "/flags" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiFlag} size={1} />}
+				startIcon={<Icon>flag</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",
@@ -67,7 +58,7 @@ export default function ChallengeSideBar() {
 			<Button
 				variant={path === "/images" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiPackageVariant} size={1} />}
+				startIcon={<Icon>deployed_code</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",
@@ -79,7 +70,7 @@ export default function ChallengeSideBar() {
 			<Button
 				variant={path === "/submissions" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiCheckDecagram} size={1} />}
+				startIcon={<Icon>verified</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",

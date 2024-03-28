@@ -2,11 +2,17 @@ import { useUserApi } from "@/api/user";
 import { useAuthStore } from "@/store/auth";
 import { useConfigStore } from "@/store/config";
 import { Team } from "@/types/team";
-import { Avatar, Box, Card, Divider, Grid, Typography } from "@mui/material";
+import {
+	Avatar,
+	Box,
+	Card,
+	Divider,
+	Grid,
+	Typography,
+	Icon,
+} from "@mui/material";
 import { useEffect, useState } from "react";
-import Icon from "@mdi/react";
 import CryptoJS from "crypto-js";
-import { mdiAccountGroup, mdiStar } from "@mdi/js";
 
 function TeamCard({ team }: { team: Team }) {
 	const authStore = useAuthStore();
@@ -58,7 +64,13 @@ function TeamCard({ team }: { team: Team }) {
 					zIndex: 0,
 				}}
 			>
-				<Icon path={mdiAccountGroup} size={8} />
+				<Icon
+					sx={{
+						fontSize: "8rem",
+					}}
+				>
+					group
+				</Icon>
 			</Box>
 			{team.captain_id === authStore.user?.id && (
 				<Box
@@ -69,7 +81,14 @@ function TeamCard({ team }: { team: Team }) {
 						zIndex: 1,
 					}}
 				>
-					<Icon path={mdiStar} size={1.25} color="#fcc419" />
+					<Icon
+						sx={{
+							fontSize: "2rem",
+							color: "#fcc419",
+						}}
+					>
+						star
+					</Icon>
 				</Box>
 			)}
 		</Card>

@@ -58,6 +58,13 @@ export function useTheme() {
 
 	return createTheme({
 		palette: getPalette(mode),
+		components: {
+			MuiIcon: {
+				defaultProps: {
+					baseClassName: "material-symbols-rounded",
+				},
+			},
+		},
 		typography: {
 			fontFamily: "Jetbrains Mono, sans-serif",
 		},

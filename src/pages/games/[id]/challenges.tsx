@@ -1,7 +1,6 @@
 import { useGameApi } from "@/api/game";
 import ChallengeDialog from "@/components/modals/ChallengeDialog";
 import Loading from "@/components/ui/Loading";
-import UIcon from "@/components/ui/UIcon";
 import ChallengeCard from "@/components/widgets/ChallengeCard";
 import { useChallengeStore } from "@/store/challenge";
 import { useGameStore } from "@/store/game";
@@ -11,8 +10,6 @@ import { Category } from "@/types/category";
 import { Challenge } from "@/types/challenge";
 import { Game } from "@/types/game";
 import { Team } from "@/types/team";
-import { mdiCloudUpload, mdiFlag, mdiPuzzle, mdiTrendingUp } from "@mdi/js";
-import Icon from "@mdi/react";
 import {
 	Avatar,
 	Box,
@@ -22,6 +19,7 @@ import {
 	Divider,
 	Grid,
 	Paper,
+	Icon,
 	Tab,
 	Tabs,
 	Typography,
@@ -183,7 +181,7 @@ export default function Page() {
 								marginX: "0.5rem",
 								fontWeight: "bold",
 							}}
-							startIcon={<Icon path={mdiFlag} size={1} />}
+							startIcon={<Icon>flag</Icon>}
 						>
 							比赛题目
 						</Button>
@@ -195,7 +193,7 @@ export default function Page() {
 								marginX: "0.5rem",
 								fontWeight: "bold",
 							}}
-							startIcon={<Icon path={mdiTrendingUp} size={1} />}
+							startIcon={<Icon>trending_up</Icon>}
 							onClick={() => {
 								navigate(`/games/${id}/scoreboard`);
 							}}
@@ -223,12 +221,7 @@ export default function Page() {
 									<Button
 										variant="contained"
 										disableElevation
-										startIcon={
-											<Icon
-												path={mdiCloudUpload}
-												size={1}
-											/>
-										}
+										startIcon={<Icon>cloud_upload</Icon>}
 									>
 										上传题解
 									</Button>
@@ -240,7 +233,7 @@ export default function Page() {
 								size="large"
 								disableElevation
 								color="primary"
-								startIcon={<Icon path={mdiPuzzle} size={1} />}
+								startIcon={<Icon>extension</Icon>}
 								sx={{
 									bgcolor:
 										selectedCategory === 0
@@ -270,10 +263,7 @@ export default function Page() {
 										size="large"
 										disableElevation
 										startIcon={
-											<UIcon
-												path={`mdi${category?.icon}`}
-												size={1}
-											/>
+											<Icon>{category?.icon}</Icon>
 										}
 										sx={{
 											bgcolor:

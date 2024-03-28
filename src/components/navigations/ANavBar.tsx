@@ -1,15 +1,5 @@
 import Logo from "@/components/widgets/Logo";
-import {
-	mdiBookMultiple,
-	mdiFlag,
-	mdiHome,
-	mdiAccountMultiple,
-	mdiAccount,
-	mdiShapePlus,
-	mdiShieldAccount,
-} from "@mdi/js";
-import Icon from "@mdi/react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Icon } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
 
 export default function ANavBar() {
@@ -30,7 +20,7 @@ export default function ANavBar() {
 							fontWeight: "bold",
 							marginX: "0.5rem",
 						}}
-						startIcon={<Icon path={mdiHome} size={1} />}
+						startIcon={<Icon>home</Icon>}
 						onClick={() => {
 							navigate("/admin");
 						}}
@@ -49,7 +39,7 @@ export default function ANavBar() {
 							fontWeight: "bold",
 							marginX: "0.5rem",
 						}}
-						startIcon={<Icon path={mdiBookMultiple} size={1} />}
+						startIcon={<Icon>collections_bookmark</Icon>}
 						onClick={() => {
 							navigate("/admin/challenges");
 						}}
@@ -68,7 +58,7 @@ export default function ANavBar() {
 							fontWeight: "bold",
 							marginX: "0.5rem",
 						}}
-						startIcon={<Icon path={mdiShapePlus} size={1} />}
+						startIcon={<Icon>category</Icon>}
 						onClick={() => {
 							navigate("/admin/categories");
 						}}
@@ -85,7 +75,7 @@ export default function ANavBar() {
 							fontWeight: "bold",
 							marginX: "0.5rem",
 						}}
-						startIcon={<Icon path={mdiFlag} size={1} />}
+						startIcon={<Icon>flag</Icon>}
 						onClick={() => {
 							navigate("/admin/games");
 						}}
@@ -102,7 +92,7 @@ export default function ANavBar() {
 							fontWeight: "bold",
 							marginX: "0.5rem",
 						}}
-						startIcon={<Icon path={mdiAccountMultiple} size={1} />}
+						startIcon={<Icon>group</Icon>}
 						onClick={() => {
 							navigate("/admin/teams");
 						}}
@@ -121,7 +111,7 @@ export default function ANavBar() {
 							fontWeight: "bold",
 							marginX: "0.5rem",
 						}}
-						startIcon={<Icon path={mdiShieldAccount} size={1} />}
+						startIcon={<Icon>shield_person</Icon>}
 						onClick={() => {
 							navigate("/admin/groups");
 						}}
@@ -138,7 +128,7 @@ export default function ANavBar() {
 							fontWeight: "bold",
 							marginX: "0.5rem",
 						}}
-						startIcon={<Icon path={mdiAccount} size={1} />}
+						startIcon={<Icon>person</Icon>}
 						onClick={() => {
 							navigate("/admin/users");
 						}}

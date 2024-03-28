@@ -1,7 +1,7 @@
 import { Challenge } from "@/types/challenge";
 import {
 	Box,
-	ButtonBase,
+	Icon,
 	Card,
 	CardContent,
 	Chip,
@@ -10,11 +10,10 @@ import {
 	Tooltip,
 	Typography,
 } from "@mui/material";
-import Icon from "@mdi/react";
-import { mdiCheck, mdiStar, mdiStarOutline } from "@mdi/js";
 import { useThemeStore } from "@/store/theme";
-import UIcon from "@/components/ui/UIcon";
 import { hexToRGBA } from "@/utils/color";
+import StarOutlined from "../icons/stars/StarOutlined";
+import Star from "../icons/stars/Star";
 
 export default function ChallengeCard({
 	challenge,
@@ -124,8 +123,20 @@ export default function ChallengeCard({
 							},
 						}}
 						size="large"
-						icon={<Icon path={mdiStar} size={1.25} />}
-						emptyIcon={<Icon path={mdiStarOutline} size={1.25} />}
+						icon={
+							<Star
+								sx={{
+									fontSize: "1.75rem",
+								}}
+							/>
+						}
+						emptyIcon={
+							<StarOutlined
+								sx={{
+									fontSize: "1.75rem",
+								}}
+							/>
+						}
 					/>
 				</Box>
 			</CardContent>
@@ -140,7 +151,7 @@ export default function ChallengeCard({
 					}}
 				>
 					<Tooltip title="已解决" placement="top">
-						<Icon path={mdiCheck} size={1.25}></Icon>
+						<Icon>done</Icon>
 					</Tooltip>
 				</Box>
 			)}
@@ -155,7 +166,13 @@ export default function ChallengeCard({
 					color: textColor,
 				}}
 			>
-				<UIcon path={`mdi${challenge.category?.icon}`} size={8} />
+				<Icon
+					sx={{
+						fontSize: "12rem",
+					}}
+				>
+					{challenge.category?.icon}
+				</Icon>
 			</Box>
 		</Card>
 	);

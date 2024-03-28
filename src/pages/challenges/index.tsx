@@ -8,6 +8,7 @@ import {
 	TableBody,
 	Rating,
 	Paper,
+	Icon,
 	IconButton,
 	TablePagination,
 	TableSortLabel,
@@ -18,13 +19,10 @@ import {
 	SelectChangeEvent,
 	Typography,
 } from "@mui/material";
-import UIcon from "@/components/ui/UIcon";
 import { useChallengeApi } from "@/api/challenge";
 import { useConfigStore } from "@/store/config";
 import { useEffect, useState } from "react";
 import { Challenge } from "@/types/challenge";
-import Icon from "@mdi/react";
-import { mdiStar, mdiStarOutline, mdiPlay, mdiMagnify } from "@mdi/js";
 import { challenge as color } from "@/utils/color";
 import { create } from "zustand";
 import { useSnackBarStore } from "@/store/snackBar";
@@ -33,6 +31,8 @@ import ChallengeDialog from "@/components/modals/ChallengeDialog";
 import { usePodApi } from "@/api/pod";
 import { usePodStore } from "@/store/pod";
 import { useCategoryStore } from "@/store/category";
+import StarOutlined from "@/components/icons/stars/StarOutlined";
+import Star from "@/components/icons/stars/Star";
 
 interface State {
 	open: boolean;
@@ -119,10 +119,7 @@ function Row({ row }: { row: Challenge }) {
 						),
 					}}
 				>
-					<UIcon
-						path={`mdi${row.category?.icon as string}`}
-						size={1}
-					/>
+					<Icon>{row.category?.icon as string}</Icon>
 					<Box sx={{ marginX: "0.5rem" }}>{row.category?.name}</Box>
 				</Box>
 			</TableCell>
@@ -145,8 +142,8 @@ function Row({ row }: { row: Challenge }) {
 						},
 					}}
 					size="large"
-					icon={<Icon path={mdiStar} size={1} />}
-					emptyIcon={<Icon path={mdiStarOutline} size={1} />}
+					icon={<Star />}
+					emptyIcon={<StarOutlined />}
 				/>
 			</TableCell>
 			<TableCell align={"left"}>
@@ -174,7 +171,7 @@ function Row({ row }: { row: Challenge }) {
 						store.setChallenge(row);
 					}}
 				>
-					<Icon path={mdiPlay} size={1} />
+					<Icon>play_arrow</Icon>
 				</IconButton>
 			</TableCell>
 		</TableRow>
@@ -344,7 +341,7 @@ export default function Page() {
 							sx={{ marginX: "1rem" }}
 							onClick={() => setSearch(searchInput)}
 						>
-							<Icon path={mdiMagnify} size={1} />
+							<Icon>search</Icon>
 						</IconButton>
 					</Box>
 					<TableContainer
@@ -402,7 +399,7 @@ export default function Page() {
 						labelDisplayedRows={({ from, to, count }) =>
 							`${from}-${to} 共 ${count}`
 						}
-						onPageChange={(event: unknown, newPage: number) => {
+						onPageChange={(_: unknown, newPage: number) => {
 							setPage(newPage);
 						}}
 						onRowsPerPageChange={(

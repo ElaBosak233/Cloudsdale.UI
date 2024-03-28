@@ -1,5 +1,4 @@
 import withAdmin from "@/components/layouts/withAdmin";
-import withChallenge from "@/components/layouts/admin/withChallenge";
 import {
 	Box,
 	Button,
@@ -7,6 +6,7 @@ import {
 	Dialog,
 	Divider,
 	FormControl,
+	Icon,
 	IconButton,
 	InputLabel,
 	MenuItem,
@@ -25,8 +25,6 @@ import { useEffect, useState } from "react";
 import { useChallengeApi } from "@/api/challenge";
 import { useSubmissionApi } from "@/api/submission";
 import { useParams } from "react-router";
-import Icon from "@mdi/react";
-import { mdiDelete } from "@mdi/js";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import { Flag } from "@/types/flag";
@@ -81,7 +79,7 @@ function Delete() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiDelete} size={1} />
+				<Icon>delete</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -129,7 +127,7 @@ function Delete() {
 					variant="contained"
 					color="error"
 					disableElevation
-					startIcon={<Icon path={mdiDelete} size={1} />}
+					startIcon={<Icon>delete</Icon>}
 					onClick={() => {
 						deleteSubmission();
 						store.setDeleteOpen(false);
@@ -273,7 +271,7 @@ function Page() {
 												store.setSubmission(submission);
 											}}
 										>
-											<Icon path={mdiDelete} size={1} />
+											<Icon>delete</Icon>
 										</IconButton>
 									</TableCell>
 								</TableRow>

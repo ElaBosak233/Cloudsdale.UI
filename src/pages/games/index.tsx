@@ -2,17 +2,15 @@ import GameCard from "@/components/widgets/GameCard";
 import { useConfigStore } from "@/store/config";
 import {
 	Box,
+	Icon,
 	IconButton,
 	Pagination,
 	TextField,
 	Typography,
 } from "@mui/material";
-import { mdiMagnify } from "@mdi/js";
-import { Icon } from "@mdi/react";
 import { useEffect, useState } from "react";
 import { useGameApi } from "@/api/game";
 import { Game } from "@/types/game";
-import { useNavigate } from "react-router";
 
 export default function Page() {
 	const gameApi = useGameApi();
@@ -88,7 +86,7 @@ export default function Page() {
 						fullWidth
 					/>
 					<IconButton sx={{ marginX: "1rem" }}>
-						<Icon path={mdiMagnify} size={1} />
+						<Icon>search</Icon>
 					</IconButton>
 				</Box>
 				{games?.map((game) => (

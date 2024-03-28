@@ -2,17 +2,12 @@ import withAdmin from "@/components/layouts/withAdmin";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
 import {
-	mdiAccountEdit,
-	mdiContentSave,
-	mdiMagnify,
-	mdiPuzzleEdit,
-} from "@mdi/js";
-import {
 	Box,
 	Button,
 	Card,
 	Dialog,
 	Divider,
+	Icon,
 	IconButton,
 	Paper,
 	Table,
@@ -24,7 +19,6 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { useGroupApi } from "@/api/group";
@@ -90,7 +84,7 @@ function Edit() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiPuzzleEdit} size={1} />
+				<Icon>edit</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -138,7 +132,7 @@ function Edit() {
 					size="large"
 					variant="contained"
 					disableElevation
-					startIcon={<Icon path={mdiContentSave} size={1} />}
+					startIcon={<Icon>save</Icon>}
 					onClick={updateGroup}
 				>
 					保存
@@ -199,7 +193,7 @@ function Row({ row }: { row: Group }) {
 						store.setEditOpen(true);
 					}}
 				>
-					<Icon path={mdiAccountEdit} size={1} />
+					<Icon>edit</Icon>
 				</IconButton>
 			</TableCell>
 		</TableRow>
@@ -272,7 +266,7 @@ function Page() {
 						sx={{ marginX: "0.5rem" }}
 						onClick={() => setSearch(searchInput)}
 					>
-						<Icon path={mdiMagnify} size={1} />
+						<Icon>search</Icon>
 					</IconButton>
 				</Box>
 				<TableContainer

@@ -3,6 +3,7 @@ import withChallenge from "@/components/layouts/admin/withChallenge";
 import {
 	Box,
 	Button,
+	Icon,
 	FormControlLabel,
 	MenuItem,
 	Paper,
@@ -15,8 +16,6 @@ import { useCategoryStore } from "@/store/category";
 import { useEffect, useState } from "react";
 import { useChallengeApi } from "@/api/challenge";
 import { useParams } from "react-router";
-import Icon from "@mdi/react";
-import { mdiContentSave } from "@mdi/js";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 
@@ -255,7 +254,7 @@ function Page() {
 						variant="contained"
 						disableElevation
 						size="large"
-						startIcon={<Icon path={mdiContentSave} size={1} />}
+						startIcon={<Icon>save</Icon>}
 						onClick={updateChallenge}
 					>
 						保存

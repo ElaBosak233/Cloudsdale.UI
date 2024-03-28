@@ -1,17 +1,4 @@
-import {
-	mdiArrowLeft,
-	mdiInformation,
-	mdiFlag,
-	mdiPackageVariant,
-	mdiCheckDecagram,
-	mdiBookshelf,
-	mdiBookMultiple,
-	mdiAccountMultiple,
-	mdiBullhorn,
-	mdiFileDocumentCheck,
-} from "@mdi/js";
-import Icon from "@mdi/react";
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Button, Divider, Icon } from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router";
 
 export default function GameSideBar() {
@@ -31,7 +18,7 @@ export default function GameSideBar() {
 			<Button
 				variant="contained"
 				disableElevation
-				startIcon={<Icon path={mdiArrowLeft} size={1} />}
+				startIcon={<Icon>arrow_back</Icon>}
 				sx={{
 					fontWeight: "bold",
 				}}
@@ -47,7 +34,7 @@ export default function GameSideBar() {
 			<Button
 				variant={path === "" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiInformation} size={1} />}
+				startIcon={<Icon>info</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",
@@ -59,7 +46,7 @@ export default function GameSideBar() {
 			<Button
 				variant={path === "/challenges" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiBookMultiple} size={1} />}
+				startIcon={<Icon>collections_bookmark</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",
@@ -71,7 +58,7 @@ export default function GameSideBar() {
 			<Button
 				variant={path === "/teams" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiAccountMultiple} size={1} />}
+				startIcon={<Icon>group</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",
@@ -83,7 +70,7 @@ export default function GameSideBar() {
 			<Button
 				variant={path === "/submissions" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiCheckDecagram} size={1} />}
+				startIcon={<Icon>verified</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",
@@ -95,7 +82,7 @@ export default function GameSideBar() {
 			<Button
 				variant={path === "/notices" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiBullhorn} size={1} />}
+				startIcon={<Icon>campaign</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",
@@ -108,7 +95,7 @@ export default function GameSideBar() {
 			<Button
 				variant={path === "/writeups" ? "contained" : "text"}
 				disableElevation
-				startIcon={<Icon path={mdiFileDocumentCheck} size={1} />}
+				startIcon={<Icon>description</Icon>}
 				sx={{
 					fontWeight: "bold",
 					marginY: "0.25rem",

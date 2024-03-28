@@ -1,14 +1,7 @@
 import GameScoreLines from "@/components/navigations/charts/GameScoreLines";
 import {
-	mdiClose,
-	mdiFlag,
-	mdiHexagonSlice2,
-	mdiHexagonSlice4,
-	mdiHexagonSlice6,
-	mdiTrendingUp,
-} from "@mdi/js";
-import {
 	Box,
+	Icon,
 	Typography,
 	Button,
 	TableContainer,
@@ -20,7 +13,6 @@ import {
 	TableBody,
 	Avatar,
 } from "@mui/material";
-import Icon from "@mdi/react";
 import { useNavigate, useParams } from "react-router";
 import { useGameApi } from "@/api/game";
 import { useEffect, useState } from "react";
@@ -30,7 +22,9 @@ import { Category } from "@/types/category";
 import { Submission } from "@/types/submission";
 import { Team } from "@/types/team";
 import CryptoJS from "crypto-js";
-import UIcon from "@/components/ui/UIcon";
+import FirstBlood from "@/components/icons/hexagons/FirstBlood";
+import SecondBlood from "@/components/icons/hexagons/SecondBlood";
+import ThirdBlood from "@/components/icons/hexagons/ThirdBlood";
 
 interface S {
 	id?: number;
@@ -178,7 +172,7 @@ export default function Page() {
 							marginX: "0.5rem",
 							fontWeight: "bold",
 						}}
-						startIcon={<Icon path={mdiFlag} size={1} />}
+						startIcon={<Icon>flag</Icon>}
 						onClick={() => navigate(`/games/${id}/challenges`)}
 					>
 						比赛题目
@@ -191,7 +185,7 @@ export default function Page() {
 							marginX: "0.5rem",
 							fontWeight: "bold",
 						}}
-						startIcon={<Icon path={mdiTrendingUp} size={1} />}
+						startIcon={<Icon>trending_up</Icon>}
 					>
 						积分总榜
 					</Button>
@@ -237,10 +231,12 @@ export default function Page() {
 													justifyContent: "center",
 												}}
 											>
-												<UIcon
-													path={`mdi${categoriedChallenge?.category?.icon}`}
-													size={1}
-												/>
+												<Icon>
+													{
+														categoriedChallenge
+															?.category?.icon
+													}
+												</Icon>
 												<Box
 													sx={{
 														marginX: "0.5rem",
@@ -346,42 +342,24 @@ export default function Page() {
 																2 && (
 																<>
 																	{submission.first_blood && (
-																		<Icon
-																			path={
-																				mdiHexagonSlice6
-																			}
-																			size={
-																				1
-																			}
-																			color={
-																				"#fcc419"
-																			}
+																		<FirstBlood
+																			sx={{
+																				color: "#fcc419",
+																			}}
 																		/>
 																	)}
 																	{submission.second_blood && (
-																		<Icon
-																			path={
-																				mdiHexagonSlice4
-																			}
-																			size={
-																				1
-																			}
-																			color={
-																				"#a6a6a6"
-																			}
+																		<SecondBlood
+																			sx={{
+																				color: "#a6a6a6",
+																			}}
 																		/>
 																	)}
 																	{submission.third_blood && (
-																		<Icon
-																			path={
-																				mdiHexagonSlice2
-																			}
-																			size={
-																				1
-																			}
-																			color={
-																				"#f98539"
-																			}
+																		<ThirdBlood
+																			sx={{
+																				color: "#f98539",
+																			}}
 																		/>
 																	)}
 																	{!(
@@ -389,27 +367,17 @@ export default function Page() {
 																		submission.second_blood ||
 																		submission.first_blood
 																	) && (
-																		<Icon
-																			path={
-																				mdiFlag
-																			}
-																			size={
-																				1
-																			}
-																			color="green"
-																		/>
+																		<Icon>
+																			flag
+																		</Icon>
 																	)}
 																</>
 															)}
 															{submission.status ===
 																1 && (
-																<Icon
-																	path={
-																		mdiClose
-																	}
-																	size={1}
-																	color="red"
-																/>
+																<Icon>
+																	close
+																</Icon>
 															)}
 														</TableCell>
 													);

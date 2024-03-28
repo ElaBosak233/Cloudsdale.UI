@@ -3,6 +3,7 @@ import withAdmin from "@/components/layouts/withAdmin";
 import { Challenge } from "@/types/challenge";
 import { Game } from "@/types/game";
 import {
+	Icon,
 	IconButton,
 	Box,
 	Paper,
@@ -22,21 +23,10 @@ import {
 	Pagination,
 	FormControlLabel,
 } from "@mui/material";
-import Icon from "@mdi/react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useGameApi } from "@/api/game";
-import {
-	mdiBookPlus,
-	mdiBookEdit,
-	mdiBookMinus,
-	mdiBookArrowRight,
-	mdiContentSave,
-	mdiPuzzleEdit,
-	mdiCheck,
-} from "@mdi/js";
 import { challenge, challenge as color } from "@/utils/color";
-import UIcon from "@/components/ui/UIcon";
 import { useSnackBarStore } from "@/store/snackBar";
 import { useChallengeStore } from "@/store/challenge";
 import { create } from "zustand";
@@ -192,7 +182,7 @@ function ChallengeSelect() {
 								store.setSelectOpen(false);
 							}}
 						>
-							<Icon path={mdiCheck} size={1} />
+							<Icon>check</Icon>
 						</IconButton>
 					</Box>
 				))}
@@ -309,7 +299,7 @@ function Edit() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiPuzzleEdit} size={1} />
+				<Icon>edit</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -371,10 +361,7 @@ function Edit() {
 								alignItems: "center",
 							}}
 						>
-							<UIcon
-								path={`mdi${challenge?.category?.icon as string}`}
-								size={1}
-							/>
+							<Icon>{challenge?.category?.icon as string}</Icon>
 							<Box sx={{ marginX: "0.5rem" }}>
 								{challenge?.category?.name}
 							</Box>
@@ -389,7 +376,7 @@ function Edit() {
 							marginLeft: "2rem",
 						}}
 					>
-						<Icon path={mdiPuzzleEdit} size={1} />
+						<Icon>edit</Icon>
 					</IconButton>
 				)}
 			</Box>
@@ -436,7 +423,7 @@ function Edit() {
 				<Button
 					variant="contained"
 					disableElevation
-					startIcon={<Icon path={mdiContentSave} size={1} />}
+					startIcon={<Icon>save</Icon>}
 					onClick={() =>
 						store.mode === "create"
 							? createGameChallenge()
@@ -485,7 +472,7 @@ function Delete() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiBookMinus} size={1} />
+				<Icon>delete</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -545,10 +532,9 @@ function Delete() {
 								alignItems: "center",
 							}}
 						>
-							<UIcon
-								path={`mdi${store.challenge?.category?.icon as string}`}
-								size={1}
-							/>
+							<Icon>
+								{store.challenge?.category?.icon as string}
+							</Icon>
 							<Box sx={{ marginX: "0.5rem" }}>
 								{store.challenge?.category?.name}
 							</Box>
@@ -639,10 +625,7 @@ function Row({ row }: { row: Challenge }) {
 						color: color.useTextColor(false, row?.category?.color),
 					}}
 				>
-					<UIcon
-						path={`mdi${row.category?.icon as string}`}
-						size={1}
-					/>
+					<Icon>{row.category?.icon as string}</Icon>
 					<Box sx={{ marginX: "0.5rem" }}>{row.category?.name}</Box>
 				</Box>
 			</TableCell>
@@ -665,13 +648,13 @@ function Row({ row }: { row: Challenge }) {
 						store.setEditOpen(true);
 					}}
 				>
-					<Icon path={mdiBookEdit} size={1} />
+					<Icon>edit</Icon>
 				</IconButton>
 				<IconButton
 					sx={{ marginX: "0.1rem" }}
 					onClick={() => navigate(`/admin/challenges/${row.id}`)}
 				>
-					<Icon path={mdiBookArrowRight} size={1} />
+					<Icon>arrow_forward</Icon>
 				</IconButton>
 				<IconButton
 					sx={{ marginX: "0.1rem" }}
@@ -681,7 +664,7 @@ function Row({ row }: { row: Challenge }) {
 						store.setDeleteOpen(true);
 					}}
 				>
-					<Icon path={mdiBookMinus} size={1} />
+					<Icon>delete</Icon>
 				</IconButton>
 			</TableCell>
 		</TableRow>
@@ -761,7 +744,7 @@ function Page() {
 										store.setEditOpen(true);
 									}}
 								>
-									<Icon path={mdiBookPlus} size={1} />
+									<Icon>add</Icon>
 								</IconButton>
 							</TableCell>
 						</TableRow>

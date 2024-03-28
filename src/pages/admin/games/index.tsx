@@ -1,15 +1,6 @@
 import withAdmin from "@/components/layouts/withAdmin";
-import { useChallengeStore } from "@/store/challenge";
 import { useConfigStore } from "@/store/config";
 import { useSnackBarStore } from "@/store/snackBar";
-import {
-	mdiPuzzleEdit,
-	mdiDelete,
-	mdiFlagMinus,
-	mdiFlagPlus,
-	mdiMagnify,
-	mdiContentSave,
-} from "@mdi/js";
 import {
 	Box,
 	Button,
@@ -19,6 +10,7 @@ import {
 	Divider,
 	FormControl,
 	FormControlLabel,
+	Icon,
 	IconButton,
 	InputLabel,
 	MenuItem,
@@ -39,7 +31,6 @@ import {
 	Typography,
 	duration,
 } from "@mui/material";
-import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { Game } from "@/types/game";
 import { useGameApi } from "@/api/game";
@@ -111,7 +102,7 @@ function Edit() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiPuzzleEdit} size={1} />
+				<Icon>edit</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -187,7 +178,7 @@ function Edit() {
 					size="large"
 					variant="contained"
 					disableElevation
-					startIcon={<Icon path={mdiContentSave} size={1} />}
+					startIcon={<Icon>save</Icon>}
 					onClick={createGame}
 				>
 					创建
@@ -228,7 +219,7 @@ function Delete() {
 			}}
 		>
 			<Box sx={{ display: "flex", alignItems: "center" }}>
-				<Icon path={mdiDelete} size={1} />
+				<Icon>delete</Icon>
 				<Typography
 					sx={{
 						marginX: "0.5rem",
@@ -259,7 +250,7 @@ function Delete() {
 					variant="contained"
 					disableElevation
 					color="error"
-					startIcon={<Icon path={mdiDelete} size={1} />}
+					startIcon={<Icon>delete</Icon>}
 					onClick={deleteGame}
 				>
 					删除
@@ -367,7 +358,7 @@ function Row({ row }: { row: Game }) {
 					color="primary"
 					onClick={() => navigate(`/admin/games/${row.id}`)}
 				>
-					<Icon path={mdiPuzzleEdit} size={1} />
+					<Icon>edit</Icon>
 				</IconButton>
 				<IconButton
 					sx={{ marginX: "0.1rem" }}
@@ -377,7 +368,7 @@ function Row({ row }: { row: Game }) {
 						store.setDeleteOpen(true);
 					}}
 				>
-					<Icon path={mdiFlagMinus} size={1} />
+					<Icon>delete</Icon>
 				</IconButton>
 			</TableCell>
 		</TableRow>
@@ -469,7 +460,7 @@ function Page() {
 						sx={{ marginX: "0.5rem" }}
 						onClick={() => setSearch(searchInput)}
 					>
-						<Icon path={mdiMagnify} size={1} />
+						<Icon>search</Icon>
 					</IconButton>
 					<IconButton
 						sx={{ marginRight: "0.5rem" }}
@@ -478,7 +469,7 @@ function Page() {
 							store.setEditOpen(true);
 						}}
 					>
-						<Icon path={mdiFlagPlus} size={1} />
+						<Icon>add</Icon>
 					</IconButton>
 				</Box>
 				<TableContainer
