@@ -367,7 +367,7 @@ export default function Page() {
 																		submission.second_blood ||
 																		submission.first_blood
 																	) && (
-																		<Icon>
+																		<Icon color="success">
 																			flag
 																		</Icon>
 																	)}
